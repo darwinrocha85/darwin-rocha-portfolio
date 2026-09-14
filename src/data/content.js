@@ -7,28 +7,48 @@ export const profile = {
   linkedin: 'https://linkedin.com/in/darwinrocha',
   cvUrl: '/cv/Darwin_Rocha_CV.pdf',
   summary:
-    'Ingeniero en Computación con más de 10 años de experiencia en desarrollo backend con Python y Java: APIs REST, microservicios y sistemas de base de datos para plataformas en producción. En los últimos años integré herramientas de IA (Claude, OpenCode) directamente en mi flujo de trabajo para acelerar el análisis de código y reducir tiempos de entrega.',
+    'Ingeniero en Computación con más de 10 años de experiencia en desarrollo con Python y Java: APIs REST, microservicios y sistemas de base de datos para plataformas en producción. En los últimos años integré herramientas de IA (Claude, OpenCode) directamente en mi flujo de trabajo para acelerar el análisis de código y reducir tiempos de entrega.',
   aiNote:
     'El proyecto destacado de abajo es un ejemplo directo de ese proceso: yo defino la arquitectura y las reglas de negocio con el cliente, y colaboro con un agente de IA para construir, verificar y desplegar cada fase — el mismo flujo que uso hoy en mi trabajo diario.',
 }
+
+export const highlights = [
+  { value: '10+', label: 'años de experiencia en desarrollo' },
+  { value: '4', label: 'apps de naveSpace en Demo, de punta a punta' },
+  { value: '7', label: 'empresas en 3 países, On-Site o Remoto ' },
+  { value: 'ML', label: 'real con PyTorch — no solo prompts' },
+]
 
 export const experience = [
   {
     company: 'Clorian Ticketing',
     role: 'Java Backend',
     place: 'Barcelona, España',
-    period: 'Feb 2026 — Ago 2026',
+    period: '2026',
     tech: ['Java', 'Spring Boot', 'JSP', 'MySQL', 'Jenkins', 'AWS', 'IA (Claude, OpenCode)'],
     bullets: [
       'Desarrollo y mantenimiento del producto en Java, refactorizando código existente y agregando funcionalidades a distintos microservicios.',
+      'Mantenimiento de la plataforma en JSP en paralelo a los nuevos microservicios, asegurando continuidad operativa del sistema.',
       'Integración de herramientas de IA en el flujo de trabajo para acelerar el análisis de código y optimizar tiempos de respuesta en desarrollo.',
+    ],
+  },
+  {
+    company: 'Universidad Simón Bolívar',
+    role: 'Prácticas de Máster en Inteligencia Artificial',
+    place: 'Caracas, Venezuela · Remoto',
+    period: '2024 — 2025',
+    tech: ['Python', 'PyTorch', 'NumPy', 'scikit-learn', 'OpenCV', 'Pandas', 'Matplotlib'],
+    bullets: [
+      'Modelos de aprendizaje automático para clasificación y análisis multimodal (audio, video, texto), con arquitecturas de fusión de características para reconocimiento de emociones enfocadas en simplicidad e interpretabilidad.',
+      'Pipelines completos de IA — preprocesamiento, extracción de características, entrenamiento, validación cruzada y métricas (F1-score, matrices de confusión) — experimentando con activación adaptativa y normalización para estabilidad numérica en modelos ligeros.',
+      'Gestión de datasets a gran escala (limpieza, alineación de modalidades, scripts reproducibles) y documentación técnica siguiendo estándares de investigación reproducible.',
     ],
   },
   {
     company: 'Carver Advanced',
     role: 'Software Developer',
     place: 'Barcelona, España',
-    period: 'Abr 2025 — Oct 2025',
+    period: '2025',
     tech: ['Java', 'MySQL', 'SQL Server', 'RabbitMQ', 'SOAP/REST', 'JUnit', 'Mockito', 'SonarQube'],
     bullets: [
       'Pruebas unitarias e integradas con JUnit, Mockito y Spring Test, reduciendo errores en integración con servicios externos.',
@@ -39,7 +59,7 @@ export const experience = [
     company: 'Autolab SAS',
     role: 'Desarrollador Full Stack',
     place: 'Remoto, Colombia',
-    period: 'Ago 2021 — Abr 2024',
+    period: '2021 — 2024',
     tech: ['Python', 'Kotlin', 'Flask', 'EmberJS', 'PostgreSQL', 'Docker', 'Kubernetes', 'AWS'],
     bullets: [
       'Funcionalidades críticas para un ERP/CRM de gestión de trabajos, incidencias y garantías, mejorando la eficiencia operativa.',
@@ -48,21 +68,10 @@ export const experience = [
     ],
   },
   {
-    company: 'Ditech',
-    role: 'Desarrollador Java',
-    place: 'Remoto, Bilbao-España',
-    period: 'Abr 2021 — Jul 2021',
-    tech: ['Java', 'Spring Boot', 'Oracle 12c', 'WebLogic'],
-    bullets: [
-      'Módulo de evaluación de participantes de talleres con Spring Boot y Oracle.',
-      'Ampliación de un sistema de gestión académica municipal con nuevos flujos backend.',
-    ],
-  },
-  {
     company: 'GlobalHitss',
     role: 'Desarrollador Java',
     place: 'Bogotá, Colombia',
-    period: 'Ene 2019 — Abr 2021',
+    period: '2019 — 2021',
     tech: ['Java EE', 'PrimeFaces', 'JSF', 'JPA', 'Oracle 12c', 'WebLogic'],
     bullets: [
       'Módulo de agendamiento de técnicos, optimizando asignación y seguimiento de visitas.',
@@ -74,22 +83,24 @@ export const experience = [
     company: 'PetCaribe CA',
     role: 'Coordinador de Tecnología',
     place: 'Mariara, Venezuela',
-    period: 'Mar 2018 — Oct 2018',
+    period: '2018',
     tech: ['Gestión de proyectos', 'Infraestructura IT'],
     bullets: [
-      'Gestión de proyectos tecnológicos y políticas de uso y mantenimiento de infraestructura.',
-      'Coordinación de instalación de redes, equipos y sistemas críticos, con soporte técnico a áreas operativas.',
+      'Gestión de proyectos tecnológicos, definiendo políticas de uso y mantenimiento de infraestructura.',
+      'Coordinación de instalación de redes, equipos y sistemas críticos.',
+      'Soporte técnico a usuarios y áreas operativas de la organización.',
     ],
   },
   {
     company: 'Hecticus Inc',
     role: 'Developer App & Web',
     place: 'Caracas, Venezuela',
-    period: 'Sep 2016 — Oct 2017',
+    period: '2016 — 2017',
     tech: ['PHP', 'Laravel', 'Java', 'Spring Boot', 'Angular', 'MySQL'],
     bullets: [
-      'Módulos web con Laravel/PHP a partir de requerimientos de negocio.',
-      'Componentes en Spring Boot para extender funcionalidades internas de administración de clientes corporativos.',
+      'Análisis de requerimientos de negocio e implementación de módulos web con Laravel/PHP.',
+      'Desarrollo de componentes en Spring Boot para extender funcionalidades internas.',
+      'Soluciones para la administración y distribución del producto entre clientes corporativos.',
     ],
   },
 ]
@@ -106,7 +117,10 @@ export const skillGroups = [
   { label: 'Datos', items: ['MySQL', 'PostgreSQL', 'SQLite', 'Oracle 12c', 'H2', 'SQL Server'] },
   { label: 'Infraestructura', items: ['Docker', 'Kubernetes', 'AWS', 'Jenkins', 'Linux', 'WebLogic'] },
   { label: 'Calidad & Testing', items: ['JUnit', 'Mockito', 'Spring Test', 'SonarQube'] },
-  { label: 'IA aplicada', items: ['Claude', 'OpenCode', 'Flujos de desarrollo asistido por IA'] },
+  {
+    label: 'IA aplicada',
+    items: ['PyTorch', 'scikit-learn', 'OpenCV', 'Pandas', 'NumPy', 'Matplotlib', 'Claude', 'OpenCode'],
+  },
 ]
 
 export const featuredProject = {

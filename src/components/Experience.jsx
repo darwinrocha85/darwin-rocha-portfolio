@@ -1,8 +1,10 @@
 import { experience } from '../data/content'
+import { useReveal } from '../hooks/useReveal'
 
 export default function Experience() {
+  const { ref, revealed } = useReveal()
   return (
-    <section className="section" id="experiencia">
+    <section ref={ref} className={`section reveal${revealed ? ' is-visible' : ''}`} id="experiencia">
       <div className="container">
         <div className="section-head">
           <span className="eyebrow">Experiencia</span>

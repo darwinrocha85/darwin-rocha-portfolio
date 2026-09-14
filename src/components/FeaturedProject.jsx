@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { featuredProject } from '../data/content'
+import { useReveal } from '../hooks/useReveal'
 
 export default function FeaturedProject() {
   const [audience, setAudience] = useState('hr')
   const copy = audience === 'hr' ? featuredProject.hrDescription : featuredProject.techDescription
+  const { ref, revealed } = useReveal()
 
   return (
-    <section className="section" id="proyecto-destacado">
+    <section ref={ref} className={`section reveal${revealed ? ' is-visible' : ''}`} id="proyecto-destacado">
       <div className="container">
         <div className="featured">
           <div className="featured-inner">

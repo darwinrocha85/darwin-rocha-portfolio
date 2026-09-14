@@ -1,8 +1,10 @@
 import { otherProjects } from '../data/content'
+import { useReveal } from '../hooks/useReveal'
 
 export default function OtherProjects() {
+  const { ref, revealed } = useReveal()
   return (
-    <section className="section" id="otros-proyectos">
+    <section ref={ref} className={`section reveal${revealed ? ' is-visible' : ''}`} id="otros-proyectos">
       <div className="container">
         <div className="section-head">
           <span className="eyebrow">Otros proyectos</span>

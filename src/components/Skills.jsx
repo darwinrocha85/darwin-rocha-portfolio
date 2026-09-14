@@ -1,8 +1,10 @@
 import { skillGroups } from '../data/content'
+import { useReveal } from '../hooks/useReveal'
 
 export default function Skills() {
+  const { ref, revealed } = useReveal()
   return (
-    <section className="section" id="skills">
+    <section ref={ref} className={`section reveal${revealed ? ' is-visible' : ''}`} id="skills">
       <div className="container">
         <div className="section-head">
           <span className="eyebrow">Skills</span>

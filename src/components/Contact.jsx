@@ -1,8 +1,10 @@
 import { profile } from '../data/content'
+import { useReveal } from '../hooks/useReveal'
 
 export default function Contact() {
+  const { ref, revealed } = useReveal()
   return (
-    <section className="section" id="contacto">
+    <section ref={ref} className={`section reveal${revealed ? ' is-visible' : ''}`} id="contacto">
       <div className="container">
         <div className="contact-panel">
           <span className="eyebrow">Contacto</span>

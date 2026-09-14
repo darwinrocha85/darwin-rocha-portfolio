@@ -1,8 +1,10 @@
 import { education, profile } from '../data/content'
+import { useReveal } from '../hooks/useReveal'
 
 export default function About() {
+  const { ref, revealed } = useReveal()
   return (
-    <section className="section" id="sobre-mi">
+    <section ref={ref} className={`section reveal${revealed ? ' is-visible' : ''}`} id="sobre-mi">
       <div className="container">
         <div className="section-head">
           <span className="eyebrow">Sobre mí</span>
