@@ -177,6 +177,39 @@ export const featuredProject = {
   ],
 }
 
+export const relevantProject = {
+  eyebrow: 'Proyecto relevante',
+  title: 'BankIn — el método de pago conectado a naveSpace',
+  tagline:
+    'Es un proyecto compacto, pero ya demuestra su eficacia en producción: BankIn es el método de pago real que usa naveSpace para cobrar sus entradas.',
+  name: 'BankIn',
+  connectedTo: 'naveSpace',
+  hrDescription: [
+    'Demo de un backend bancario (clientes, tarjetas, transacciones) con un rol de gerente que supervisa toda la operación — y ya en uso real: es el método de pago que usa naveSpace para cobrar sus entradas.',
+    'Aunque es un proyecto más compacto que naveSpace, ya demuestra su valor práctico: otra aplicación completamente distinta le pide un cobro y BankIn lo procesa y lo deja trazado, sin intervención manual.',
+    'Es la primera pieza de una pequeña infraestructura de pagos que planeo seguir usando: hotelDarwin y una tienda de ropa (ambos por construir) se conectarán de la misma forma más adelante.',
+  ],
+  techDescription: [
+    'Backend en Python 3.14 con FastAPI 0.141 (sobre Starlette y Uvicorn) y arquitectura hexagonal, migrado desde una versión original en Java/Spring Boot. Persistencia en SQLite en archivo vía SQLAlchemy 2.0 (ORM 2.0-style) y validación con Pydantic 2.13, con una migración simple automática para columnas nuevas.',
+    'El endpoint `POST /transactions/purchase` está pensado para ser consumido por apps externas: recibe tarjeta, monto y un campo `note` que identifica la app de origen, protegible con una API key simple vía variable de entorno.',
+    'naveSpace llama a ese endpoint al confirmar una compra de entradas; el panel de gerente de BankIn muestra el cargo con su nota, para auditar exactamente qué app y qué compra generó cada movimiento.',
+    'El mismo endpoint quedará disponible para hotelDarwin y la tienda de ropa cuando se construyan, sin cambios en BankIn: solo una nueva app llamando con su propia nota y su propia API key.',
+  ],
+  apps: [
+    {
+      label: 'BankIn',
+      description: 'Panel de cliente y de gerente del banco.',
+      url: 'https://bankin-frontend.web.app',
+      repo: 'https://github.com/darwinrocha85/Bankin-frontend',
+    },
+  ],
+  backendRepo: 'https://github.com/darwinrocha85/Bankin',
+  comingSoon: [
+    { name: 'hotelDarwin', note: 'reservas de hotel — próximamente' },
+    { name: 'Tienda de ropa', note: 'e-commerce — próximamente' },
+  ],
+}
+
 export const otherProjects = [
   {
     name: 'Barrio Sonora',
