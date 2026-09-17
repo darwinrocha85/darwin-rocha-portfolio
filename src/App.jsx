@@ -5,7 +5,7 @@ import About from './components/About'
 import Experience from './components/Experience'
 import Skills from './components/Skills'
 import FeaturedProject from './components/FeaturedProject'
-import RelevantProject from './components/RelevantProject'
+import MoreProjects from './components/MoreProjects'
 import OtherProjects from './components/OtherProjects'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
@@ -21,7 +21,7 @@ export default function App() {
         <Experience />
         <Skills />
         <FeaturedProject />
-        <RelevantProject />
+        <MoreProjects />
         <OtherProjects />
         <Contact />
       </main>

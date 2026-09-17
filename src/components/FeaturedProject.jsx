@@ -47,14 +47,7 @@ export default function FeaturedProject() {
               ))}
             </div>
 
-            <div className="phases">
-              {featuredProject.phases.map((phase) => (
-                <div className="phase-card" key={phase.title}>
-                  <h4>{phase.title}</h4>
-                  <p>{phase.detail}</p>
-                </div>
-              ))}
-            </div>
+            <div className="views-label">Tres vistas para explorarlo</div>
 
             <div className="apps-grid">
               {featuredProject.apps.map((app) => (

@@ -11,6 +11,7 @@
   --accent-strong: #1c3fb0;
   --accent-soft: #eef1fe;
   --tag-bg: #f2f2f5;
+  --header-bg: rgba(250, 250, 250, 0.85);
   --shadow-sm: 0 1px 2px rgba(20, 22, 26, 0.04);
   --shadow-md: 0 8px 24px rgba(20, 22, 26, 0.06);
   --radius-sm: 8px;
@@ -20,6 +21,61 @@
   --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --display: 'Space Grotesk', var(--sans);
   --mono: 'JetBrains Mono', 'SFMono-Regular', Menlo, monospace;
+}
+
+/* Dark mode — system preference (only when the visitor hasn't chosen explicitly) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #0a0b10;
+    --surface: #14161e;
+    --border: #24272f;
+    --border-strong: #343841;
+    --text: #f3f4f7;
+    --text-muted: #a7abb7;
+    --text-faint: #767b89;
+    --accent: #5b7cfa;
+    --accent-strong: #8aa0ff;
+    --accent-soft: #1a2140;
+    --tag-bg: #1b1e26;
+    --header-bg: rgba(10, 11, 16, 0.85);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Dark mode — explicit choice via the toggle (wins over system preference either way) */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0a0b10;
+  --surface: #14161e;
+  --border: #24272f;
+  --border-strong: #343841;
+  --text: #f3f4f7;
+  --text-muted: #a7abb7;
+  --text-faint: #767b89;
+  --accent: #5b7cfa;
+  --accent-strong: #8aa0ff;
+  --accent-soft: #1a2140;
+  --tag-bg: #1b1e26;
+  --header-bg: rgba(10, 11, 16, 0.85);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* naveSpace's card is deliberately dark even in light mode; in dark mode give it its
+   own elevation so it still reads as the "spotlight" card instead of blending into
+   the page. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .featured {
+    background: #191c28;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}
+
+:root[data-theme='dark'] .featured {
+  background: #191c28;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 * {
@@ -140,7 +196,7 @@ button {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(250, 250, 250, 0.85);
+  background: var(--header-bg);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
 }
@@ -166,7 +222,7 @@ button {
   height: 32px;
   border-radius: 8px;
   background: var(--text);
-  color: #fff;
+  color: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -213,6 +269,26 @@ button {
   gap: 12px;
 }
 
+.theme-toggle {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  padding: 0;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--tag-bg);
+  border-color: var(--text-faint);
+  transform: translateY(-1px);
+}
+
 .nav-toggle {
   display: none;
   background: none;
@@ -255,11 +331,12 @@ button {
 
 .btn-primary {
   background: var(--text);
-  color: #fff;
+  color: var(--bg);
 }
 
 .btn-primary:hover {
   background: var(--accent);
+  color: #fff;
 }
 
 .btn-outline {
@@ -793,8 +870,17 @@ button {
   color: #b6b9c8;
 }
 
-.apps-grid {
+.views-label {
   margin-top: 40px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #b6b9c8;
+}
+
+.apps-grid {
+  margin-top: 16px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
@@ -871,7 +957,7 @@ button {
   border-bottom: 1px dotted rgba(255, 255, 255, 0.35);
 }
 
-/* Relevant project */
+/* Related project (BankIn — connected to naveSpace, light card, same toggle pattern) */
 .relevant-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -895,7 +981,6 @@ button {
   font-size: 15.5px;
 }
 
-/* Light-card variant of the RH/tech toggle used inside .featured */
 .relevant-card .audience-toggle {
   background: var(--tag-bg);
   border-color: var(--border-strong);
@@ -907,7 +992,7 @@ button {
 
 .relevant-card .audience-toggle button.active {
   background: var(--text);
-  color: #fff;
+  color: var(--bg);
 }
 
 .relevant-card .audience-copy {
@@ -960,30 +1045,6 @@ button {
   color: var(--text-faint);
 }
 
-.relevant-points {
-  margin-top: 24px;
-  max-width: 720px;
-}
-
-.relevant-points li {
-  position: relative;
-  padding-left: 18px;
-  color: var(--text-muted);
-  font-size: 14.5px;
-  margin-bottom: 10px;
-}
-
-.relevant-points li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 9px;
-  width: 5px;
-  height: 5px;
-  border-radius: 999px;
-  background: var(--accent);
-}
-
 .relevant-links {
   margin-top: 28px;
   display: flex;
@@ -1011,6 +1072,89 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+/* Project switcher tabs (choose which secondary project to show) */
+.project-tabs {
+  display: inline-flex;
+  background: var(--tag-bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 4px;
+  gap: 4px;
+  margin-bottom: 32px;
+}
+
+.project-tabs button {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 999px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.project-tabs button.active {
+  background: var(--text);
+  color: var(--bg);
+}
+
+/* Secondary projects (backend demos, no audience toggle) */
+.secondary-projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 24px;
+}
+
+.secondary-project-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.secondary-project-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
+}
+
+.secondary-project-kind {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 10px;
+}
+
+.secondary-project-card h3 {
+  font-size: 22px;
+}
+
+.secondary-project-card .tagline {
+  margin-top: 8px;
+  color: var(--text-muted);
+  font-size: 15px;
+  max-width: 640px;
+}
+
+.secondary-project-card p {
+  margin-top: 14px;
+  color: var(--text-muted);
+  font-size: 14.5px;
+  max-width: 720px;
+}
+
+.secondary-project-actions {
+  margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 /* Other projects */
