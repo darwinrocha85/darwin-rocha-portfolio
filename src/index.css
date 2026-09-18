@@ -6,7 +6,7 @@
   --border-strong: #ddd8d2;
   --text: #1c1e21;
   --text-muted: #6b6e7a;
-  --text-faint: #9aa0a8;
+  --text-faint: #70747f;
   --accent: #2954e0;
   --accent-strong: #1c3fb0;
   --accent-soft: #f0f2ff;
@@ -789,8 +789,8 @@ button {
   flex-wrap: wrap;
 }
 
-.featured h2 {
-  font-size: clamp(26px, 3.4vw, 36px);
+.featured-top h3 {
+  font-size: clamp(24px, 3vw, 32px);
   color: #fff;
 }
 

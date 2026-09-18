@@ -12,6 +12,15 @@ export default function FeaturedProject() {
   return (
     <section ref={ref} className={`section reveal${revealed ? ' is-visible' : ''}`} id="proyecto-destacado">
       <div className="container">
+        <div className="section-head">
+          <span className="eyebrow">Proyectos destacados</span>
+          <h2>naveSpace y el asistente que lo explica</h2>
+          <p>
+            El sistema completo de gestión de flota, y un asistente de IA embebido en este mismo
+            portfolio que responde con su contenido real. Cambiá de uno a otro con las pestañas.
+          </p>
+        </div>
+
         <div className="featured">
           <div className="featured-inner">
             <div className="project-tabs" role="tablist" aria-label="Elegir proyecto destacado">
@@ -41,10 +50,7 @@ export default function FeaturedProject() {
 
             <div className="featured-top">
               <div>
-                <span className="eyebrow" style={{ background: 'rgba(91,124,250,0.16)', color: '#9fb1ff' }}>
-                  Proyecto destacado
-                </span>
-                <h2>{project.name}</h2>
+                <h3>{project.name}</h3>
                 <p className="tagline">{project.tagline}</p>
               </div>
 
@@ -83,19 +89,21 @@ export default function FeaturedProject() {
                 <div className="app-card" key={app.label}>
                   <div className="label">{app.label}</div>
                   <p>{app.description}</p>
-                  <div className="links">
-                    <a
-                      className="link-pill primary"
-                      href={app.url}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Ver demo ↗
-                    </a>
-                    <a className="link-pill" href={app.repo} target="_blank" rel="noreferrer">
-                      Código
-                    </a>
-                  </div>
+                  {activeProject === 'navespace' && (
+                    <div className="links">
+                      <a
+                        className="link-pill primary"
+                        href={app.url}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Ver demo ↗
+                      </a>
+                      <a className="link-pill" href={app.repo} target="_blank" rel="noreferrer">
+                        Código
+                      </a>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
