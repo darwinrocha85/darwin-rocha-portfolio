@@ -126,12 +126,12 @@ export const skillGroups = [
 export const featuredProject = {
   name: 'naveSpace',
   tagline:
-    'Sistema de gestión de una flota de naves que opera como museo o teatro — con venta de entradas real, panel de administración con dashboard, y una landing pública de marketing.',
+    'Sistema de gestión de una flota de naves que opera como museo o teatro — con venta de entradas real, taller independiente y panel de administración con dashboard.',
   apps: [
     {
       label: 'Panel Admin',
       description:
-        'Gestión de flota: alta de naves, configurar museo/teatro, dashboard de ingresos y ocupación, enviar una nave a taller.',
+        'Gestión de flota: alta de naves, configurar museo/teatro y dashboard de ingresos y ocupación. Si una nave está en taller no se puede editar; su estado se consulta haciendo click en “En taller”.',
       url: 'https://spacecraft-system.web.app',
       repo: 'https://github.com/darwinrocha85/spacecraftSystem-frontend',
     },
@@ -150,32 +150,30 @@ export const featuredProject = {
   ],
   backendRepo: 'https://github.com/darwinrocha85/spacecraftSystem',
   hrDescription: [
-    'Empezó como un MVP simple — dar de alta naves y controlar su estado — y fue creciendo pieza a pieza hasta un sistema completo: venta de entradas con cobro real, panel de administración con dashboard de ingresos y ocupación, y una landing pública de marketing. Las tres ya desplegadas y usables hoy.',
-    'Se explora desde tres ángulos: la landing (qué hay para visitar o ver ahora mismo), la tienda de entradas (donde se completa la compra) y el panel de administración (gestión de la flota, ventas y métricas del negocio).',
-    'Muestra cómo trabajo con un producto real: levanto las reglas de negocio junto al usuario, diseño la arquitectura de datos y permisos, verifico cada entrega antes de darla por lista y despliego a un entorno accesible en vivo.',
+    'Empezó como un MVP para dar de alta naves y fue creciendo por partes hasta un sistema completo: venta de entradas con cobro real, un taller aparte que lleva presupuestos y aprobaciones, y un panel con métricas del negocio. Todo desplegado y usable hoy.',
+    'Cada parte tiene su rol: la landing muestra qué hay para visitar, la tienda resuelve la compra, el panel de administración gestiona la flota sin tocar lo que está en reparación, y la app de taller lleva el trabajo diario y el historial de cada visita.',
+    'Refleja cómo trabajo un producto: acordar reglas claras con el usuario, separar responsabilidades donde hace falta y verificar cada entrega antes de darla por lista.',
   ],
   techDescription: [
-    'Backend en Java 17 + Spring Boot (Maven), sin capa DTO, con Lombok y `@ElementCollection` para modelar asientos de teatro; base H2 en memoria sembrada con datos de demo completos.',
-    '3 frontends públicos en React + Vite sobre el mismo backend: una landing de marketing que agrega en una sola vista todo lo reservable de la flota (museos abiertos y funciones de teatro con fecha) con deep-link directo a un booking específico en la tienda, la tienda de entradas que resuelve la compra, y el panel de administración con un dashboard de solo lectura (ingresos, ocupación del día, estado de la flota, top naves) calculado al vuelo sin tocar el esquema de datos.',
-    'Cobro real vía BankIn desde el backend (nunca desde el navegador): nada se persiste hasta que BankIn confirma, y cancelar una entrada intenta revertir el cobro automáticamente — con email de confirmación y de cancelación al comprador en ambos casos.',
-    'El taller de reparación sigue construido junto a este backend hoy (permisos separados: el panel admin solo puede enviar una nave a taller y ver su historial en modo lectura), pero está pensado para independizarse como su propia app conectada — el mismo patrón que ya sigue BankIn como método de pago (ver "Más proyectos" abajo).',
+    'Backend en Java 17 + Spring Boot (Maven), sin capa DTO, con Lombok y `@ElementCollection` para asientos de teatro; ahora con SQLite en archivo y seeder idempotente para que el estado no se pierda al reiniciar.',
+    '3 frontends en React + Vite sobre ese backend: landing que agrega lo reservable (museos y funciones con fecha) con deep-link a la tienda, tienda que resuelve la compra, y panel admin con dashboard de solo lectura (ingresos, ocupación del día, estado de flota, top naves) sin tocar esquema. Tabla sin scroll horizontal y columna Estado en lugar de Taller.',
+    'Cobro real vía BankIn desde el backend — nada se guarda hasta que BankIn confirma con 201 y cancelar intenta revertir el cobro — con email de compra y cancelación. El taller expone presupuestos con histórico: lo enviado y, si hubo rechazo, lo anterior queda visible.',
+    'Taller extraído a servicio propio en Python 3.14 + FastAPI con SQLAlchemy 2.0 y SQLite en archivo, con su propia app en React + Vite de estilo sobrio de hangar. El panel admin solo envía a taller y ve estado/historial; el flujo fino (recibir, avanzar, presupuesto) vive en la app de taller.',
   ],
 }
 
 export const relatedProject = {
-  name: 'BankIn — el método de pago conectado a naveSpace',
-  tagline:
-    'Es un proyecto compacto, pero ya demuestra su eficacia en producción: BankIn es el método de pago real que usa naveSpace para cobrar sus entradas.',
+  name: 'BankIn — sistema de pago del ecosistema',
+  tagline: 'No es una demo suelta. BankIn es el sistema de pago del ecosistema.',
   hrDescription: [
-    'Demo de un backend bancario (clientes, tarjetas, transacciones) con un rol de gerente que supervisa toda la operación — y ya en uso real: es el método de pago que usa naveSpace para cobrar sus entradas.',
-    'Aunque es un proyecto más compacto que naveSpace, ya demuestra su valor práctico: otra aplicación completamente distinta le pide un cobro y BankIn lo procesa y lo deja trazado, sin intervención manual.',
-    'Es la primera pieza de una pequeña infraestructura de pagos que planeo seguir usando: hotelDarwin y una tienda de ropa (ambos por construir) se conectarán de la misma forma más adelante.',
+    'Cada compra de entradas en naveSpace pasa por aquí: recibe los datos, hace el cobro y lo guarda para que se pueda auditar después. Los pagos al taller tambien usan esta apps.',
+    'Tiene un panel de gerente donde se ve cada movimiento con su nota de origen, sin pasos manuales entre una app y otra.',
+    'Hoy ya conecta naveSpace. Más adelante se podra conectar a otras apps con la misma API y sin cambios en BankIn.',
   ],
   techDescription: [
-    'Backend en Python 3.14 con FastAPI 0.141 (sobre Starlette y Uvicorn) y arquitectura hexagonal, migrado desde una versión original en Java/Spring Boot. Persistencia en SQLite en archivo vía SQLAlchemy 2.0 (ORM 2.0-style) y validación con Pydantic 2.13, con una migración simple automática para columnas nuevas.',
-    'El endpoint `POST /transactions/purchase` está pensado para ser consumido por apps externas: recibe tarjeta, monto y un campo `note` que identifica la app de origen, protegible con una API key simple vía variable de entorno.',
-    'naveSpace llama a ese endpoint al confirmar una compra de entradas; el panel de gerente de BankIn muestra el cargo con su nota, para auditar exactamente qué app y qué compra generó cada movimiento.',
-    'El mismo endpoint quedará disponible para hotelDarwin y la tienda de ropa cuando se construyan, sin cambios en BankIn: solo una nueva app llamando con su propia nota y su propia API key.',
+    'Backend en Python 3.14 con FastAPI y arquitectura hexagonal. Viene de una versión anterior en Java/Spring Boot y ahora persiste en SQLite en archivo con SQLAlchemy 2.0 y validación con Pydantic.',
+    'Expone `POST /transactions/purchase` para apps externas: recibe tarjeta, monto y un campo `note` con el origen, protegido con API key por variable de entorno.',
+    'naveSpace lo llama al confirmar una compra; el panel de gerente muestra el cargo con su nota para saber qué app y qué compra generó cada movimiento.',
   ],
   connectedTo: 'naveSpace',
   demoUrl: 'https://bankin-frontend.web.app',
@@ -185,30 +183,38 @@ export const relatedProject = {
 }
 
 export const secondaryProjects = [
-  {
+ {
     id: 'taller',
     name: 'Taller de Reparación',
-    kind: 'Parte de naveSpace — en camino a independizarse',
-    tagline:
-      'Gestiona el ciclo de reparación de una nave: daños por categoría, sub-estados, y el cierre del historial cuando vuelve a operar.',
-    description: [
-      'Hoy vive dentro del mismo backend de naveSpace (mismo repo, mismas reglas de negocio) — cuando una nave entra a reparación, el taller se encarga de la cascada de daños, el cambio de sub-estado, y de liberar la nave (y su historial) cuando termina.',
-      'A futuro está pensado para independizarse como su propia app conectada a naveSpace — el mismo patrón que ya sigue BankIn como método de pago: una pieza más pequeña, con su propia razón de ser, que se conecta al sistema principal sin ser el centro de la demo.',
+    tagline: 'Taller del ecosistema - donde se reparan las naves. Aquí entra una nave con daños y sale solo cuando el trabajo está terminado.',
+    hrDescription: [
+      'El taller es el hangar aparte donde entra una nave con daños. Mientras está dentro, el panel de administración no la puede editar; solo puede ver su estado entrando por “En taller”.',
+      'Cada visita guarda qué se rompió, en qué estado está y qué presupuestos se enviaron.',
+      'Está separado a propósito del resto del sistema para que el flujo de reparación no mezcle responsabilidades con la venta de entradas.',
     ],
-    tech: ['Java', 'Spring Boot', 'React', 'Vite'],
+    techDescription: [
+      'Backend propio en Python 3.14 con FastAPI y arquitectura hexagonal, con SQLite en archivo vía SQLAlchemy 2.0. La máquina de estados y la lógica de presupuestos viven solo en el dominio.',
+      'Frontend aparte en React + Vite con estilo sobrio de hangar. La tabla evita scroll horizontal y el detalle se abre haciendo click en “En taller”, mismo patrón que BankIn.',
+      'Se conecta con naveSpace solo para crear la visita y avisar cuando vuelve a estar operativa. Fuera de eso, funciona por su cuenta.',
+    ],
+    tech: ['Python', 'FastAPI', 'SQLite', 'SQLAlchemy', 'React', 'Vite'],
     demoUrl: 'https://spacecraft-taller.web.app',
     frontendRepo: 'https://github.com/darwinrocha85/spacecraft-taller-frontend',
-    backendRepo: 'https://github.com/darwinrocha85/spacecraftSystem',
+    backendRepo: 'https://github.com/darwinrocha85/spacecraft-taller-backend',
   },
   {
     id: 'contenthub',
     name: 'ContentHub',
-    kind: 'Proyecto con backend — marketplace de contenido',
-    tagline:
-      'Marketplace de contenido (fotos, vídeos, clips musicales) con pagos reales vía Stripe y moderación automática por IA.',
-    description: [
-      'Cualquiera puede publicar una pieza con precio, buscarla en un feed de contenido en venta, o pedir contenido que le falta — otros usuarios pueden ofrecer hasta 2 piezas propias como respuesta a esa solicitud. Comprar es una operación única: en cuanto se paga, la pieza deja de estar disponible para los demás.',
-      'Backend en Python con arquitectura hexagonal: dominio y casos de uso sin dependencias de framework, así que cambiar SQLite por Postgres, el analizador de IA o el gateway de pago no toca la lógica de negocio, solo un adaptador nuevo. Cada pieza se modera automáticamente al publicarse (reglas o IA de OpenAI) y el checkout usa Stripe en modo test con confirmación server-side — nunca se confía en que el navegador diga "ya pagué".',
+    tagline: 'Marketplace pequeño donde cada compra es única y queda trazada.',
+    hrDescription: [
+      'Cualquiera puede publicar una foto, vídeo o pista con precio y ponerla a la venta en un feed.',
+      'También se puede pedir lo que falta y otros usuarios responden ofreciendo piezas propias. En cuanto alguien paga, esa pieza deja de estar disponible para el resto.',
+      'Sirve como ejemplo de flujo de compra con moderación y sin depender de lo que diga el navegador.',
+    ],
+    techDescription: [
+      'Backend en Python con FastAPI y arquitectura hexagonal: dominio y casos de uso sin ataduras a framework, así cambiar SQLite por Postgres o el gateway de pago es solo un adaptador nuevo.',
+      'Cada pieza se modera al publicarse con reglas o IA de OpenAI. El checkout usa Stripe en modo test con confirmación en servidor; nunca se confía en que el navegador diga “ya pagué”.',
+      'Frontend en React + Vite con feed, detalle y flujo de solicitud/oferta. Operación única: una venta cierra la disponibilidad para los demás.',
     ],
     tech: ['Python', 'FastAPI', 'SQLite', 'Stripe', 'React', 'Vite'],
     demoUrl: 'https://contenthub-frontend.web.app',

@@ -4,12 +4,16 @@ import { useReveal } from '../hooks/useReveal'
 
 export default function MoreProjects() {
   const [activeTab, setActiveTab] = useState('bankin')
-  const [audience, setAudience] = useState('hr')
+  const [bankinAudience, setBankinAudience] = useState('hr')
+  const [secondaryAudience, setSecondaryAudience] = useState('hr')
   const { ref, revealed } = useReveal()
 
-  const audienceCopy = audience === 'hr' ? relatedProject.hrDescription : relatedProject.techDescription
+  const bankinCopy = bankinAudience === 'hr' ? relatedProject.hrDescription : relatedProject.techDescription
   const linkStyle = { color: 'var(--text)', borderColor: 'var(--border-strong)' }
   const activeSecondary = secondaryProjects.find((project) => project.id === activeTab)
+  const secondaryCopy =
+    activeSecondary &&
+    (secondaryAudience === 'hr' ? activeSecondary.hrDescription : activeSecondary.techDescription)
 
   return (
     <section ref={ref} className={`section reveal${revealed ? ' is-visible' : ''}`} id="proyectos-backend">
@@ -18,9 +22,9 @@ export default function MoreProjects() {
           <span className="eyebrow">Más proyectos</span>
           <h2>Más proyectos con backend</h2>
           <p>
-            Proyectos más compactos que naveSpace, pero funcionando de verdad: uno ya conectado como su
-            método de pago, otro que hoy vive dentro de naveSpace y está en camino a independizarse, y un
-            tercero como demo independiente.
+            Tres proyectos más pequeños que naveSpace, pero funcionando de verdad: BankIn es el sistema
+            de pago del ecosistema, el taller es el hangar aislado donde se reparan las naves y ContentHub
+            es un marketplace independiente.
           </p>
         </div>
 
@@ -39,7 +43,10 @@ export default function MoreProjects() {
               role="tab"
               aria-selected={activeTab === project.id}
               className={activeTab === project.id ? 'active' : ''}
-              onClick={() => setActiveTab(project.id)}
+              onClick={() => {
+                setActiveTab(project.id)
+                setSecondaryAudience('hr')
+              }}
             >
               {project.name}
             </button>
@@ -57,17 +64,17 @@ export default function MoreProjects() {
               <div className="audience-toggle" role="tablist" aria-label="Elegir tipo de descripción">
                 <button
                   role="tab"
-                  aria-selected={audience === 'hr'}
-                  className={audience === 'hr' ? 'active' : ''}
-                  onClick={() => setAudience('hr')}
+                  aria-selected={bankinAudience === 'hr'}
+                  className={bankinAudience === 'hr' ? 'active' : ''}
+                  onClick={() => setBankinAudience('hr')}
                 >
                   Para RRHH / PM
                 </button>
                 <button
                   role="tab"
-                  aria-selected={audience === 'tech'}
-                  className={audience === 'tech' ? 'active' : ''}
-                  onClick={() => setAudience('tech')}
+                  aria-selected={bankinAudience === 'tech'}
+                  className={bankinAudience === 'tech' ? 'active' : ''}
+                  onClick={() => setBankinAudience('tech')}
                 >
                   Para perfiles técnicos
                 </button>
@@ -75,7 +82,7 @@ export default function MoreProjects() {
             </div>
 
             <div className="audience-copy">
-              {audienceCopy.map((paragraph) => (
+              {bankinCopy.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
@@ -113,12 +120,36 @@ export default function MoreProjects() {
           activeSecondary && (
             <div className="secondary-project-card">
               <span className="secondary-project-kind">{activeSecondary.kind}</span>
-              <h3>{activeSecondary.name}</h3>
-              <p className="tagline">{activeSecondary.tagline}</p>
+              <div className="secondary-top">
+                <div>
+                  <h3>{activeSecondary.name}</h3>
+                  <p className="tagline">{activeSecondary.tagline}</p>
+                </div>
+                <div className="audience-toggle" role="tablist" aria-label="Elegir tipo de descripción">
+                  <button
+                    role="tab"
+                    aria-selected={secondaryAudience === 'hr'}
+                    className={secondaryAudience === 'hr' ? 'active' : ''}
+                    onClick={() => setSecondaryAudience('hr')}
+                  >
+                    Para RRHH / PM
+                  </button>
+                  <button
+                    role="tab"
+                    aria-selected={secondaryAudience === 'tech'}
+                    className={secondaryAudience === 'tech' ? 'active' : ''}
+                    onClick={() => setSecondaryAudience('tech')}
+                  >
+                    Para perfiles técnicos
+                  </button>
+                </div>
+              </div>
 
-              {activeSecondary.description.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
+              <div className="audience-copy">
+                {secondaryCopy.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
 
               <div className="tag-row">
                 {activeSecondary.tech.map((item) => (
