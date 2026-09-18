@@ -198,7 +198,7 @@ export const secondaryProjects = [
       'Se conecta con naveSpace solo para crear la visita y avisar cuando vuelve a estar operativa. Fuera de eso, funciona por su cuenta.',
     ],
     tech: ['Python', 'FastAPI', 'SQLite', 'SQLAlchemy', 'React', 'Vite'],
-    demoUrl: 'https://spacecraft-taller.web.app',
+    demoUrl: 'https://spacecraft-taller-frontend.web.app',
     frontendRepo: 'https://github.com/darwinrocha85/spacecraft-taller-frontend',
     backendRepo: 'https://github.com/darwinrocha85/spacecraft-taller-backend',
   },
