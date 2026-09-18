@@ -9,6 +9,7 @@ import MoreProjects from './components/MoreProjects'
 import OtherProjects from './components/OtherProjects'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import AgentWidget from './components/AgentWidget'
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
         <Contact />
       </main>
       <Footer />
+      <AgentWidget />
     </>
   )
 }

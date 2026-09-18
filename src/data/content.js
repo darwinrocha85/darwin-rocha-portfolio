@@ -162,6 +162,36 @@ export const featuredProject = {
   ],
 }
 
+export const featuredAgent = {
+  name: 'Asistente IA del Portfolio',
+  tagline: 'Widget embebido que responde solo con lo que hay en el portfolio y deriva a la sección correcta.',
+  apps: [
+    {
+      label: 'Widget',
+      description: 'Burbuja abajo a la derecha con historial corto y sugerencias. Llama a /api/ask del mismo Hosting.',
+      url: '/#contact',
+      repo: 'https://github.com/darwinrocha85/darwin-rocha-portfolio',
+    },
+    {
+      label: 'Function',
+      description: 'Cloud Function en el mismo proyecto Firebase, con contexto de content.js y CV y Gemini 3.6 Flash.',
+      url: '/api/ask',
+      repo: 'https://github.com/darwinrocha85/darwin-rocha-portfolio',
+    },
+  ],
+  backendRepo: 'https://github.com/darwinrocha85/darwin-rocha-portfolio/tree/main/functions',
+  hrDescription: [
+    'Añade un atajo real al portfolio: en vez de navegar 4 proyectos, el visitante pregunta “¿qué hace el taller si rechazan un presupuesto?” y obtiene respuesta trazada.',
+    'Solo responde con lo que hay en estudios, experiencia y demos. Si no está, dice que no lo tiene y deriva a la sección donde mirar.',
+    'Muestra cómo integro IA sin humo: reglas claras, grounding y widget simple que no expone claves.',
+  ],
+  techDescription: [
+    'Hosting + Functions en el mismo proyecto Firebase (darwin-rocha-portfolio). El widget hace POST /api/ask y la Function inyecta content.js+CV como system prompt a Gemini 3.6 Flash.',
+    'Sin vector DB para el MVP: contexto en prompt, max 800 tokens, temperature 0.3, fallback mock si no hay GEMINI_API_KEY. Validado en local con emuladores.',
+    'Mismo patrón que el resto del ecosistema: servicio pequeño con responsabilidad clara, desplegado junto al frontend que lo usa.',
+  ],
+}
+
 export const relatedProject = {
   name: 'BankIn — sistema de pago del ecosistema',
   tagline: 'No es una demo suelta. BankIn es el sistema de pago del ecosistema.',
