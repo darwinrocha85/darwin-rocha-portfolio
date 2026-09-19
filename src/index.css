@@ -945,6 +945,31 @@ button {
   background: var(--accent-strong);
 }
 
+.agent-invite {
+  margin-top: 40px;
+  padding: 22px 26px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.agent-invite p {
+  margin: 0;
+  max-width: 480px;
+  color: #d7d9e4;
+  font-size: 14.5px;
+}
+
+.agent-invite button {
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
 .featured-repo {
   margin-top: 28px;
   font-size: 13px;
@@ -1373,6 +1398,11 @@ button {
   .featured-top,
   .relevant-top {
     flex-direction: column;
+  }
+
+  .agent-invite {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 

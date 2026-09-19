@@ -1,6 +1,7 @@
 const { onRequest } = require("firebase-functions/v2/https");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
 const cors = require("cors")({ origin: true });
+const { runAssistant } = require("./lib/ai-provider.js");
+const { sanitizeHistory } = require("./lib/chat-utils.js");
 
 // Generado desde src/data/content.js — es la única fuente de verdad del contenido del
 // portfolio (misma data que renderiza la UI). NO editar portfolioContext.generated.js a
@@ -8,6 +9,12 @@ const cors = require("cors")({ origin: true });
 // a content.js (firebase.json ya lo corre solo como predeploy de "hosting" y "functions").
 const portfolioContext = require("./portfolioContext.generated.js");
 
+// Motor del asistente: Gemini o Claude según la variable de entorno AI_PROVIDER (default
+// "gemini"; ver lib/ai-provider.js). Mismo patrón de switch que ya usan los asistentes del
+// panel admin y del taller de naveSpace (spacecraftSystem-frontend/functions), pero SIN el
+// loop de tool-calling de esos dos: este asistente responde solo con lo que ya está escrito
+// en el portfolio, nunca datos operativos en vivo — alcance confirmado con el usuario, ver
+// claude/fase4-estado.md.
 const SYSTEM_PROMPT = `Eres el asistente del portfolio de Darwin Rocha. Respondes SOLO sobre lo que hay en PORTFOLIO_CONTEXT: su perfil, experiencia, educación, skills, y los proyectos mostrados en este portfolio (naveSpace, este mismo asistente IA, BankIn, Taller de Reparación, ContentHub, y las landings de Sonora).
 
 Si preguntan algo que no está en PORTFOLIO_CONTEXT (salario, disponibilidad, datos personales no listados, o cualquier tema sin relación con este portfolio — cultura general, matemáticas, noticias, o cualquier otro tema), no respondas ese tema. Responde exactamente: "No tengo esa información en el portfolio. Para más detalle mira la sección [elige la más relacionada: #sobre-mi, #experiencia, #skills, #proyecto-destacado, #proyectos-backend, #otros-proyectos, #contacto]".
@@ -28,32 +35,6 @@ ${portfolioContext}
 // que una conversación larga no infle el costo por request sin límite — 6 turnos = las
 // últimas 3 idas y vueltas, de sobra para resolver un "¿y eso cuánto cuesta?".
 const MAX_HISTORY_TURNS = 6;
-
-// Esta función NO confía en el historial tal cual lo manda el cliente: es un endpoint
-// público (cors: true, sin auth), así que cualquiera podría mandar un array armado a
-// mano. Se revalida forma, longitud y alternancia estricta user/model acá, server-side,
-// independientemente de lo que ya recorte el widget.
-function sanitizeHistory(historyRaw) {
-  if (!Array.isArray(historyRaw)) return [];
-
-  const cleaned = [];
-  let expectedRole = "user";
-  for (const item of historyRaw) {
-    if (!item || typeof item.text !== "string") continue;
-    const text = item.text.trim().slice(0, 500);
-    if (!text) continue;
-    const role = item.role === "assistant" ? "model" : item.role === "user" ? "user" : null;
-    if (role !== expectedRole) continue; // fuerza que arranque en "user" y alterne estricto
-    cleaned.push({ role, parts: [{ text }] });
-    expectedRole = role === "user" ? "model" : "user";
-  }
-
-  // Si el historial queda esperando una respuesta ("model") que nunca llegó, esa última
-  // pregunta suelta se descarta para no romper la alternancia que exige la API de Gemini.
-  if (expectedRole === "model" && cleaned.length) cleaned.pop();
-
-  return cleaned.slice(-MAX_HISTORY_TURNS * 2);
-}
 
 exports.ask = onRequest(
   {
@@ -82,34 +63,30 @@ exports.ask = onRequest(
         return;
       }
 
-      const history = sanitizeHistory(req.body && req.body.history);
-
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey) {
-        // Mock local sin key — útil para probar widget sin gastar
-        res.json({
-          answer:
-            "[mock sin GEMINI_API_KEY] Para más detalle mira la sección #proyecto-destacado. Configura GEMINI_API_KEY en Functions para respuesta real. Pregunta recibida: " +
-            question.slice(0, 120),
-          mock: true,
-        });
-        return;
-      }
+      const history = sanitizeHistory(req.body && req.body.history, MAX_HISTORY_TURNS);
 
       try {
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({
-          model: "gemini-3.6-flash",
-          systemInstruction: SYSTEM_PROMPT,
+        const result = await runAssistant({
+          systemPrompt: SYSTEM_PROMPT,
+          history,
+          question,
+          temperature: 0.55,
+          maxOutputTokens: 800,
         });
-        const result = await model.generateContent({
-          contents: [...history, { role: "user", parts: [{ text: question }] }],
-          generationConfig: { maxOutputTokens: 800, temperature: 0.55 },
-        });
-        const text = result.response.text() || "No tengo esa información en el portfolio. Para más detalle mira la sección #contacto";
-        res.json({ answer: text.trim() });
+        res.json(result);
       } catch (err) {
         console.error("ask error", err);
+
+        if (err.isQuotaError) {
+          const providerLabel = err.provider === "claude" ? "Claude" : "Gemini";
+          res.status(429).json({
+            error:
+              `Se agotó la cuota gratuita del asistente (${providerLabel}) por hoy. Probá de ` +
+              "nuevo más tarde (la cuota se renueva a diario).",
+          });
+          return;
+        }
+
         res.status(500).json({ error: "Error al consultar el modelo. Intenta de nuevo." });
       }
     });

@@ -1,107 +1,43 @@
 # Darwin Rocha — Portafolio
 
-![React](https://img.shields.io/badge/React-18.3-149eca?logo=react&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?logo=vite&logoColor=white)
-![Firebase Hosting](https://img.shields.io/badge/Firebase-Hosting-FFCA28?logo=firebase&logoColor=black)
-![License](https://img.shields.io/badge/licencia-privado-lightgrey)
+Portafolio personal de **Darwin Rocha** — Software Engineer backend Java & Python, IA aplicada.
+Presenta experiencia, skills y varios proyectos propios, con un asistente de chat con IA
+embebido que responde preguntas sobre el perfil.
 
-Portafolio personal de **Darwin Rocha** — Software Engineer, backend Java & Python
-con IA aplicada. Presenta experiencia, skills y dos grupos de proyectos:
-
-- **[naveSpace](#proyecto-destacado-navespace)** — sistema de gestión de flota
-  (museo / teatro / taller) construido de punta a punta, con 3 apps en producción.
-- **Otros proyectos** — landings de conversión para clientes de la industria musical.
-
-**🔗 Demo en vivo:** https://darwin-rocha-portfolio.web.app
-
----
-
-## Contenido
-
-- [Stack](#stack)
-- [Desarrollo local](#desarrollo-local)
-- [Build y verificación](#build-y-verificación)
-- [Estructura del proyecto](#estructura-del-proyecto)
-- [Proyecto destacado: naveSpace](#proyecto-destacado-navespace)
-- [Deploy a Firebase Hosting](#deploy-a-firebase-hosting)
+**Demo:** https://darwin-rocha-portfolio.web.app
 
 ## Stack
+React 18 + Vite 5, CSS propio (sin framework), Firebase Hosting + Cloud Functions (asistente IA).
 
-| Capa       | Tecnología                          |
-| ---------- | ------------------------------------ |
-| Frontend   | React 18 + Vite 5                    |
-| Estilos    | CSS plano, sin framework (mobile-first) |
-| Calidad    | ESLint 8 (`eslint:recommended` + reglas React) |
-| Hosting    | Firebase Hosting                     |
-
-## Desarrollo local
-
+## Cómo correr en local
 ```bash
 npm install
 npm run dev      # http://localhost:5176
 ```
 
 ## Build y verificación
-
 ```bash
-npm run build    # genera dist/
-npm run lint     # eslint — 0 errores, 0 warnings esperado
-npm run preview  # sirve dist/ localmente para revisar antes de deploy
+npm run build
+npm run lint
+npm run preview
 ```
 
-## Estructura del proyecto
+## Contenido y estructura
+Todo el contenido del portafolio (perfil, experiencia, skills, proyectos) vive en
+`src/data/content.js` — se edita ese archivo, no hace falta tocar componentes. El CV
+descargable está en `public/cv/`.
 
-```
-src/
-├── data/content.js        # toda la data del portafolio (perfil, experiencia, skills, proyectos)
-├── components/             # un componente por sección (Hero, About, Experience, Skills,
-│                            # FeaturedProject, OtherProjects, Contact, Header, Footer)
-├── index.css                # design system (tokens de color/tipografía) + estilos de sección
-└── App.jsx                  # composición de secciones
-public/
-└── cv/Darwin_Rocha_CV.pdf   # CV descargable desde el header/hero/contacto
-```
+## Proyectos que muestra
+- **naveSpace** — proyecto destacado: gestión de una flota de naves (museo, teatro, venta de
+  entradas), con 3 apps propias (panel admin, tienda de entradas, landing de marketing).
+- **Asistente IA** — segundo proyecto destacado: el propio chat embebido de este portafolio.
+- **Más proyectos** — BankIn (pagos), Taller de Reparación y ContentHub, presentados como
+  proyectos en camino a independizarse.
+- Landings freelance para productoras musicales.
 
-Para actualizar contenido (experiencia, skills, proyectos, textos), editar
-**`src/data/content.js`** — no hace falta tocar ningún componente.
-
-Para reemplazar el CV, sobreescribir `public/cv/Darwin_Rocha_CV.pdf` con el mismo
-nombre y volver a hacer build/deploy.
-
-## Proyecto destacado: naveSpace
-
-Sistema de gestión de una flota de naves que operan como museo, teatro, o entran a
-un taller de reparación. Construido en 3 fases incrementales: modelo base → venta de
-entradas (museo/teatro) → taller de reparación con permisos separados entre panel
-admin y panel de taller.
-
-| App                  | Descripción                                              | Repo |
-| -------------------- | --------------------------------------------------------- | ---- |
-| Panel Admin          | Gestión de flota, configurar museo/teatro, ver ventas, enviar a taller | [spacecraftSystem-frontend](https://github.com/darwinrocha85/spacecraftSystem-frontend) |
-| Tienda de Entradas    | Compra pública de entradas museo/teatro                  | [spacecraft-tickets-frontend](https://github.com/darwinrocha85/spacecraft-tickets-frontend) |
-| Taller de Reparación | Gestión de daños, sub-estados, cierre de reparación       | [spacecraft-taller-frontend](https://github.com/darwinrocha85/spacecraft-taller-frontend) |
-| Backend              | Java 17 + Spring Boot, API REST para las 3 apps           | [spacecraftSystem](https://github.com/darwinrocha85/spacecraftSystem) |
-
-El portafolio incluye una descripción del proyecto en dos versiones (toggle en la
-sección "Proyecto destacado"): una para RRHH/PM en lenguaje de negocio, y otra
-técnica con detalle de arquitectura.
-
-## Deploy a Firebase Hosting
-
-Proyecto Firebase: **`darwin-rocha-portfolio`** (ya configurado en `.firebaserc`).
-
-Primera vez en esta máquina:
-
-```bash
-firebase login
-```
-
-Cada deploy:
-
+## Deploy
 ```bash
 npm run build
 firebase deploy --only hosting
 ```
-
-`firebase.json` apunta a `dist/` como carpeta pública, con rewrite de SPA
-(`** → /index.html`).
+Proyecto de Firebase: `darwin-rocha-portfolio` (ya configurado en `.firebaserc`).

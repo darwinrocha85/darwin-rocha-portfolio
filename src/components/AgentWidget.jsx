@@ -35,6 +35,16 @@ export default function AgentWidget() {
     if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight
   }, [messages, loading])
 
+  // Permite que otras partes de la página (ej. la invitación en "Proyectos destacados")
+  // abran este chat sin acoplar estado — solo escuchan/emiten este evento.
+  useEffect(() => {
+    function handleOpenRequest() {
+      setOpen(true)
+    }
+    window.addEventListener('open-portfolio-agent', handleOpenRequest)
+    return () => window.removeEventListener('open-portfolio-agent', handleOpenRequest)
+  }, [])
+
   async function send(text) {
     const question = (text ?? input).trim()
     if (!question || loading) return

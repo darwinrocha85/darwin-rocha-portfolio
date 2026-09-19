@@ -1,6 +1,6 @@
 {
   "name": "functions",
-  "description": "Portfolio agent - ask Darwin",
+  "description": "Portfolio agent - ask Darwin - Gemini o Claude segun AI_PROVIDER",
   "engines": { "node": "20" },
   "main": "index.js",
   "scripts": {
@@ -15,6 +15,7 @@
     "firebase-admin": "^12.4.0",
     "firebase-functions": "^5.1.1",
     "@google/generative-ai": "^0.21.0",
+    "@anthropic-ai/sdk": "^0.32.0",
     "cors": "^2.8.5"
   }
 }

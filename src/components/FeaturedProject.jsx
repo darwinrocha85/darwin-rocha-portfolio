@@ -80,33 +80,43 @@ export default function FeaturedProject() {
               ))}
             </div>
 
-            <div className="views-label">
-              {activeProject === 'navespace' ? 'Tres vistas para explorarlo' : 'Dos piezas para probarlo'}
-            </div>
-
-            <div className="apps-grid">
-              {project.apps.map((app) => (
-                <div className="app-card" key={app.label}>
-                  <div className="label">{app.label}</div>
-                  <p>{app.description}</p>
-                  {activeProject === 'navespace' && (
-                    <div className="links">
-                      <a
-                        className="link-pill primary"
-                        href={app.url}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Ver demo ↗
-                      </a>
-                      <a className="link-pill" href={app.repo} target="_blank" rel="noreferrer">
-                        Código
-                      </a>
+            {activeProject === 'navespace' ? (
+              <>
+                <div className="views-label">Tres vistas para explorarlo</div>
+                <div className="apps-grid">
+                  {project.apps.map((app) => (
+                    <div className="app-card" key={app.label}>
+                      <div className="label">{app.label}</div>
+                      <p>{app.description}</p>
+                      <div className="links">
+                        <a
+                          className="link-pill primary"
+                          href={app.url}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Ver demo ↗
+                        </a>
+                        <a className="link-pill" href={app.repo} target="_blank" rel="noreferrer">
+                          Código
+                        </a>
+                      </div>
                     </div>
-                  )}
+                  ))}
                 </div>
-              ))}
-            </div>
+              </>
+            ) : (
+              <div className="agent-invite">
+                <p>¿Querés probarlo ya? Abajo a la derecha está el chat real de este portfolio — preguntale lo que quieras.</p>
+                <button
+                  type="button"
+                  className="link-pill primary"
+                  onClick={() => window.dispatchEvent(new CustomEvent('open-portfolio-agent'))}
+                >
+                  Abrir el chat ↗
+                </button>
+              </div>
+            )}
 
             <div className="featured-repo">
               {activeProject === 'navespace' ? 'Backend:' : 'Function:'}{' '}

@@ -119,7 +119,8 @@ export const skillGroups = [
   { label: 'Calidad & Testing', items: ['JUnit', 'Mockito', 'Spring Test', 'SonarQube'] },
   {
     label: 'IA aplicada',
-    items: ['PyTorch', 'scikit-learn', 'OpenCV', 'Pandas', 'NumPy', 'Matplotlib', 'Claude', 'OpenCode'],
+    items: ['PyTorch', 'scikit-learn', 'OpenCV', 'Pandas', 'NumPy', 'Matplotlib', 'ClaudeCode', 'OpenCode',
+    'MCP (Model Context Protocol)', 'Function-calling', 'Gemini API', 'Anthropic API (Claude)'],
   },
 ]
 
@@ -131,7 +132,7 @@ export const featuredProject = {
     {
       label: 'Panel Admin',
       description:
-        'Gestión de flota: alta de naves, configurar museo/teatro y dashboard de ingresos y ocupación. Si una nave está en taller no se puede editar; su estado se consulta haciendo click en “En taller”.',
+        'Gestión de flota: alta de naves, configurar museo/teatro y dashboard de ingresos y ocupación. Si una nave está en taller no se puede editar; su estado se consulta haciendo click en “En taller”. Incluye un asistente de chat con IA que puede consultar y operar la flota, pidiendo confirmación antes de cualquier acción con impacto real.',
       url: 'https://spacecraft-system.web.app',
       repo: 'https://github.com/darwinrocha85/spacecraftSystem-frontend',
     },
@@ -153,12 +154,14 @@ export const featuredProject = {
     'Empezó como un MVP para dar de alta naves y fue creciendo por partes hasta un sistema completo: venta de entradas con cobro real, un taller aparte que lleva presupuestos y aprobaciones, y un panel con métricas del negocio. Todo desplegado y usable hoy.',
     'Cada parte tiene su rol: la landing muestra qué hay para visitar, la tienda resuelve la compra, el panel de administración gestiona la flota sin tocar lo que está en reparación, y la app de taller lleva el trabajo diario y el historial de cada visita.',
     'Refleja cómo trabajo un producto: acordar reglas claras con el usuario, separar responsabilidades donde hace falta y verificar cada entrega antes de darla por lista.',
+    'El panel de administración y el taller tienen, cada uno, su propio asistente de chat con IA: no da respuestas genéricas, lee los datos reales y hasta actúa (crear una nave, armar un horario, enviar a reparar) — siempre pidiendo confirmación antes de algo con impacto real.',
   ],
   techDescription: [
     'Backend en Java 17 + Spring Boot (Maven), sin capa DTO, con Lombok y `@ElementCollection` para asientos de teatro; ahora con SQLite en archivo y seeder idempotente para que el estado no se pierda al reiniciar.',
     '3 frontends en React + Vite sobre ese backend: landing que agrega lo reservable (museos y funciones con fecha) con deep-link a la tienda, tienda que resuelve la compra, y panel admin con dashboard de solo lectura (ingresos, ocupación del día, estado de flota, top naves) sin tocar esquema. Tabla sin scroll horizontal y columna Estado en lugar de Taller.',
     'Cobro real vía BankIn desde el backend — nada se guarda hasta que BankIn confirma con 201 y cancelar intenta revertir el cobro — con email de compra y cancelación. El taller expone presupuestos con histórico: lo enviado y, si hubo rechazo, lo anterior queda visible.',
     'Taller extraído a servicio propio en Python 3.14 + FastAPI con SQLAlchemy 2.0 y SQLite en archivo, con su propia app en React + Vite de estilo sobrio de hangar. El panel admin solo envía a taller y ve estado/historial; el flujo fino (recibir, avanzar, presupuesto) vive en la app de taller.',
+    'Los dos asistentes comparten un mismo motor de function-calling (36 tools en total, lectura y escritura) que corre sobre Gemini - gemini-3.6-flash - o Claude - claude-haiku-4-5 - según la variable `AI_PROVIDER` — un solo JSON Schema por tool sirve para los dos proveedores. Ese mismo catálogo se expone además por un servidor MCP aparte (protocolo `@modelcontextprotocol/sdk`, sin pasar por el SDK de ningún modelo) para que cualquier cliente MCP externo, no solo el widget de chat, pueda consultarlo y operarlo.',
   ],
 }
 
@@ -174,7 +177,7 @@ export const featuredAgent = {
     },
     {
       label: 'Function',
-      description: 'Cloud Function en el mismo proyecto Firebase, con contexto de content.js y CV y Gemini 3.6 Flash.',
+      description: 'Cloud Function en el mismo proyecto Firebase, con contexto generado desde content.js y el mismo motor Gemini/Claude que usan los asistentes de naveSpace.',
       url: '/api/ask',
       repo: 'https://github.com/darwinrocha85/darwin-rocha-portfolio',
     },
@@ -186,9 +189,9 @@ export const featuredAgent = {
     'Muestra cómo integro IA sin humo: reglas claras, grounding y widget simple que no expone claves.',
   ],
   techDescription: [
-    'Hosting + Functions en el mismo proyecto Firebase (darwin-rocha-portfolio). El widget hace POST /api/ask y la Function inyecta content.js+CV como system prompt a Gemini 3.6 Flash.',
-    'Sin vector DB para el MVP: contexto en prompt, max 800 tokens, temperature 0.3, fallback mock si no hay GEMINI_API_KEY. Validado en local con emuladores.',
-    'Mismo patrón que el resto del ecosistema: servicio pequeño con responsabilidad clara, desplegado junto al frontend que lo usa.',
+    'Hosting + Functions en el mismo proyecto Firebase (darwin-rocha-portfolio). El widget hace POST /api/ask; la Function arma el system prompt con un contexto generado desde content.js en cada build — no es un import en caliente ni un texto mantenido a mano aparte.',
+    'El panel admin y el taller de naveSpace tienen cada uno su propio asistente con una arquitectura distinta a la de este: un loop real de function-calling sobre Gemini o Claude, con ese mismo catálogo de tools expuesto además por un servidor MCP aparte para cualquier cliente externo — el detalle está en el proyecto naveSpace.',
+    'Este asistente, en cambio, es deliberadamente más simple: corre sobre Gemini — gemini-3.6-flash — o Claude — claude-haiku-4-5 — según la variable AI_PROVIDER, pero solo arma el mensaje y devuelve texto — sin loop de tool-calling ni servidor MCP, porque no opera sobre datos en vivo, solo sobre lo que ya está escrito en el portfolio. Memoria de los últimos turnos, temperature 0.55, y cae a una respuesta mock si falta la API key del proveedor activo.',
   ],
 }
 
@@ -221,11 +224,13 @@ export const secondaryProjects = [
       'El taller es el hangar aparte donde entra una nave con daños. Mientras está dentro, el panel de administración no la puede editar; solo puede ver su estado entrando por “En taller”.',
       'Cada visita guarda qué se rompió, en qué estado está y qué presupuestos se enviaron.',
       'Está separado a propósito del resto del sistema para que el flujo de reparación no mezcle responsabilidades con la venta de entradas.',
+      'Tiene su propio asistente de chat con IA, con el alcance del personal del taller: confirmar recepciones, avanzar el estado, armar presupuestos y consultar el stock de repuestos — aprobar o rechazar un presupuesto sigue siendo del panel de administración.',
     ],
     techDescription: [
       'Backend propio en Python 3.14 con FastAPI y arquitectura hexagonal, con SQLite en archivo vía SQLAlchemy 2.0. La máquina de estados y la lógica de presupuestos viven solo en el dominio.',
       'Frontend aparte en React + Vite con estilo sobrio de hangar. La tabla evita scroll horizontal y el detalle se abre haciendo click en “En taller”, mismo patrón que BankIn.',
       'Se conecta con naveSpace solo para crear la visita y avisar cuando vuelve a estar operativa. Fuera de eso, funciona por su cuenta.',
+      'Su asistente de chat comparte el mismo motor de function-calling que el del panel admin (Gemini - gemini-3.6-flash - o Claude `claude-haiku-4-5-20251001`, según `AI_PROVIDER`) pero con su propio catálogo de 14 tools (6 reusadas del admin + 8 propias), acotado a lo que le compete al taller — también servido por el mismo servidor MCP del panel admin.',
     ],
     tech: ['Python', 'FastAPI', 'SQLite', 'SQLAlchemy', 'React', 'Vite'],
     demoUrl: 'https://spacecraft-taller-frontend.web.app',
