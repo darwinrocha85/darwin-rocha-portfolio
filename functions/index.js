@@ -2,50 +2,58 @@ const { onRequest } = require("firebase-functions/v2/https");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const cors = require("cors")({ origin: true });
 
-const portfolioContext = `
-PERFIL:
-Darwin Rocha — Software Engineer — Backend Java & Python | IA Aplicada — Barcelona, España — darwinrocha85@gmail.com — github darwinrocha85 — linkedin darwinrocha
-Resumen: Ingeniero en Computación 10+ años backend Python/Java, APIs REST, microservicios. Integró IA (Claude, OpenCode) en flujo diario.
-Highlights: 10+ años backend, 4 apps naveSpace prod, 7 empresas 3 países, ML real PyTorch
-Secciones: #sobre-mi, #experiencia, #skills, #proyecto-destacado, #proyectos-backend, #otros-proyectos, #contacto
+// Generado desde src/data/content.js — es la única fuente de verdad del contenido del
+// portfolio (misma data que renderiza la UI). NO editar portfolioContext.generated.js a
+// mano: correr `npm run generate:agent-context` en la raíz del repo tras cualquier cambio
+// a content.js (firebase.json ya lo corre solo como predeploy de "hosting" y "functions").
+const portfolioContext = require("./portfolioContext.generated.js");
 
-EXPERIENCIA (año solo):
-- Clorian Ticketing 2026 Barcelona — Java Backend — Java Spring Boot JSP MySQL Jenkins AWS + IA
-- Universidad Simón Bolívar 2024-2025 Prácticas Máster IA (Co-op) Caracas remoto — Python PyTorch etc — modelos multimodales, pipelines IA
-- Carver Advanced 2025 Barcelona — Software Developer — Java MySQL RabbitMQ SOAP/REST JUnit Mockito SonarQube
-- Autolab SAS 2021-2024 Remoto Colombia — Full Stack — Python Kotlin Flask EmberJS Postgres Docker K8s AWS — ERP/CRM talleres, apps Android
-- GlobalHitss 2019-2021 Bogotá — Java EE PrimeFaces JSF JPA Oracle WebLogic — agendamiento técnicos, APIs REST
-- PetCaribe 2018 Mariara — Coordinador Tecnología — Gestión proyectos infra
-- Hecticus 2016-2017 Caracas — Developer App & Web — PHP Laravel Java Spring Boot Angular MySQL
+const SYSTEM_PROMPT = `Eres el asistente del portfolio de Darwin Rocha. Respondes SOLO sobre lo que hay en PORTFOLIO_CONTEXT: su perfil, experiencia, educación, skills, y los proyectos mostrados en este portfolio (naveSpace, este mismo asistente IA, BankIn, Taller de Reparación, ContentHub, y las landings de Sonora).
 
-EDUCACION: Lic Cs Computación 2013 Carabobo, Especialista Desarrollo Software 2022, Scrum Master 2024
-SKILLS: Backend Java Spring Boot Python Flask PHP Laravel Kotlin — Frontend React Vite EmberJS JSF Angular — Datos MySQL Postgres SQLite Oracle H2 SQL Server — Infra Docker K8s AWS Jenkins Linux WebLogic — Testing JUnit Mockito — IA PyTorch scikit-learn OpenCV Pandas Claude OpenCode
+Si preguntan algo que no está en PORTFOLIO_CONTEXT (salario, disponibilidad, datos personales no listados, o cualquier tema sin relación con este portfolio — cultura general, matemáticas, noticias, o cualquier otro tema), no respondas ese tema. Responde exactamente: "No tengo esa información en el portfolio. Para más detalle mira la sección [elige la más relacionada: #sobre-mi, #experiencia, #skills, #proyecto-destacado, #proyectos-backend, #otros-proyectos, #contacto]".
 
-PROYECTO DESTACADO naveSpace:
-Tagline: Sistema gestión flota naves que opera como museo o teatro — venta entradas real, taller independiente, panel admin con dashboard
-Apps: Panel Admin (gestión flota alta/config museo-teatro, dashboard, si nave en taller no editable, estado click En taller) https://spacecraft-system.web.app — Tienda Entradas https://spacecraft-tickets.web.app cobro BankIn — Landing Marketing https://spacecraft-events-landing.web.app
-Backend: https://github.com/darwinrocha85/spacecraftSystem Java 17 Spring Boot SQLite file seeder idempotente, sin DTO, Lombok ElementCollection. 3 frontends React Vite + 1 app taller separada. Tabla sin scroll, Estado. Cobro BankIn backend 201, cancel revierte, email. Taller servicio Python FastAPI SQLAlchemy SQLite hangar sobrio.
-
-MAS PROYECTOS:
-- BankIn — sistema de pago del ecosistema (no demo suelta, cobra entradas naveSpace). HR: sistema pago ecosistema, panel gerente trazado, hoy naveSpace mañana hoteldarwin/tienda ropa sin tocar BankIn. Tech: Python 3.14 FastAPI hexagonal ex Java Spring Boot, SQLite SQLAlchemy Pydantic, POST /transactions/purchase con note + API key, naveSpace llama y gerente audita. Demo https://bankin-frontend.web.app repos Bankin/Bankin-frontend — Próximamente hoteldarwin, tienda ropa
-- Taller de Reparación — Hangar aislado donde se reparan naves, caso aislado. HR: hangar aparte, mientras dentro panel no edita solo ve estado por En taller, cada visita guarda daños/estado/presupuestos, si rechazado anterior visible. Tech: Backend Python FastAPI hexagonal SQLite SQLAlchemy, estados, presupuestos, frontend React Vite sobrio, tabla sin scroll, Estado click En taller, mismo patrón BankIn. Demo https://spacecraft-taller-frontend.web.app repos spacecraft-taller-frontend/backend
-- ContentHub — Marketplace independiente demo pagos reales. HR: publicar foto/video/pista con precio en feed, pedir lo que falta y otros ofrecen piezas, compra única cierra disponibilidad, con moderación. Tech: Python FastAPI hexagonal, SQLite, Stripe test server-side nunca confiar navegador, moderación reglas/OpenAI, React Vite. Demo https://contenthub-frontend.web.app
-
-OTROS: Barrio Sonora (Villaverde drill trap), Casa Sonora (Malasaña atelier pop), Sonora Labs (Gran Vía premium) — landings conversión.
-
-CV: /cv/Darwin_Rocha_CV.pdf
-`;
-
-const SYSTEM_PROMPT = `Eres el asistente del portfolio de Darwin Rocha. Respondes solo con lo que hay en PORTFOLIO_CONTEXT (estudios, experiencia, demos, skills). Si no está ahí, di exactamente: "No tengo esa información en el portfolio. Para más detalle mira la sección [elige: #sobre-mi, #experiencia, #skills, #proyecto-destacado, #proyectos-backend, #otros-proyectos, #contacto]".
-No inventes. No hagas copy-paste del contexto: sintetiza con tus palabras, tono cercano y sencillo como el portfolio, sin sonar a IA ni a texto pegado. En español por defecto (si preguntan en inglés, responde en inglés). 2-3 frases cortas y deriva a la sección.
+No inventes, y no cites el PORTFOLIO_CONTEXT casi textual — es la fuente de datos, no el guion de tu respuesta. Contalo con tus propias palabras, como si le explicaras el trabajo de Darwin a alguien interesado: tono cercano y natural, variando cómo arrancás cada respuesta (no repitas siempre la misma estructura ni las mismas frases del contexto). Evitá sonar a folleto o a IA genérica. Si la pregunta hace referencia a algo dicho antes en la conversación ("y eso", "lo mismo", "por qué"), usá el historial para entender a qué se refiere. En español por defecto (si preguntan en inglés, responde en inglés). Entre 2 y 4 frases, y deriva a la sección cuando aplique.
 
 Ejemplos:
-- Pregunta: ¿dónde estudió Darwin? -> Respuesta: Estudió Ciencias de la Computación en la Univ. de Carabobo (2013) y luego Especialista en Desarrollo de Software (2022). Para más detalle mira la sección #experience.
-- Pregunta: ¿cuánto pides de salario? -> Respuesta: No tengo esa información en el portfolio. Para más detalle mira la sección #contact.
+- Pregunta: ¿dónde estudió Darwin? -> Respuesta: Estudió Ciencias de la Computación en la Univ. de Carabobo (2013) y después se especializó en Desarrollo de Software (2022). Podés ver más en #experiencia.
+- Pregunta: ¿qué hace naveSpace? -> Respuesta: naveSpace es su proyecto más grande: una flota de naves que funciona como museo o teatro, con venta de entradas real y un taller aparte que lleva presupuestos y reparaciones. Lo fue armando por partes hasta llegar a 4 apps funcionando hoy. Hay más detalle en #proyecto-destacado.
+- Pregunta: ¿cuánto pides de salario? -> Respuesta: No tengo esa información en el portfolio. Para más detalle mira la sección #contacto.
+- Pregunta: ¿cuánto es 5 más 5? -> Respuesta: No tengo esa información en el portfolio. Para más detalle mira la sección #contacto.
 
 PORTFOLIO_CONTEXT:
 ${portfolioContext}
 `;
+
+// Máximo de turnos previos (usuario+asistente) que se reenvían al modelo. Acotado para
+// que una conversación larga no infle el costo por request sin límite — 6 turnos = las
+// últimas 3 idas y vueltas, de sobra para resolver un "¿y eso cuánto cuesta?".
+const MAX_HISTORY_TURNS = 6;
+
+// Esta función NO confía en el historial tal cual lo manda el cliente: es un endpoint
+// público (cors: true, sin auth), así que cualquiera podría mandar un array armado a
+// mano. Se revalida forma, longitud y alternancia estricta user/model acá, server-side,
+// independientemente de lo que ya recorte el widget.
+function sanitizeHistory(historyRaw) {
+  if (!Array.isArray(historyRaw)) return [];
+
+  const cleaned = [];
+  let expectedRole = "user";
+  for (const item of historyRaw) {
+    if (!item || typeof item.text !== "string") continue;
+    const text = item.text.trim().slice(0, 500);
+    if (!text) continue;
+    const role = item.role === "assistant" ? "model" : item.role === "user" ? "user" : null;
+    if (role !== expectedRole) continue; // fuerza que arranque en "user" y alterne estricto
+    cleaned.push({ role, parts: [{ text }] });
+    expectedRole = role === "user" ? "model" : "user";
+  }
+
+  // Si el historial queda esperando una respuesta ("model") que nunca llegó, esa última
+  // pregunta suelta se descarta para no romper la alternancia que exige la API de Gemini.
+  if (expectedRole === "model" && cleaned.length) cleaned.pop();
+
+  return cleaned.slice(-MAX_HISTORY_TURNS * 2);
+}
 
 exports.ask = onRequest(
   {
@@ -74,6 +82,8 @@ exports.ask = onRequest(
         return;
       }
 
+      const history = sanitizeHistory(req.body && req.body.history);
+
       const apiKey = process.env.GEMINI_API_KEY;
       if (!apiKey) {
         // Mock local sin key — útil para probar widget sin gastar
@@ -93,10 +103,10 @@ exports.ask = onRequest(
           systemInstruction: SYSTEM_PROMPT,
         });
         const result = await model.generateContent({
-          contents: [{ role: "user", parts: [{ text: question }] }],
-          generationConfig: { maxOutputTokens: 800, temperature: 0.3 },
+          contents: [...history, { role: "user", parts: [{ text: question }] }],
+          generationConfig: { maxOutputTokens: 800, temperature: 0.55 },
         });
-        const text = result.response.text() || "No tengo esa información en el portfolio. Para más detalle mira la sección #contact";
+        const text = result.response.text() || "No tengo esa información en el portfolio. Para más detalle mira la sección #contacto";
         res.json({ answer: text.trim() });
       } catch (err) {
         console.error("ask error", err);

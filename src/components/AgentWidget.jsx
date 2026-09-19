@@ -6,6 +6,12 @@ const SUGGESTIONS = [
   '¿Cómo cobra BankIn las entradas?',
 ]
 
+// Cuántos mensajes previos (usuario+asistente) se mandan como historial en cada pregunta
+// nueva — acotado para no inflar el tamaño del request sin límite en una charla larga.
+// El backend vuelve a acotar esto igual, así que este número es solo para no mandar de
+// más desde el cliente; no es la única defensa.
+const MAX_HISTORY_MESSAGES = 12
+
 function getApiUrl() {
   if (import.meta.env.DEV) {
     return 'http://localhost:5001/darwin-rocha-portfolio/us-central1/ask'
@@ -32,6 +38,12 @@ export default function AgentWidget() {
   async function send(text) {
     const question = (text ?? input).trim()
     if (!question || loading) return
+
+    // El saludo inicial (índice 0) es solo de la UI, nunca vino del modelo — no se manda
+    // como historial real. El resto de `messages` en este punto es exactamente lo que se
+    // charló antes de esta pregunta (la pregunta nueva todavía no se agregó al estado).
+    const history = messages.slice(1).slice(-MAX_HISTORY_MESSAGES).map((m) => ({ role: m.role, text: m.text }))
+
     setMessages((m) => [...m, { role: 'user', text: question }])
     setInput('')
     setLoading(true)
@@ -39,7 +51,7 @@ export default function AgentWidget() {
       const res = await fetch(getApiUrl(), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question }),
+        body: JSON.stringify({ question, history }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Error')

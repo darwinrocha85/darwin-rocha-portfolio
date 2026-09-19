@@ -4,8 +4,9 @@
   "engines": { "node": "20" },
   "main": "index.js",
   "scripts": {
-    "serve": "firebase emulators:start --only functions",
-    "shell": "firebase functions:shell",
+    "generate:agent-context": "node ../scripts/generate-agent-context.mjs",
+    "serve": "npm run generate:agent-context && firebase emulators:start --only functions",
+    "shell": "npm run generate:agent-context && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
