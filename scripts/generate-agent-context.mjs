@@ -131,6 +131,20 @@ ${otherProjects.map((p) => `- ${p.name} (${p.kind}): ${p.description} — ${p.ur
 
   const output = sections.join('\n\n')
 
+  // Claves estables por sección, en el MISMO orden en que se pusieron arriba (11 secciones).
+  // functions/index.js manda solo las relevantes por pregunta (pickContext) en vez del texto
+  // entero — si algún día cambia la cantidad de secciones, esto falla en build a propósito.
+  const SECTION_KEYS = [
+    'PERFIL', 'DESTACADOS', 'EXPERIENCIA', 'EDUCACION', 'SKILLS',
+    'NAVESPACE', 'ASISTENTE', 'BANKIN', 'SECUNDARIOS', 'OTROS', 'SECCIONES',
+  ]
+  if (SECTION_KEYS.length !== sections.length) {
+    throw new Error(
+      `[generate-agent-context] secciones: esperaba ${SECTION_KEYS.length}, hay ${sections.length}. Actualizar SECTION_KEYS.`
+    )
+  }
+  const byKey = Object.fromEntries(sections.map((s, i) => [SECTION_KEYS[i], s]))
+
   const fileContents = `// AUTO-GENERADO por scripts/generate-agent-context.mjs a partir de src/data/content.js.
 // NO EDITAR A MANO — se sobreescribe en el próximo build/deploy.
 // Para actualizar lo que sabe el agente: editar src/data/content.js y correr
@@ -138,11 +152,11 @@ ${otherProjects.map((p) => `- ${p.name} (${p.kind}): ${p.description} — ${p.ur
 // (firebase.json ya lo corre solo como predeploy de "hosting" y "functions").
 // Generado: ${new Date().toISOString()}
 
-module.exports = ${JSON.stringify(output)}
+module.exports = { ALL: ${JSON.stringify(output)}, sections: ${JSON.stringify(byKey)} }
 `
 
   await writeFile(OUTPUT_PATH, fileContents, 'utf8')
-  console.log(`[generate-agent-context] escrito ${OUTPUT_PATH} (${output.length} caracteres)`)
+  console.log(`[generate-agent-context] escrito ${OUTPUT_PATH} (${output.length} caracteres, ${sections.length} secciones)`)
 }
 
 main().catch((err) => {

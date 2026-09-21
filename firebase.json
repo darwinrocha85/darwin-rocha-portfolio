@@ -19,7 +19,7 @@
     "predeploy": ["node scripts/generate-agent-context.mjs"]
   },
   "emulators": {
-    "functions": { "port": 5001 },
+    "functions": { "port": 5002 },
     "hosting": { "port": 5000 }
   }
 }

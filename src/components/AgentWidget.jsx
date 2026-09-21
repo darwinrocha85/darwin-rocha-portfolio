@@ -14,7 +14,7 @@ const MAX_HISTORY_MESSAGES = 12
 
 function getApiUrl() {
   if (import.meta.env.DEV) {
-    return 'http://localhost:5001/darwin-rocha-portfolio/us-central1/ask'
+    return 'http://localhost:5002/darwin-rocha-portfolio/us-central1/ask'
   }
   return '/api/ask'
 }

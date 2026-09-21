@@ -44,8 +44,14 @@ async function runGemini({ apiKey, model, systemPrompt, history, question, tempe
     generationConfig: { maxOutputTokens, temperature },
   });
 
+  // Nota de costo: el system prompt (instrucciones + PORTFOLIO_CONTEXT entero) es idéntico
+  // en cada request, así que queda cubierto por el caché implícito de la API cuando el
+  // modelo lo soporta. Este SDK (@google/generative-ai) no expone caché explícito.
   const text = (result.response.text() || "").trim();
-  return { answer: text || "No tengo esa información en el portfolio. Para más detalle mira la sección #contacto" };
+  return {
+    answer: text || "No tengo esa información en el portfolio. Para más detalle mira la sección #contacto",
+    usage: result.response.usageMetadata || undefined,
+  };
 }
 
 async function runClaude({ apiKey, model, systemPrompt, history, question, temperature, maxOutputTokens }) {
@@ -58,9 +64,12 @@ async function runClaude({ apiKey, model, systemPrompt, history, question, tempe
     { role: "user", content: question },
   ];
 
+  // Prompt caching: el system prompt (instrucciones + contexto entero, idéntico siempre)
+  // va con breakpoint de caché. Historial y pregunta cambian en cada request y quedan fuera.
+  // El `usage` se devuelve para verificar cache hits en logs (cache_read_input_tokens).
   const response = await anthropic.messages.create({
     model,
-    system: systemPrompt,
+    system: [{ type: "text", text: systemPrompt, cache_control: { type: "ephemeral" } }],
     max_tokens: maxOutputTokens,
     temperature,
     messages,
@@ -72,7 +81,10 @@ async function runClaude({ apiKey, model, systemPrompt, history, question, tempe
     .join("\n")
     .trim();
 
-  return { answer: text || "No tengo esa información en el portfolio. Para más detalle mira la sección #contacto" };
+  return {
+    answer: text || "No tengo esa información en el portfolio. Para más detalle mira la sección #contacto",
+    usage: response.usage || undefined,
+  };
 }
 
 /**
