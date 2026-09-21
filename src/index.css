@@ -155,7 +155,7 @@ button {
 }
 
 .section {
-  padding: 88px 0;
+  padding: 40px 0;
   border-bottom: 1px solid var(--border);
 }
 
@@ -368,7 +368,7 @@ button {
 
 .hero {
   position: relative;
-  padding: 120px 0 96px;
+  padding: 20px 0 40px;
   overflow: hidden;
 }
 
@@ -470,6 +470,45 @@ button {
   font-size: 16px;
 }
 
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 48px;
+  align-items: start;
+  animation: fadeUp 0.7s ease both;
+  animation-delay: 0.24s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-grid {
+    animation: none;
+  }
+}
+
+.hero-grid .ai-note {
+  margin-top: 18px;
+}
+
+.hero-side .hero-actions {
+  margin-top: 24px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hero-side .hero-actions .btn {
+  font-size: 13px;
+  padding: 8px 14px;
+  text-align: center;
+}
+
+.hero-side .hero-meta {
+  margin-top: 20px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+
 .hero-actions {
   margin-top: 36px;
   display: flex;
@@ -495,68 +534,7 @@ button {
   color: var(--accent);
 }
 
-/* Highlights strip */
-.highlights-strip {
-  padding: 0 0 88px;
-  animation: fadeUp 0.7s ease both;
-  animation-delay: 0.48s;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .highlights-strip {
-    animation: none;
-  }
-}
-
-.highlights-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--border);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
-.highlight-tile {
-  background: var(--surface);
-  padding: 24px 18px;
-  text-align: center;
-}
-
-.highlight-value {
-  font-family: var(--display);
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--accent-strong);
-}
-
-.highlight-label {
-  margin-top: 6px;
-  font-size: 12.5px;
-  line-height: 1.4;
-  color: var(--text-muted);
-}
-
-@media (max-width: 720px) {
-  .highlights-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* About */
-.about-grid {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 56px;
-}
-
-.about-text p {
-  color: var(--text-muted);
-  font-size: 16px;
-  margin-bottom: 18px;
-}
-
+/* Formación (vive en el Hero) */
 .ai-note {
   background: var(--accent-soft);
   border-radius: var(--radius-md);
@@ -1336,7 +1314,7 @@ button {
 
 /* Responsive */
 @media (max-width: 860px) {
-  .about-grid,
+  .hero-grid,
   .skills-grid,
   .phases,
   .apps-grid,
@@ -1388,11 +1366,11 @@ button {
 
 @media (max-width: 520px) {
   .section {
-    padding: 64px 0;
+    padding: 32px 0;
   }
 
   .hero {
-    padding: 88px 0 64px;
+    padding: 24px 0 32px;
   }
 
   .featured-top,

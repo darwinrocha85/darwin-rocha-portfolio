@@ -3,7 +3,6 @@ import { profile } from '../data/content'
 import { useTheme } from '../hooks/useTheme'
 
 const NAV_ITEMS = [
-  { href: '#sobre-mi', label: 'Sobre mí' },
   { href: '#experiencia', label: 'Experiencia' },
   { href: '#skills', label: 'Skills' },
   { href: '#proyecto-destacado', label: 'Proyecto destacado' },

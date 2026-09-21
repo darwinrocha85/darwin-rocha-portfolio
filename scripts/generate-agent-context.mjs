@@ -127,7 +127,7 @@ ${renderProjectBody(relatedProject, { includeDemo: true })}`)
 ${otherProjects.map((p) => `- ${p.name} (${p.kind}): ${p.description} — ${p.url}`).join('\n')}`)
 
   sections.push(`SECCIONES DEL SITIO (para derivar cuando la respuesta no está en este contexto)
-#sobre-mi, #experiencia, #skills, #proyecto-destacado, #proyectos-backend, #otros-proyectos, #contacto`)
+#experiencia, #skills, #proyecto-destacado, #proyectos-backend, #otros-proyectos, #contacto`)
 
   const output = sections.join('\n\n')
 

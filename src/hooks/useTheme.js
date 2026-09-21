@@ -4,13 +4,14 @@ function getInitialTheme() {
   if (typeof document !== 'undefined' && document.documentElement.dataset.theme) {
     return document.documentElement.dataset.theme
   }
-  if (typeof window === 'undefined') return 'light'
+  if (typeof window === 'undefined') return 'dark'
   try {
     const stored = window.localStorage.getItem('theme')
+    // Sin elección guardada, dark es el tema por defecto.
     if (stored === 'light' || stored === 'dark') return stored
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    return 'dark'
   } catch {
-    return 'light'
+    return 'dark'
   }
 }
 

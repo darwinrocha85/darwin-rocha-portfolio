@@ -1,7 +1,5 @@
 import Header from './components/Header'
 import Hero from './components/Hero'
-import Highlights from './components/Highlights'
-import About from './components/About'
 import Experience from './components/Experience'
 import Skills from './components/Skills'
 import FeaturedProject from './components/FeaturedProject'
@@ -17,8 +15,6 @@ export default function App() {
       <Header />
       <main>
         <Hero />
-        <Highlights />
-        <About />
         <Experience />
         <Skills />
         <FeaturedProject />

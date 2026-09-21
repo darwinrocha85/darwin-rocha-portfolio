@@ -8,15 +8,11 @@
       (function () {
         try {
           var stored = localStorage.getItem('theme');
-          var theme =
-            stored === 'light' || stored === 'dark'
-              ? stored
-              : window.matchMedia('(prefers-color-scheme: dark)').matches
-                ? 'dark'
-                : 'light';
+          // Sin elección guardada, dark es el tema por defecto.
+          var theme = stored === 'light' || stored === 'dark' ? stored : 'dark';
           document.documentElement.dataset.theme = theme;
         } catch (e) {
-          document.documentElement.dataset.theme = 'light';
+          document.documentElement.dataset.theme = 'dark';
         }
       })();
     </script>
