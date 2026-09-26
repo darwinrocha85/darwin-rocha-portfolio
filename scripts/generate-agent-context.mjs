@@ -76,6 +76,7 @@ async function main() {
     skillGroups,
     featuredProject,
     featuredAgent,
+    merlinCase,
     relatedProject,
     secondaryProjects,
     otherProjects,
@@ -114,6 +115,9 @@ ${renderProjectBody(featuredProject, { includeApps: true })}`)
   sections.push(`PROYECTO DESTACADO 2 — el propio asistente IA (este mismo widget)
 ${renderProjectBody(featuredAgent, { includeApps: true })}`)
 
+  sections.push(`IA SOLUTIONS — caso dominio desconocido (decompilación)
+${renderProjectBody(merlinCase, { includeDemo: false })}`)
+
   sections.push(`PROYECTO RELACIONADO — BankIn
 ${renderProjectBody(relatedProject, { includeDemo: true })}`)
 
@@ -127,16 +131,16 @@ ${renderProjectBody(relatedProject, { includeDemo: true })}`)
 ${otherProjects.map((p) => `- ${p.name} (${p.kind}): ${p.description} — ${p.url}`).join('\n')}`)
 
   sections.push(`SECCIONES DEL SITIO (para derivar cuando la respuesta no está en este contexto)
-#experiencia, #skills, #proyecto-destacado, #proyectos-backend, #otros-proyectos, #contacto`)
+#experiencia, #skills, #proyecto-destacado, #ia-solutions, #otros-proyectos, #contacto`)
 
   const output = sections.join('\n\n')
 
-  // Claves estables por sección, en el MISMO orden en que se pusieron arriba (11 secciones).
+  // Claves estables por sección, en el MISMO orden en que se pusieron arriba (12 secciones).
   // functions/index.js manda solo las relevantes por pregunta (pickContext) en vez del texto
   // entero — si algún día cambia la cantidad de secciones, esto falla en build a propósito.
   const SECTION_KEYS = [
     'PERFIL', 'DESTACADOS', 'EXPERIENCIA', 'EDUCACION', 'SKILLS',
-    'NAVESPACE', 'ASISTENTE', 'BANKIN', 'SECUNDARIOS', 'OTROS', 'SECCIONES',
+    'NAVESPACE', 'ASISTENTE', 'MERLIN', 'BANKIN', 'SECUNDARIOS', 'OTROS', 'SECCIONES',
   ]
   if (SECTION_KEYS.length !== sections.length) {
     throw new Error(

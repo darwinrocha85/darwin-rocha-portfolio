@@ -1,5 +1,26 @@
-import { otherProjects } from '../data/content'
+import { otherProjects, secondaryProjects } from '../data/content'
 import { useReveal } from '../hooks/useReveal'
+
+const contenthub = secondaryProjects.find((p) => p.id === 'contenthub')
+
+const rows = [
+  ...(contenthub
+    ? [
+        {
+          name: contenthub.name,
+          kind: 'Marketplace independiente',
+          description: 'Marketplace pequeño donde cada compra es única y queda trazada.',
+          url: contenthub.demoUrl,
+        },
+      ]
+    : []),
+  ...otherProjects.map((p) => ({
+    name: p.name,
+    kind: p.kind,
+    description: p.description,
+    url: p.url,
+  })),
+]
 
 export default function OtherProjects() {
   const { ref, revealed } = useReveal()
@@ -7,39 +28,23 @@ export default function OtherProjects() {
     <section ref={ref} className={`section reveal${revealed ? ' is-visible' : ''}`} id="otros-proyectos">
       <div className="container">
         <div className="section-head">
-          <span className="eyebrow">Otros proyectos</span>
-          <h2>Landings de conversión</h2>
+          <span className="eyebrow">Otros trabajos</span>
+          <h2>ContentHub y landings</h2>
           <p>
-            Prototipos de sitio para clientes de la industria musical: copywriting orientado a
-            venta, planes de precio y una identidad visual distinta para cada marca.
+            Fuera del ecosistema naveSpace: un marketplace independiente y prototipos de landings
+            para clientes. Lista compacta, sin demos largas.
           </p>
         </div>
 
-        <div className="projects-grid">
-          {otherProjects.map((project) => (
-            <a
-              className="project-card"
-              key={project.name}
-              href={project.url}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <div
-                className="project-card-swatch"
-                style={{ background: project.bg, color: project.accent }}
-              >
-                <span className="style-label" style={{ color: project.accent }}>
-                  {project.style}
-                </span>
+        <div className="other-list">
+          {rows.map((row) => (
+            <a className="other-row" key={row.name} href={row.url} target="_blank" rel="noreferrer">
+              <div>
+                <div className="project-card-kind">{row.kind}</div>
+                <strong>{row.name}</strong>
+                <span className="other-row-desc"> — {row.description}</span>
               </div>
-              <div className="project-card-body">
-                <div className="project-card-kind">{project.kind}</div>
-                <h3>{project.name}</h3>
-                <p>{project.description}</p>
-                <span className="link-pill" style={{ alignSelf: 'flex-start', color: 'var(--text)', borderColor: 'var(--border-strong)' }}>
-                  Ver sitio ↗
-                </span>
-              </div>
+              <span className="link-pill">Ver ↗</span>
             </a>
           ))}
         </div>

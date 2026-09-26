@@ -19,9 +19,9 @@ const portfolioFull = generated && generated.ALL ? generated.ALL : generated;
 // loop de tool-calling de esos dos: este asistente responde solo con lo que ya está escrito
 // en el portfolio, nunca datos operativos en vivo — alcance confirmado con el usuario, ver
 // claude/fase4-estado.md.
-const SYSTEM_HEAD = `Eres el asistente del portfolio de Darwin Rocha. Respondes SOLO sobre lo que hay en PORTFOLIO_CONTEXT: su perfil, experiencia, educación, skills, y los proyectos mostrados en este portfolio (naveSpace, este mismo asistente IA, BankIn, Taller de Reparación, ContentHub, y las landings de Sonora).
+const SYSTEM_HEAD = `Eres el asistente del portfolio de Darwin Rocha. Respondes SOLO sobre lo que hay en PORTFOLIO_CONTEXT: su perfil, experiencia, educación, skills, y los proyectos mostrados en este portfolio (naveSpace, este mismo asistente IA, el caso de decompilación con IA, BankIn, Taller de Reparación, ContentHub, y las landings de Sonora).
 
-Si preguntan algo que no está en PORTFOLIO_CONTEXT (salario, disponibilidad, datos personales no listados, o cualquier tema sin relación con este portfolio — cultura general, matemáticas, noticias, o cualquier otro tema), no respondas ese tema. Responde exactamente: "No tengo esa información en el portfolio. Para más detalle mira la sección [elige la más relacionada: #experiencia, #skills, #proyecto-destacado, #proyectos-backend, #otros-proyectos, #contacto]".
+Si preguntan algo que no está en PORTFOLIO_CONTEXT (salario, disponibilidad, datos personales no listados, o cualquier tema sin relación con este portfolio — cultura general, matemáticas, noticias, o cualquier otro tema), no respondas ese tema. Responde exactamente: "No tengo esa información en el portfolio. Para más detalle mira la sección [elige la más relacionada: #experiencia, #skills, #proyecto-destacado, #ia-solutions, #otros-proyectos, #contacto]".
 
 No inventes, y no cites el PORTFOLIO_CONTEXT casi textual — es la fuente de datos, no el guion de tu respuesta. Contalo con tus propias palabras, como si le explicaras el trabajo de Darwin a alguien interesado: tono cercano y natural, variando cómo arrancás cada respuesta (no repitas siempre la misma estructura ni las mismas frases del contexto). Evitá sonar a folleto o a IA genérica. Si la pregunta hace referencia a algo dicho antes en la conversación ("y eso", "lo mismo", "por qué"), usá el historial para entender a qué se refiere. En español por defecto (si preguntan en inglés, responde en inglés). Entre 2 y 4 frases, y deriva a la sección cuando aplique.
 
@@ -42,12 +42,13 @@ const SECTION_RULES = [
   { key: "SKILLS", words: ["skill", "stack", "tecnol", "herramienta", "lenguaje", "sabe", "tech"] },
   { key: "NAVESPACE", words: ["navespace", "nave", "museo", "teatro", "entrada", "flota", "ticket"] },
   { key: "ASISTENTE", words: ["asistente", "agente", "inteligencia", "chat", "widget", "modelo", "agent"] },
+  { key: "MERLIN", words: ["merlin", "decompil", "decomp", "homeworld", "matching", "byte", "dominio desconocido", "legacy", "revers"] },
   { key: "BANKIN", words: ["bankin", "banco", "pago", "tarjeta", "cobro"] },
   { key: "SECUNDARIOS", words: ["taller", "reparaci", "contenthub", "contenido", "marketplace", "presupuesto"] },
   { key: "OTROS", words: ["landing", "freelance", "sonora", "otros proyectos", "other project"] },
 ];
 
-const PROJECT_SECTIONS = ["NAVESPACE", "ASISTENTE", "BANKIN", "SECUNDARIOS"];
+const PROJECT_SECTIONS = ["NAVESPACE", "ASISTENTE", "MERLIN", "BANKIN", "SECUNDARIOS"];
 
 function pickContext(question) {
   if (!portfolioSections) return portfolioFull;

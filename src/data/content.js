@@ -161,38 +161,61 @@ export const featuredProject = {
     '3 frontends en React + Vite sobre ese backend: landing que agrega lo reservable (museos y funciones con fecha) con deep-link a la tienda, tienda que resuelve la compra, y panel admin con dashboard de solo lectura (ingresos, ocupación del día, estado de flota, top naves) sin tocar esquema. Tabla sin scroll horizontal y columna Estado en lugar de Taller.',
     'Cobro real vía BankIn desde el backend — nada se guarda hasta que BankIn confirma con 201 y cancelar intenta revertir el cobro — con email de compra y cancelación. El taller expone presupuestos con histórico: lo enviado y, si hubo rechazo, lo anterior queda visible.',
     'Taller extraído a servicio propio en Python 3.14 + FastAPI con SQLAlchemy 2.0 y SQLite en archivo, con su propia app en React + Vite de estilo sobrio de hangar. El panel admin solo envía a taller y ve estado/historial; el flujo fino (recibir, avanzar, presupuesto) vive en la app de taller.',
-    'Los dos asistentes comparten un mismo motor de function-calling (36 tools en total, lectura y escritura) que corre sobre Gemini - gemini-3.6-flash - o Claude - claude-haiku-4-5 - según la variable `AI_PROVIDER` — un solo JSON Schema por tool sirve para los dos proveedores. Ese mismo catálogo se expone además por un servidor MCP aparte (protocolo `@modelcontextprotocol/sdk`, sin pasar por el SDK de ningún modelo) para que cualquier cliente MCP externo, no solo el widget de chat, pueda consultarlo y operarlo.',
+    'El panel admin corre su propio motor de function-calling (lectura y escritura sobre la flota) sobre Gemini - gemini-3.6-flash - o Claude - claude-haiku-4-5 - según la variable `AI_PROVIDER` — un solo JSON Schema por tool sirve para los dos proveedores. Ese mismo catálogo se expone además por un servidor MCP aparte (protocolo `@modelcontextprotocol/sdk`, sin pasar por el SDK de ningún modelo) para que cualquier cliente MCP externo, no solo el widget de chat, pueda consultarlo y operarlo. El taller vive en su propio proyecto de Cloud Functions, con su propio motor y catálogo de tools: no comparte deploy ni servidor MCP con el panel admin, a propósito, para que un cambio grande en uno no pueda afectar al otro.',
   ],
 }
 
 export const featuredAgent = {
-  name: 'Asistente IA del Portfolio',
-  tagline: 'Widget embebido que responde solo con lo que hay en el portfolio y deriva a la sección correcta.',
+  name: 'Asistentes IA — tres casos, un mismo oficio',
+  tagline: 'Tres asistentes con el mismo motor y distinto alcance: el admin opera la flota en vivo, el del taller lleva el ciclo de reparación, y el de este portfolio responde solo con lo publicado.',
   apps: [
     {
-      label: 'Widget',
-      description: 'Burbuja abajo a la derecha con historial corto y sugerencias. Llama a /api/ask del mismo Hosting.',
+      label: 'Caso 1 — Admin',
+      description: 'Dueño de la flota: consulta ingresos, ocupación y entradas en vivo, y también actúa (crear naves, enviar a taller) pidiendo confirmación antes de cualquier impacto real.',
+      url: 'https://spacecraft-system.web.app',
+      repo: 'https://github.com/darwinrocha85/spacecraftSystem-frontend',
+    },
+    {
+      label: 'Caso 2 — Taller',
+      description: 'Staff del hangar: recepciones, avances de estado, presupuestos con stock y borradores desde texto libre. Nada destructivo, así que ejecuta directo sin fricción.',
+      url: 'https://spacecraft-taller-frontend.web.app',
+      repo: 'https://github.com/darwinrocha85/spacecraft-taller-frontend',
+    },
+    {
+      label: 'Caso 3 — Portfolio (este widget)',
+      description: 'Burbuja abajo a la derecha con historial corto y sugerencias. Sin datos en vivo: si no está en el portfolio, dice que no lo tiene y deriva a la sección.',
       url: '/#contact',
       repo: 'https://github.com/darwinrocha85/darwin-rocha-portfolio',
     },
-    {
-      label: 'Function',
-      description: 'Cloud Function en el mismo proyecto Firebase, con contexto generado desde content.js y el mismo motor Gemini/Claude que usan los asistentes de naveSpace.',
-      url: '/api/ask',
-      repo: 'https://github.com/darwinrocha85/darwin-rocha-portfolio',
-    },
   ],
-  backendRepo: 'https://github.com/darwinrocha85/darwin-rocha-portfolio/tree/main/functions',
+  backendRepo: 'https://github.com/darwinrocha85/spacecraftSystem-frontend',
   hrDescription: [
-    'Añade un atajo real al portfolio: en vez de navegar 4 proyectos, el visitante pregunta “¿qué hace el taller si rechazan un presupuesto?” y obtiene respuesta trazada.',
-    'Solo responde con lo que hay en estudios, experiencia y demos. Si no está, dice que no lo tiene y deriva a la sección donde mirar.',
-    'Muestra cómo integro IA sin humo: reglas claras, grounding y widget simple que no expone claves.',
+    'No es un chat de demo: son tres asistentes trabajando sobre casos reales con distinto nivel de permiso. El del admin consulta y opera la flota en vivo, el del taller lleva el día a día del hangar, y el de este portfolio responde solo con lo que está publicado.',
+    'La regla es la misma en los tres: nunca inventar. Los dos primeros leen el dato real antes de responder y piden confirmación antes de cualquier acción con impacto; el tercero prefiere decir “no lo tengo” y mandar a la sección correcta.',
+    'Detrás hay un solo proyecto de IA aparte que expone cada herramienta una sola vez —cada asistente ve únicamente su alcance: el taller no puede tocar cobros y aprobar un presupuesto solo se hace desde el panel, nunca desde un chat.',
   ],
   techDescription: [
-    'Hosting + Functions en el mismo proyecto Firebase (darwin-rocha-portfolio). El widget hace POST /api/ask; la Function arma el system prompt con un contexto generado desde content.js en cada build — no es un import en caliente ni un texto mantenido a mano aparte.',
-    'El panel admin y el taller de naveSpace tienen cada uno su propio asistente con una arquitectura distinta a la de este: un loop real de function-calling sobre Gemini o Claude, con ese mismo catálogo de tools expuesto además por un servidor MCP aparte para cualquier cliente externo — el detalle está en el proyecto naveSpace.',
-    'Este asistente, en cambio, es deliberadamente más simple: corre sobre Gemini — gemini-3.6-flash — o Claude — claude-haiku-4-5 — según la variable AI_PROVIDER, pero solo arma el mensaje y devuelve texto — sin loop de tool-calling ni servidor MCP, porque no opera sobre datos en vivo, solo sobre lo que ya está escrito en el portfolio. Memoria de los últimos turnos, temperature 0.55, y cae a una respuesta mock si falta la API key del proveedor activo.',
+    'Mismo motor de function-calling sobre Gemini (gemini-3.6-flash) o Claude (claude-haiku-4-5) según `AI_PROVIDER`, con catálogo único de tools: las de lectura del taller se reusan por referencia desde el catálogo admin (mismo backend/endpoint, cero duplicación). El caso del taller sumó `draft_budget_from_damage_description` (matching exacto/fuzzy de texto libre a daños y repuestos, con lo no resuelto al criterio del modelo y confirmación previa a crear).',
+    'Arquitectura: proyecto `spacecraft-mcp` aparte con el servidor MCP stateless (StreamableHTTP sin sesión, para clientes externos como Claude Desktop) más `askAdmin` y `askTaller` en el mismo proceso —los asistentes consumen las tools en directo, sin doble hop HTTP—. Los frontends son clientes delgados: sus widgets pegan a la URL directa de cada Function (`/askAdmin`, `/askTaller`), en local al emulador `:5001` del proyecto MCP.',
+    'Seguridad por alcance, no por obscuridad: la confirmación previa a destructivas vive en el SYSTEM_PROMPT del admin (leer impacto + ejecutar nunca en el mismo turno); el taller no la necesita (nada destructivo ni fuera de la reparación); aprobar presupuestos —cobra tarjeta real contra BankIn— está fuera de todos los catálogos. Este portfolio, sin datos vivos, ni siquiera consume el MCP: contexto estático generado desde content.js en cada build, temperature 0.55, y mock si falta la API key.',
   ],
+}
+
+export const merlinCase = {
+  id: 'merlin-decomp',
+  name: 'Reconversión — legacy desconocido con IA',
+  tagline: 'Un videojuego clásico (Homeworld 2) como banco de pruebas: reconstruir su C para que compile a bytes idénticos al original, sin conocer el dominio y con IA como copiloto.',
+  hrDescription: [
+    'Quise probarme fuera de mi dominio: elegí un producto legacy real y abierto —el videojuego Homeworld 2— donde no conocía ni el código ni las reglas del negocio, y me puse a reconstruirlo con IA como copiloto.',
+    'El resultado se mide solo: 5 funciones de lógica real reconstruidas al 100 % byte a byte —el compilador original produce exactamente los mismos bytes—, más 2 piezas grandes llevadas al 66–81 % con su límite técnico explicado.',
+    'Lo que me llevo y ofrezco: entrar rápido en código ajeno sin documentación, distinguir qué es reproducible de qué tiene techo, y dejar tooling propio para que el siguiente avance más rápido.',
+  ],
+  techDescription: [
+    'Matching decompilation sobre Homeworld2Classic (MSVC): el C que escribo debe compilar a bytes idénticos al original —mismas instrucciones, registros y orden—. Medido con objdiff-cli: una función pequeña al 100 % (24 B), 4 de lógica real al 100 % (comparador de sonido de 441 B, contenedor de efectos, punto de envolvente y tabla de excepciones Windows de 387 B) y 2 piezas grandes al 66.75 % (test SAT de 15 ejes, 2718 B) y 81.28 % (despachador de 43 eventos, 6100 B).',
+    'El aprendizaje duro: corregir una sola declaración guiándome por el diff exacto empeoró 66.75 % → 61.19 % —el compilador reprograma registros y scheduling de forma global—. Igual que un intento previo (60 % → 22 %). Esas piezas son difíciles de verdad, no solo largas: no convergen con arreglos locales.',
+    'Mi loop: elegir candidata por barrido (tamaño, sin llamadas a imports crudos ni helpers con hash irreproducible), escribir C, compilar con ninja, medir, alinear diffs y repetir —con 22 scripts propios para ranking, visores de diff y aplicación de cambios—. Todo verificado localmente, con evidencia JSON por función.',
+  ],
+  tech: ['C', 'MSVC', 'ninja', 'objdiff-cli', 'Python', 'IA aplicada'],
 }
 
 export const relatedProject = {
@@ -230,7 +253,7 @@ export const secondaryProjects = [
       'Backend propio en Python 3.14 con FastAPI y arquitectura hexagonal, con SQLite en archivo vía SQLAlchemy 2.0. La máquina de estados y la lógica de presupuestos viven solo en el dominio.',
       'Frontend aparte en React + Vite con estilo sobrio de hangar. La tabla evita scroll horizontal y el detalle se abre haciendo click en “En taller”, mismo patrón que BankIn.',
       'Se conecta con naveSpace solo para crear la visita y avisar cuando vuelve a estar operativa. Fuera de eso, funciona por su cuenta.',
-      'Su asistente de chat comparte el mismo motor de function-calling que el del panel admin (Gemini - gemini-3.6-flash - o Claude `claude-haiku-4-5-20251001`, según `AI_PROVIDER`) pero con su propio catálogo de 14 tools (6 reusadas del admin + 8 propias), acotado a lo que le compete al taller — también servido por el mismo servidor MCP del panel admin.',
+      'Su asistente de chat es un proyecto de Cloud Functions propio e independiente del panel admin: mismo patrón de function-calling (Gemini - gemini-3.6-flash - o Claude `claude-haiku-4-5-20251001`, según `AI_PROVIDER`), pero con motor, deploy y catálogo separados — 15 tools propias (6 de lectura + 9 de escritura, incluyendo un matcher de texto que arma un borrador de presupuesto a partir de una descripción libre del daño), acotadas a lo que le compete al taller. No pasa por el servidor MCP del panel admin ni depende de su código.',
     ],
     tech: ['Python', 'FastAPI', 'SQLite', 'SQLAlchemy', 'React', 'Vite'],
     demoUrl: 'https://spacecraft-taller-frontend.web.app',

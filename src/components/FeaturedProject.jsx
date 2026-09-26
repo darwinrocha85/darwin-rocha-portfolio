@@ -1,51 +1,54 @@
 import { useState } from 'react'
-import { featuredProject, featuredAgent } from '../data/content'
+import { featuredProject, relatedProject, secondaryProjects } from '../data/content'
 import { useReveal } from '../hooks/useReveal'
+
+const taller = secondaryProjects.find((p) => p.id === 'taller')
+
+const TABS = [
+  { id: 'navespace', label: 'naveSpace' },
+  { id: 'taller', label: 'Taller' },
+  { id: 'bankin', label: 'BankIn' },
+]
 
 export default function FeaturedProject() {
   const [activeProject, setActiveProject] = useState('navespace')
   const [audience, setAudience] = useState('hr')
-  const project = activeProject === 'navespace' ? featuredProject : featuredAgent
-  const copy = audience === 'hr' ? project.hrDescription : project.techDescription
   const { ref, revealed } = useReveal()
+
+  const project =
+    activeProject === 'taller' ? taller : activeProject === 'bankin' ? relatedProject : featuredProject
+  const copy = audience === 'hr' ? project.hrDescription : project.techDescription
 
   return (
     <section ref={ref} className={`section reveal${revealed ? ' is-visible' : ''}`} id="proyecto-destacado">
       <div className="container">
         <div className="section-head">
-          <span className="eyebrow">Proyectos destacados</span>
-          <h2>naveSpace y el asistente que lo explica</h2>
+          <span className="eyebrow">Ecosistema en producción</span>
+          <h2>naveSpace, Taller y BankIn</h2>
           <p>
-            El sistema completo de gestión de flota, y un asistente de IA embebido en este mismo
-            portfolio que responde con su contenido real. Cambiá de uno a otro con las pestañas.
+            Un solo ecosistema: naveSpace gestiona la flota y vende entradas, el Taller es el hangar
+            aparte donde se reparan las naves y BankIn es el sistema de pago que cobra de verdad.
+            Cambiá de una parte a otra con las pestañas.
           </p>
         </div>
 
         <div className="featured">
           <div className="featured-inner">
-            <div className="project-tabs" role="tablist" aria-label="Elegir proyecto destacado">
-              <button
-                role="tab"
-                aria-selected={activeProject === 'navespace'}
-                className={activeProject === 'navespace' ? 'active' : ''}
-                onClick={() => {
-                  setActiveProject('navespace')
-                  setAudience('hr')
-                }}
-              >
-                naveSpace
-              </button>
-              <button
-                role="tab"
-                aria-selected={activeProject === 'agent'}
-                className={activeProject === 'agent' ? 'active' : ''}
-                onClick={() => {
-                  setActiveProject('agent')
-                  setAudience('hr')
-                }}
-              >
-                Asistente IA
-              </button>
+            <div className="project-tabs" role="tablist" aria-label="Elegir parte del ecosistema">
+              {TABS.map((tab) => (
+                <button
+                  key={tab.id}
+                  role="tab"
+                  aria-selected={activeProject === tab.id}
+                  className={activeProject === tab.id ? 'active' : ''}
+                  onClick={() => {
+                    setActiveProject(tab.id)
+                    setAudience('hr')
+                  }}
+                >
+                  {tab.label}
+                </button>
+              ))}
             </div>
 
             <div className="featured-top">
@@ -104,26 +107,37 @@ export default function FeaturedProject() {
                     </div>
                   ))}
                 </div>
+                <div className="featured-repo">
+                  Backend:{' '}
+                  <a href={project.backendRepo} target="_blank" rel="noreferrer">
+                    {project.backendRepo.replace('https://github.com/', '')}
+                  </a>
+                </div>
               </>
             ) : (
-              <div className="agent-invite">
-                <p>¿Querés probarlo ya? Abajo a la derecha está el chat real de este portfolio — preguntale lo que quieras.</p>
-                <button
-                  type="button"
-                  className="link-pill primary"
-                  onClick={() => window.dispatchEvent(new CustomEvent('open-portfolio-agent'))}
-                >
-                  Abrir el chat ↗
-                </button>
-              </div>
+              <>
+                {project.tech && (
+                  <div className="tag-row">
+                    {project.tech.map((item) => (
+                      <span className="tag" key={item}>
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <div className="secondary-project-actions">
+                  <a className="btn btn-primary btn-sm" href={project.demoUrl} target="_blank" rel="noreferrer">
+                    Ver demo ↗
+                  </a>
+                  <a className="btn btn-outline btn-sm" href={project.frontendRepo} target="_blank" rel="noreferrer">
+                    Código frontend
+                  </a>
+                  <a className="btn btn-outline btn-sm" href={project.backendRepo} target="_blank" rel="noreferrer">
+                    Código backend
+                  </a>
+                </div>
+              </>
             )}
-
-            <div className="featured-repo">
-              {activeProject === 'navespace' ? 'Backend:' : 'Function:'}{' '}
-              <a href={project.backendRepo} target="_blank" rel="noreferrer">
-                {project.backendRepo.replace('https://github.com/', '')}
-              </a>
-            </div>
           </div>
         </div>
       </div>
