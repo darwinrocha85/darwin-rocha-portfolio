@@ -1,10 +1,10 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const Anthropic = require("@anthropic-ai/sdk");
 
-// Capa de abstracción para que index.js pueda responder con Gemini o con Claude cambiando UNA
-// variable de entorno (AI_PROVIDER=gemini|claude) — mismo patrón y mismos nombres de variable
-// que spacecraftSystem-frontend/functions/lib/ai-provider.js (asistentes de admin/taller,
-// ver claude/fase11-1-estado.md en el proyecto), portado a CommonJS.
+// Capa de abstracción para que index.js pueda responder con Gemini, Claude o Groq cambiando UNA
+// variable de entorno (AI_PROVIDER=gemini|claude|groq) — mismo patrón y mismos nombres de variable
+// que spacecraft-mcp/functions/lib/ai-provider.js (asistentes de admin/taller), portado a CommonJS.
+// Groq es el principal desde 2026-09-27 (gratis sin tarjeta, endpoint OpenAI-compatible).
 //
 // A propósito NO tiene loop de tool-calling: el asistente del portfolio está deliberadamente
 // acotado a texto grounded en PORTFOLIO_CONTEXT (perfil + proyectos tal como se muestran en el
@@ -16,14 +16,18 @@ const DEFAULT_GEMINI_MODEL = "gemini-3.6-flash";
 // Haiku 4.5 es el modelo de Anthropic en el mismo escalón de precio/velocidad que Gemini
 // Flash — el que tiene sentido para un asistente de este tamaño (mismo criterio que admin/taller).
 const DEFAULT_CLAUDE_MODEL = "claude-haiku-4-5-20251001";
+// Groq (principal desde 2026-09-27): Qwen con buen español, endpoint OpenAI-compatible.
+// El catálogo de Groq rota seguido — GROQ_MODEL lo pisa sin tocar código.
+const DEFAULT_GROQ_MODEL = "qwen/qwen3.8-27b";
+const GROQ_API_BASE = process.env.GROQ_API_BASE || "https://api.groq.com/openai/v1";
 
 /**
  * Qué proveedor usar. AI_PROVIDER se lee una vez por invocación de la Cloud Function.
  */
 function resolveProvider() {
   const raw = (process.env.AI_PROVIDER || "gemini").trim().toLowerCase();
-  if (raw !== "gemini" && raw !== "claude") {
-    const err = new Error(`AI_PROVIDER inválido: "${raw}". Los valores válidos son "gemini" o "claude".`);
+  if (raw !== "gemini" && raw !== "claude" && raw !== "groq") {
+    const err = new Error(`AI_PROVIDER inválido: "${raw}". Los valores válidos son "gemini", "claude" o "groq".`);
     err.isConfigError = true;
     throw err;
   }
@@ -87,6 +91,44 @@ async function runClaude({ apiKey, model, systemPrompt, history, question, tempe
   };
 }
 
+async function runGroq({ apiKey, model, systemPrompt, history, question, temperature, maxOutputTokens }) {
+  // Groq expone chat completions OpenAI-compatible: fetch directo sin SDK nuevo.
+  // Sin tools acá (el portfolio es texto grounded, igual que antes).
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 90_000);
+  try {
+    const res = await fetch(`${GROQ_API_BASE}/chat/completions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: "system", content: systemPrompt },
+          ...history.map((h) => ({ role: h.role, content: h.text })),
+          { role: "user", content: question },
+        ],
+        temperature,
+        max_tokens: maxOutputTokens,
+      }),
+      signal: controller.signal,
+    });
+    const data = await res.json().catch(() => null);
+    if (!res.ok) {
+      const detail = data?.error?.message || res.statusText;
+      const err = new Error(`Groq respondió ${res.status}: ${detail}`);
+      err.status = res.status;
+      throw err;
+    }
+    const text = ((data?.choices?.[0]?.message?.content || "")).trim();
+    return {
+      answer: text || "No tengo esa información en el portfolio. Para más detalle mira la sección #contacto",
+      usage: data?.usage || undefined,
+    };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 /**
  * Clasifica un error del SDK del proveedor como "cuota agotada" (429) de forma normalizada,
  * para que index.js responda con el mismo mensaje amigable sin importar qué proveedor estaba
@@ -106,6 +148,29 @@ function classifyProviderError(err) {
  */
 async function runAssistant({ systemPrompt, history, question, temperature = 0.55, maxOutputTokens = 800 }) {
   const provider = resolveProvider();
+
+  if (provider === "groq") {
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) {
+      return {
+        mock: true,
+        provider,
+        answer:
+          "[mock sin GROQ_API_KEY, AI_PROVIDER=groq] Configura GROQ_API_KEY en " +
+          "esta Function para respuesta real. Pregunta recibida: " +
+          question.slice(0, 120),
+      };
+    }
+    const model = process.env.GROQ_MODEL || DEFAULT_GROQ_MODEL;
+    try {
+      const result = await runGroq({ apiKey, model, systemPrompt, history, question, temperature, maxOutputTokens });
+      return { ...result, provider };
+    } catch (err) {
+      err.isQuotaError = classifyProviderError(err);
+      err.provider = provider;
+      throw err;
+    }
+  }
 
   if (provider === "claude") {
     const apiKey = process.env.ANTHROPIC_API_KEY;

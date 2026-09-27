@@ -111,19 +111,6 @@ export const education = [
   { title: 'Certificación Scrum Master', place: '', year: '2024' },
 ]
 
-export const skillGroups = [
-  { label: 'Backend', items: ['Java', 'Spring Boot', 'Python', 'Flask', 'PHP / Laravel', 'Kotlin'] },
-  { label: 'Frontend', items: ['React', 'Vite', 'EmberJS', 'JSF / PrimeFaces', 'Angular'] },
-  { label: 'Datos', items: ['MySQL', 'PostgreSQL', 'SQLite', 'Oracle 12c', 'H2', 'SQL Server'] },
-  { label: 'Infraestructura', items: ['Docker', 'Kubernetes', 'AWS', 'Jenkins', 'Linux', 'WebLogic'] },
-  { label: 'Calidad & Testing', items: ['JUnit', 'Mockito', 'Spring Test', 'SonarQube'] },
-  {
-    label: 'IA aplicada',
-    items: ['PyTorch', 'scikit-learn', 'OpenCV', 'Pandas', 'NumPy', 'Matplotlib', 'ClaudeCode', 'OpenCode',
-    'MCP (Model Context Protocol)', 'Function-calling', 'Gemini API', 'Anthropic API (Claude)'],
-  },
-]
-
 export const featuredProject = {
   name: 'naveSpace',
   tagline:
@@ -161,7 +148,7 @@ export const featuredProject = {
     '3 frontends en React + Vite sobre ese backend: landing que agrega lo reservable (museos y funciones con fecha) con deep-link a la tienda, tienda que resuelve la compra, y panel admin con dashboard de solo lectura (ingresos, ocupación del día, estado de flota, top naves) sin tocar esquema. Tabla sin scroll horizontal y columna Estado en lugar de Taller.',
     'Cobro real vía BankIn desde el backend — nada se guarda hasta que BankIn confirma con 201 y cancelar intenta revertir el cobro — con email de compra y cancelación. El taller expone presupuestos con histórico: lo enviado y, si hubo rechazo, lo anterior queda visible.',
     'Taller extraído a servicio propio en Python 3.14 + FastAPI con SQLAlchemy 2.0 y SQLite en archivo, con su propia app en React + Vite de estilo sobrio de hangar. El panel admin solo envía a taller y ve estado/historial; el flujo fino (recibir, avanzar, presupuesto) vive en la app de taller.',
-    'El panel admin corre su propio motor de function-calling (lectura y escritura sobre la flota) sobre Gemini - gemini-3.6-flash - o Claude - claude-haiku-4-5 - según la variable `AI_PROVIDER` — un solo JSON Schema por tool sirve para los dos proveedores. Ese mismo catálogo se expone además por un servidor MCP aparte (protocolo `@modelcontextprotocol/sdk`, sin pasar por el SDK de ningún modelo) para que cualquier cliente MCP externo, no solo el widget de chat, pueda consultarlo y operarlo. El taller vive en su propio proyecto de Cloud Functions, con su propio motor y catálogo de tools: no comparte deploy ni servidor MCP con el panel admin, a propósito, para que un cambio grande en uno no pueda afectar al otro.',
+    'El panel admin corre su propio motor de function-calling (lectura y escritura sobre la flota) sobre Groq (`qwen/qwen3.8-27b`, gratis sin tarjeta) con Gemini como fallback ante 429, según la variable `AI_PROVIDER` — un solo JSON Schema por tool sirve para los tres proveedores, y catálogo + prompts en inglés (las respuestas siguen en español) para gastar menos tokens. Ese mismo catálogo se expone además por un servidor MCP aparte (protocolo `@modelcontextprotocol/sdk`, sin pasar por el SDK de ningún modelo) para que cualquier cliente MCP externo, no solo el widget de chat, pueda consultarlo y operarlo. El taller comparte proyecto y deploy (`spacecraft-mcp`) con el panel admin, pero con catálogo y SYSTEM_PROMPT propios: sus 6 tools de lectura se reusan por referencia desde el catálogo admin —misma definición, cero duplicación— y el flujo fino (recibir, avanzar, presupuesto) vive en sus 9 tools propias.',
   ],
 }
 
@@ -190,15 +177,16 @@ export const featuredAgent = {
   ],
   backendRepo: 'https://github.com/darwinrocha85/spacecraftSystem-frontend',
   hrDescription: [
-    'No es un chat de demo: son tres asistentes trabajando sobre casos reales con distinto nivel de permiso. El del admin consulta y opera la flota en vivo, el del taller lleva el día a día del hangar, y el de este portfolio responde solo con lo que está publicado.',
-    'La regla es la misma en los tres: nunca inventar. Los dos primeros leen el dato real antes de responder y piden confirmación antes de cualquier acción con impacto; el tercero prefiere decir “no lo tengo” y mandar a la sección correcta.',
-    'Detrás hay un solo proyecto de IA aparte que expone cada herramienta una sola vez —cada asistente ve únicamente su alcance: el taller no puede tocar cobros y aprobar un presupuesto solo se hace desde el panel, nunca desde un chat.',
-    'Operan en producción con límites reales: cupos del modelo, backends que despiertan lento y registro de cada uso —así una mejora se demuestra con números, no con sensaciones.',
+    'No son un chat de demo: son tres asistentes trabajando sobre casos reales, cada uno con su nivel de permiso. El del panel consulta y opera la flota en vivo, el del taller lleva el día a día del hangar, y el de este portfolio responde solo con lo que está publicado acá.',
+    'La regla es la misma en los tres: no inventar. Los dos primeros leen el dato real antes de responder y piden confirmación antes de cualquier acción con impacto —crear una nave, enviarla a reparar—; el tercero prefiere decir que no lo tiene y llevarte a la sección correcta.',
+    'Como trabajan con cupo limitado del modelo, sumé una capa previa que abarata cada pregunta: deriva a la ventanilla correcta en vez de mostrarle las 28 herramientas, y las repetidas se resuelven sin llamar al modelo. Medido en producción con las mismas 14 preguntas: de 56.934 a 16.344 tokens, un 71 % menos, con las 14 respondidas igual de bien.',
+    'Todo queda registrado —modelo, tokens y latencia de cada uso—, así que cada mejora se demuestra con números. Y cada asistente ve solo su alcance: el taller no toca cobros y aprobar un presupuesto solo se hace desde el panel, nunca desde un chat.',
   ],
   techDescription: [
-    'Mismo motor de function-calling sobre Gemini (hoy `gemini-3.8-flash` en prod: `3.6` agotó su cupo free y `2.5` fue retirado por Google) o Claude (`claude-haiku-4-5`) según `AI_PROVIDER`, con catálogo único de tools: las de lectura del taller se reusan por referencia desde el catálogo admin (mismo backend/endpoint, cero duplicación). El caso del taller sumó `draft_budget_from_damage_description` (matching exacto/fuzzy de texto libre a daños y repuestos, con lo no resuelto al criterio del modelo y confirmación previa a crear) y un fix real: las tools que devuelven listas rompían el loop de Gemini (400) y ahora se envuelven en `{result}`.',
-    'Arquitectura: proyecto `spacecraft-mcp` aparte con el servidor MCP stateless de solo lectura (StreamableHTTP sin sesión, para clientes externos como Claude Desktop: expone 20 tools de lectura, cero escritura) más `askAdmin` y `askTaller` en el mismo proceso —los asistentes consumen las tools en directo, sin doble hop HTTP—. Los frontends son clientes delgados: sus widgets pegan a la URL directa de cada Function (`/askAdmin`, `/askTaller`), en local al emulador `:5001` del proyecto MCP. Cada request guarda su uso (modelo, tokens, latencia) en Firestore (`ai_usage`), etiquetado pre/post-harness para comparar mejoras con datos.',
-    'Seguridad y costo por alcance, no por obscuridad: la confirmación previa a destructivas vive en el SYSTEM_PROMPT del admin (leer impacto + ejecutar nunca en el mismo turno); el taller no la necesita (nada destructivo ni fuera de la reparación); aprobar presupuestos —cobra tarjeta real contra BankIn— está fuera de todos los catálogos; cada pregunta está acotada (500 caracteres, 3 vueltas de tools) y el proyecto lleva alerta de facturación. Este portfolio, sin datos vivos, ni siquiera consume el MCP: contexto estático generado desde content.js en cada build, temperature 0.55, y mock si falta la API key.',
+    'Motor de function-calling propio en Cloud Functions for Firebase 2.ª gen (Node 20, ESM): corre sobre Groq —`qwen/qwen3.8-27b` en producción, pisado por `GROQ_MODEL` porque el catálogo rota— con Gemini (`gemini-3.8-flash`) como fallback ante 429 y Claude (`claude-haiku-4-5`) soportado, todo según `AI_PROVIDER`. Un solo JSON Schema por tool sirve a los tres proveedores; a Groq se le pega por fetch directo a su endpoint OpenAI-compatible, sin SDK nuevo.',
+    'Catálogo único en inglés (las respuestas siguen en español): 28 tools del admin y 15 del taller, con las 6 de lectura reusadas por referencia —misma definición, cero duplicación—. El MCP público expone 20 de solo lectura (denylist de 17 de escritura) por StreamableHTTP stateless (`@modelcontextprotocol/sdk` 1.30); `askAdmin` y `askTaller` consumen las tools en el mismo proceso, sin doble hop HTTP. Cada pregunta va acotada: 500 caracteres, 3 rondas de tools, 6 turnos de historial.',
+    'Harness con `HARNESS_PHASE=post-harness`: router determinístico por familias (el modelo ve 4–12 tools en vez del catálogo completo) más caché L1 exacto —pregunta a `{tool, args}`, dato siempre fresco, 0 tokens en hit— con preguntas frecuentes cableadas, namespaces por endpoint y miss forzado en datos volátiles; memoria más SQLite en local, Firestore `ai_cache` en producción. Bench en prod con 14 preguntas fijas (2026-09-27): 56.934 a 16.344 tokens (−71,3 %; admin −69,4 %, taller −74,3 %), hit-rate L1 0,43 en primera corrida, p50 de latencia 1310 a 1136 ms en admin. Cada request deja su factura en `ai_usage` (tokens, latencia, familia, `cacheHit`).',
+    'El taller suma `draft_budget_from_damage_description` (matching exacto y fuzzy contra catálogo de daños y stock; lo ambiguo queda al criterio del modelo con confirmación previa a crear) y la confirmación previa a destructivas vive en el `SYSTEM_PROMPT` del admin. Aprobar presupuestos —cobra tarjeta real vía BankIn— no existe en ningún catálogo. El caso del portfolio no toca datos vivos: contexto estático generado desde `content.js` en cada build, temperature 0.55 y mock si falta la API key.',
   ],
 }
 
@@ -254,7 +242,7 @@ export const secondaryProjects = [
       'Backend propio en Python 3.14 con FastAPI y arquitectura hexagonal, con SQLite en archivo vía SQLAlchemy 2.0. La máquina de estados y la lógica de presupuestos viven solo en el dominio.',
       'Frontend aparte en React + Vite con estilo sobrio de hangar. La tabla evita scroll horizontal y el detalle se abre haciendo click en “En taller”, mismo patrón que BankIn.',
       'Se conecta con naveSpace solo para crear la visita y avisar cuando vuelve a estar operativa. Fuera de eso, funciona por su cuenta.',
-      'Su asistente de chat es un proyecto de Cloud Functions propio e independiente del panel admin: mismo patrón de function-calling (Gemini - gemini-3.6-flash - o Claude `claude-haiku-4-5-20251001`, según `AI_PROVIDER`), pero con motor, deploy y catálogo separados — 15 tools propias (6 de lectura + 9 de escritura, incluyendo un matcher de texto que arma un borrador de presupuesto a partir de una descripción libre del daño), acotadas a lo que le compete al taller. No pasa por el servidor MCP del panel admin ni depende de su código.',
+      'Su asistente de chat corre en el mismo proyecto y deploy de Cloud Functions que el panel admin (`spacecraft-mcp`), con el mismo motor de function-calling compartido (Groq `qwen/qwen3.8-27b` como principal, Gemini de fallback, según `AI_PROVIDER`), pero con catálogo y alcance propios: 15 tools acotadas a lo que le compete al taller —6 de lectura reusadas por referencia del catálogo admin más 9 propias, incluyendo un matcher de texto que arma un borrador de presupuesto desde una descripción libre del daño—. Como el admin, tampoco pasa por el servidor MCP: consume las tools directo en el mismo proceso.',
     ],
     tech: ['Python', 'FastAPI', 'SQLite', 'SQLAlchemy', 'React', 'Vite'],
     demoUrl: 'https://spacecraft-taller-frontend.web.app',

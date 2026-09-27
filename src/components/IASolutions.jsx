@@ -17,9 +17,10 @@ export default function IASolutions() {
           <span className="eyebrow">IA Solutions</span>
           <h2>IA aplicada donde hay —y donde no hay— documentación</h2>
           <p>
-            Dos pruebas distintas del mismo oficio: el asistente de este portfolio trabaja sobre
-            dominio propio y documentado; el caso de decompilación entra a un producto legacy sin
-            docs y con verificación byte a byte. Dos pestañas, mismo toggle RRHH / técnico.
+            Dos casos del mismo oficio desde ángulos distintos: el asistente de este
+            portfolio responde sobre contenido propio y publicado; el de reingeniería
+            reconstruye un producto legacy sin documentación, verificado byte a byte.
+            Dos pestañas, mismo toggle RRHH / técnico.
           </p>
         </div>
 

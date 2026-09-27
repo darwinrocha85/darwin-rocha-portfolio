@@ -73,7 +73,6 @@ async function main() {
     highlights,
     experience,
     education,
-    skillGroups,
     featuredProject,
     featuredAgent,
     merlinCase,
@@ -106,9 +105,6 @@ ${bulletList(job.bullets)}`
   sections.push(`EDUCACIÓN
 ${education.map((e) => `- ${e.title}${e.place ? ` — ${e.place}` : ''} (${e.year})`).join('\n')}`)
 
-  sections.push(`SKILLS
-${skillGroups.map((g) => `- ${g.label}: ${g.items.join(', ')}`).join('\n')}`)
-
   sections.push(`PROYECTO DESTACADO 1 — naveSpace
 ${renderProjectBody(featuredProject, { includeApps: true })}`)
 
@@ -131,15 +127,15 @@ ${renderProjectBody(relatedProject, { includeDemo: true })}`)
 ${otherProjects.map((p) => `- ${p.name} (${p.kind}): ${p.description} — ${p.url}`).join('\n')}`)
 
   sections.push(`SECCIONES DEL SITIO (para derivar cuando la respuesta no está en este contexto)
-#experiencia, #skills, #proyecto-destacado, #ia-solutions, #otros-proyectos, #contacto`)
+#experiencia, #proyecto-destacado, #ia-solutions, #otros-proyectos, #contacto`)
 
   const output = sections.join('\n\n')
 
-  // Claves estables por sección, en el MISMO orden en que se pusieron arriba (12 secciones).
+  // Claves estables por sección, en el MISMO orden en que se pusieron arriba (11 secciones).
   // functions/index.js manda solo las relevantes por pregunta (pickContext) en vez del texto
   // entero — si algún día cambia la cantidad de secciones, esto falla en build a propósito.
   const SECTION_KEYS = [
-    'PERFIL', 'DESTACADOS', 'EXPERIENCIA', 'EDUCACION', 'SKILLS',
+    'PERFIL', 'DESTACADOS', 'EXPERIENCIA', 'EDUCACION',
     'NAVESPACE', 'ASISTENTE', 'MERLIN', 'BANKIN', 'SECUNDARIOS', 'OTROS', 'SECCIONES',
   ]
   if (SECTION_KEYS.length !== sections.length) {
