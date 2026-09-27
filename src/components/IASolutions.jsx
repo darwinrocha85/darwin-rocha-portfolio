@@ -87,9 +87,18 @@ export default function IASolutions() {
           </div>
 
           <div className="audience-copy">
-            {copy.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
+            {copy.map((block, i) =>
+              typeof block === 'string' ? (
+                <p key={block}>{block}</p>
+              ) : (
+                <div key={block.title || `block-${i}`}>
+                  {block.title && <div className="views-label">{block.title}</div>}
+                  <pre className="diagram-block">
+                    <code>{block.pre}</code>
+                  </pre>
+                </div>
+              )
+            )}
           </div>
 
           {activeTab === 'merlin' ? (

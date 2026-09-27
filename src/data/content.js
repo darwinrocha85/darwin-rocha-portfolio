@@ -199,7 +199,11 @@ export const harnessCase = {
     'El caché L1 hace que las repetidas no paguen: preguntas como "dame las naves" o "stock" se responden siempre igual, así que la primera vez se guarda el mapeo de pregunta a herramienta y la próxima se ejecuta directo sin llamar al modelo: 0 tokens. No se guarda la respuesta vieja —el dato se vuelve a pedir fresco cada vez—; lo que se evita es pagarle al modelo por algo trivial.',
   ],
   techDescription: [
-    'Dónde vive: cada pregunta pasa primero por el L1 —si ya se vio, se ejecuta la herramienta y listo, 0 tokens—; si no, el router detecta la familia y el modelo ve solo 4–12 herramientas; al responder, si el turno usó una sola herramienta de lectura, ese mapeo se aprende para la próxima. Todo corre antes del modelo, así que funciona igual con Groq, Gemini o Claude, y con HARNESS_PHASE=pre-harness se desactiva por completo para medir el antes y el después.',
+    {
+      title: 'Dónde vive',
+      pre: 'pregunta → [L1: ¿ya la vi?] → sí → ejecuta herramienta, listo (0 tokens)\n            ↓ no\n         [router: ¿qué familia es?] → modelo ve solo 4-12 herramientas\n              ↓ responde\n         [¿usó una sola herramienta de lectura? → aprender para la próxima]',
+    },
+    'Todo esto corre antes del modelo, así que funciona igual con Groq, Gemini o Claude. Y con HARNESS_PHASE=pre-harness se desactiva por completo (así medimos el antes/después).',
     'Local vs producción: el código es el mismo, cambia dónde anota lo aprendido. En local (emulador), archivo SQLite vía node:sqlite —built-in de Node, sin dependencias nativas— que se borra; en producción (Firebase), colección ai_cache en Firestore que persiste y comparte lo aprendido entre instancias. En local sirve para medir sin ruido; en producción ahorra cuota real todos los días. Modelos y runtime: Groq qwen/qwen3.8-27b con fallback a Gemini gemini-3.8-flash, Cloud Functions 2.ª gen Node 20.',
     'Cómo sabemos que funciona: cada respuesta trae la factura —qué familia detectó, cuántas herramientas vio el modelo (ej. 4 de 28), si fue hit de caché y cuántos tokens se evitaron— y queda registrada en ai_usage. De ahí salió la tabla de abajo: 56.934 a 16.344 tokens, 71,3 % menos, con las mismas 14 preguntas.',
   ],

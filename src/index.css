@@ -732,6 +732,19 @@ button {
   white-space: nowrap;
 }
 
+/* Diagram blocks (preformatted figures) */
+.diagram-block {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.7;
+  background: var(--tag-bg);
+  color: var(--text);
+  padding: 16px 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 4px 0 16px;
+}
+
 /* Featured project */
 .featured {
   background: #10121a;
