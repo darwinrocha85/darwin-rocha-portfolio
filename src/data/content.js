@@ -190,6 +190,25 @@ export const featuredAgent = {
   ],
 }
 
+export const harnessCase = {
+  id: 'harness',
+  name: 'Harness — pagar menos tokens por la misma respuesta',
+  tagline: 'Una capa previa al modelo que deriva a la ventanilla correcta y recuerda las repetidas: de 56.934 a 16.344 tokens en producción, un 71 % menos.',
+  hrDescription: [
+    'Cada pregunta al chat mandaba todo al modelo: el prompt completo más las 28 herramientas del admin, en cada vuelta. Unas 5.000 tokens por pregunta, con un cupo gratis de 7.000 por minuto: dos preguntas seguidas y el servicio se cortaba.',
+    'La solución fue un peaje antes del modelo que resuelve con reglas baratas lo que no necesita inteligencia. Dos piezas: un router que deriva a la ventanilla correcta —al modelo le llegan 4 a 12 herramientas en vez de 28— y un caché que recuerda las preguntas repetidas y las resuelve sin llamar al modelo, siempre con el dato fresco.',
+    'Medido en producción con las mismas 14 preguntas en el mismo orden: de 56.934 a 16.344 tokens, un 71 % menos, con las 14 respondidas igual de bien y la misma latencia. Cada respuesta trae su factura —herramientas vistas, hit de caché, tokens evitados— y queda registrada para auditar.',
+    'Funciona igual con Groq, Gemini o Claude porque vive antes del modelo. En local anota en SQLite y en producción en Firestore, y con una variable se desactiva por completo para poder medir el antes y el después.',
+  ],
+  techDescription: [
+    'Harness provider-agnóstico en `functions/lib` (`harness-router.js` + `harness-cache.js`), activo con `HARNESS_PHASE=post-harness`, en producción sobre Cloud Functions for Firebase 2.ª gen (Node 20, ESM) con Groq `qwen/qwen3.8-27b` y fallback a Gemini `gemini-3.8-flash` ante 429.',
+    'Router determinístico por familias con keywords en español normalizado: admin de 28 a 4–12 tools por request, taller de 15 a 4–7; desempate para sustantivos genéricos (nave o flota no suman fleet si hay familia específica) y fallback a catálogo completo si no matchea —nunca quita funcionalidad, a lo sumo no ahorra esa vez.',
+    'Caché L1 exacto de pregunta a `{tool, args}`: en un hit se re-ejecuta la tool (dato siempre fresco) con 0 tokens de modelo; preguntas frecuentes cableadas más aprendizaje de turnos de una sola tool de lectura, namespaces por endpoint y miss forzado en datos volátiles (fresco, hoy, disponibilidad, ventas, saldos), con TTL por familia. Storage en dos instalaciones: LRU en memoria más SQLite vía `node:sqlite` en local —sin dependencias nativas— y colección `ai_cache` en Firestore en producción. No invalida en escritura a propósito: cachea el mapeo, no los datos.',
+    'Bench en producción con 14 preguntas fijas en el mismo orden (`functions/bench/bench.mjs`, con reintento ante 429 y delay por los 7000 ITPM de Groq): 56.934 a 16.344 tokens (−71,3 %; admin −69,4 %, taller −74,3 %), hit-rate L1 0,43 en primera corrida, p50 de latencia 1310 a 1136 ms en admin. Cada request deja su factura en `ai_usage` (familia, herramientas vistas, `cacheHit`, `tokensAvoided`).',
+  ],
+  tech: ['Groq qwen3.8-27b', 'Gemini 3.8 Flash', 'Node 20', 'Firebase Functions', 'Firestore', 'SQLite', 'MCP 1.30'],
+}
+
 export const merlinCase = {
   id: 'merlin-decomp',
   name: 'Reconversión — legacy desconocido con IA',

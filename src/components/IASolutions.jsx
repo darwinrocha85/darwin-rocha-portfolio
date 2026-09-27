@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { featuredAgent, merlinCase } from '../data/content'
+import { featuredAgent, harnessCase, merlinCase } from '../data/content'
 import { useReveal } from '../hooks/useReveal'
 
 export default function IASolutions() {
@@ -7,7 +7,7 @@ export default function IASolutions() {
   const [audience, setAudience] = useState('hr')
   const { ref, revealed } = useReveal()
 
-  const project = activeTab === 'merlin' ? merlinCase : featuredAgent
+  const project = activeTab === 'merlin' ? merlinCase : activeTab === 'harness' ? harnessCase : featuredAgent
   const copy = audience === 'hr' ? project.hrDescription : project.techDescription
 
   return (
@@ -46,6 +46,17 @@ export default function IASolutions() {
             }}
           >
             Asistente IA
+          </button>
+          <button
+            role="tab"
+            aria-selected={activeTab === 'harness'}
+            className={activeTab === 'harness' ? 'active' : ''}
+            onClick={() => {
+              setActiveTab('harness')
+              setAudience('hr')
+            }}
+          >
+            Harness
           </button>
         </div>
 
@@ -94,6 +105,21 @@ export default function IASolutions() {
                 <span className="connection-chip">Evidencias objdiff</span>
                 <span className="connection-arrow">verificadas contra JSONs crudos →</span>
                 <span className="connection-chip accent">detalle en entrevista</span>
+              </div>
+            </>
+          ) : activeTab === 'harness' ? (
+            <>
+              <div className="tag-row">
+                {project.tech.map((item) => (
+                  <span className="tag" key={item}>
+                    {item}
+                  </span>
+                ))}
+              </div>
+              <div className="relevant-connection">
+                <span className="connection-chip">Bench prod · 14 preguntas</span>
+                <span className="connection-arrow">56.934 → 16.344 tokens (−71,3 %) →</span>
+                <span className="connection-chip accent">14/14 OK · hit-rate L1 0,43</span>
               </div>
             </>
           ) : (
