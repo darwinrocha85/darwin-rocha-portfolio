@@ -179,13 +179,11 @@ export const featuredAgent = {
   hrDescription: [
     'No son un chat de demo: son tres asistentes trabajando sobre casos reales, cada uno con su nivel de permiso. El del panel consulta y opera la flota en vivo, el del taller lleva el día a día del hangar, y el de este portfolio responde solo con lo que está publicado acá.',
     'La regla es la misma en los tres: no inventar. Los dos primeros leen el dato real antes de responder y piden confirmación antes de cualquier acción con impacto —crear una nave, enviarla a reparar—; el tercero prefiere decir que no lo tiene y llevarte a la sección correcta.',
-    'Como trabajan con cupo limitado del modelo, sumé una capa previa que abarata cada pregunta: deriva a la ventanilla correcta en vez de mostrarle las 28 herramientas, y las repetidas se resuelven sin llamar al modelo. Medido en producción con las mismas 14 preguntas: de 56.934 a 16.344 tokens, un 71 % menos, con las 14 respondidas igual de bien.',
-    'Todo queda registrado —modelo, tokens y latencia de cada uso—, así que cada mejora se demuestra con números. Y cada asistente ve solo su alcance: el taller no toca cobros y aprobar un presupuesto solo se hace desde el panel, nunca desde un chat.',
+    'Todo queda registrado —modelo, tokens y latencia de cada uso—. Y cada asistente ve solo su alcance: el taller no toca cobros y aprobar un presupuesto solo se hace desde el panel, nunca desde un chat.',
   ],
   techDescription: [
     'Motor de function-calling propio en Cloud Functions for Firebase 2.ª gen (Node 20, ESM): corre sobre Groq —`qwen/qwen3.8-27b` en producción, pisado por `GROQ_MODEL` porque el catálogo rota— con Gemini (`gemini-3.8-flash`) como fallback ante 429 y Claude (`claude-haiku-4-5`) soportado, todo según `AI_PROVIDER`. Un solo JSON Schema por tool sirve a los tres proveedores; a Groq se le pega por fetch directo a su endpoint OpenAI-compatible, sin SDK nuevo.',
     'Catálogo único en inglés (las respuestas siguen en español): 28 tools del admin y 15 del taller, con las 6 de lectura reusadas por referencia —misma definición, cero duplicación—. El MCP público expone 20 de solo lectura (denylist de 17 de escritura) por StreamableHTTP stateless (`@modelcontextprotocol/sdk` 1.30); `askAdmin` y `askTaller` consumen las tools en el mismo proceso, sin doble hop HTTP. Cada pregunta va acotada: 500 caracteres, 3 rondas de tools, 6 turnos de historial.',
-    'Harness con `HARNESS_PHASE=post-harness`: router determinístico por familias (el modelo ve 4–12 tools en vez del catálogo completo) más caché L1 exacto —pregunta a `{tool, args}`, dato siempre fresco, 0 tokens en hit— con preguntas frecuentes cableadas, namespaces por endpoint y miss forzado en datos volátiles; memoria más SQLite en local, Firestore `ai_cache` en producción. Bench en prod con 14 preguntas fijas (2026-09-27): 56.934 a 16.344 tokens (−71,3 %; admin −69,4 %, taller −74,3 %), hit-rate L1 0,43 en primera corrida, p50 de latencia 1310 a 1136 ms en admin. Cada request deja su factura en `ai_usage` (tokens, latencia, familia, `cacheHit`).',
     'El taller suma `draft_budget_from_damage_description` (matching exacto y fuzzy contra catálogo de daños y stock; lo ambiguo queda al criterio del modelo con confirmación previa a crear) y la confirmación previa a destructivas vive en el `SYSTEM_PROMPT` del admin. Aprobar presupuestos —cobra tarjeta real vía BankIn— no existe en ningún catálogo. El caso del portfolio no toca datos vivos: contexto estático generado desde `content.js` en cada build, temperature 0.55 y mock si falta la API key.',
   ],
 }
@@ -206,7 +204,33 @@ export const harnessCase = {
     'Caché L1 exacto de pregunta a `{tool, args}`: en un hit se re-ejecuta la tool (dato siempre fresco) con 0 tokens de modelo; preguntas frecuentes cableadas más aprendizaje de turnos de una sola tool de lectura, namespaces por endpoint y miss forzado en datos volátiles (fresco, hoy, disponibilidad, ventas, saldos), con TTL por familia. Storage en dos instalaciones: LRU en memoria más SQLite vía `node:sqlite` en local —sin dependencias nativas— y colección `ai_cache` en Firestore en producción. No invalida en escritura a propósito: cachea el mapeo, no los datos.',
     'Bench en producción con 14 preguntas fijas en el mismo orden (`functions/bench/bench.mjs`, con reintento ante 429 y delay por los 7000 ITPM de Groq): 56.934 a 16.344 tokens (−71,3 %; admin −69,4 %, taller −74,3 %), hit-rate L1 0,43 en primera corrida, p50 de latencia 1310 a 1136 ms en admin. Cada request deja su factura en `ai_usage` (familia, herramientas vistas, `cacheHit`, `tokensAvoided`).',
   ],
-  tech: ['Groq qwen3.8-27b', 'Gemini 3.8 Flash', 'Node 20', 'Firebase Functions', 'Firestore', 'SQLite', 'MCP 1.30'],
+  stackTable: {
+    caption: 'Con qué está construido',
+    head: ['Pieza', 'Versión / detalle'],
+    rows: [
+      ['Modelo principal', 'Groq qwen/qwen3.8-27b (se pisa con GROQ_MODEL)'],
+      ['Fallback ante 429', 'Gemini gemini-3.8-flash'],
+      ['Runtime', 'Cloud Functions for Firebase 2.ª gen · Node 20 (ESM)'],
+      ['Router', 'Reglas determinísticas en español (harness-router.js)'],
+      ['Caché L1 local', 'SQLite vía node:sqlite — built-in, sin dependencias'],
+      ['Caché L1 prod', 'Firestore, colección ai_cache'],
+      ['Servidor MCP', '@modelcontextprotocol/sdk 1.30 · solo lectura'],
+      ['Medición', 'bench.mjs + colección ai_usage'],
+    ],
+  },
+  benchTable: {
+    caption: 'Bench en producción · 14 preguntas fijas en orden · Groq · 2026-09-27',
+    head: ['Métrica', 'Pre-harness', 'Post-harness'],
+    rows: [
+      ['Tokens totales', '56.934', '16.344 (−71,3 %)'],
+      ['Admin (7 preguntas)', '35.002', '10.706 (−69,4 %)'],
+      ['Taller (7 preguntas)', '21.932', '5.638 (−74,3 %)'],
+      ['Hit-rate caché L1', '—', '0,43'],
+      ['Latencia p50 admin', '1310 ms', '1136 ms'],
+      ['Latencia p50 taller', '1010 ms', '1031 ms'],
+      ['Preguntas OK', '14/14', '14/14'],
+    ],
+  },
 }
 
 export const merlinCase = {

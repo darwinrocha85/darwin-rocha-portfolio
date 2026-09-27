@@ -699,6 +699,39 @@ button {
   border-radius: 6px;
 }
 
+/* Harness tables */
+.harness-table-wrap {
+  overflow-x: auto;
+  margin-top: 12px;
+}
+
+.harness-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.harness-table th,
+.harness-table td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--tag-bg);
+  vertical-align: top;
+}
+
+.harness-table thead th {
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-faint);
+}
+
+.harness-table tbody td:first-child {
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
 /* Featured project */
 .featured {
   background: #10121a;

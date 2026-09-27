@@ -109,18 +109,33 @@ export default function IASolutions() {
             </>
           ) : activeTab === 'harness' ? (
             <>
-              <div className="tag-row">
-                {project.tech.map((item) => (
-                  <span className="tag" key={item}>
-                    {item}
-                  </span>
-                ))}
-              </div>
-              <div className="relevant-connection">
-                <span className="connection-chip">Bench prod · 14 preguntas</span>
-                <span className="connection-arrow">56.934 → 16.344 tokens (−71,3 %) →</span>
-                <span className="connection-chip accent">14/14 OK · hit-rate L1 0,43</span>
-              </div>
+              {[project.stackTable, project.benchTable].map((table) => (
+                <div key={table.caption}>
+                  <div className="views-label">{table.caption}</div>
+                  <div className="harness-table-wrap">
+                    <table className="harness-table">
+                      <thead>
+                        <tr>
+                          {table.head.map((col) => (
+                            <th key={col} scope="col">
+                              {col}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {table.rows.map((row) => (
+                          <tr key={row[0]}>
+                            {row.map((cell, i) => (
+                              <td key={`${row[0]}-${i}`}>{cell}</td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ))}
             </>
           ) : (
             <>
