@@ -21,8 +21,25 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const CONTENT_PATH = join(__dirname, '..', 'src', 'data', 'content.js')
 const OUTPUT_PATH = join(__dirname, '..', 'functions', 'portfolioContext.generated.js')
 
+function bulletText(block) {
+  // Bloques de diagrama {title, pre} (Harness): se serializan como título + figura.
+  if (block && typeof block === 'object') {
+    return `${block.title || 'Diagrama'}:\n${block.pre || ''}`
+  }
+  return String(block)
+}
+
 function bulletList(items) {
-  return items.map((b) => `  - ${b}`).join('\n')
+  return items.map((b) => `  - ${bulletText(b)}`).join('\n')
+}
+
+function renderTable(table) {
+  if (!table || !Array.isArray(table.rows)) return null
+  const lines = []
+  if (table.caption) lines.push(`${table.caption}:`)
+  if (Array.isArray(table.head)) lines.push(`  ${table.head.filter(Boolean).join(' | ')}`)
+  for (const row of table.rows) lines.push(`  - ${row.join(': ')}`)
+  return lines.join('\n')
 }
 
 // Arma el cuerpo de texto de un proyecto (BankIn, Taller, ContentHub, naveSpace, el propio
@@ -45,6 +62,18 @@ function renderProjectBody(project, { includeApps = false, includeDemo = false }
   if (includeDemo && project.demoUrl) lines.push(`Demo: ${project.demoUrl}`)
   if (project.connectedTo) lines.push(`Conectado a: ${project.connectedTo}`)
   if (Array.isArray(project.tech)) lines.push(`Stack: ${project.tech.join(', ')}`)
+  for (const key of ['compareTable', 'stackTable', 'benchTable']) {
+    if (project[key]) {
+      const rendered = renderTable(project[key])
+      if (rendered) lines.push(rendered)
+    }
+  }
+  if (Array.isArray(project.results) && project.results.length) {
+    lines.push(
+      'Resultados (matching %):\n' +
+        project.results.map((r) => `  - ${r.label} (${r.detail}): ${r.pct} %`).join('\n')
+    )
+  }
 
   if (Array.isArray(project.hrDescription) && project.hrDescription.length) {
     lines.push('Para RRHH / negocio:')

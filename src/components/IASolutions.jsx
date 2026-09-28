@@ -17,10 +17,11 @@ export default function IASolutions() {
           <span className="eyebrow">IA Solutions</span>
           <h2>IA aplicada donde hay —y donde no hay— documentación</h2>
           <p>
-            Dos casos del mismo oficio desde ángulos distintos: el asistente de este
+            Tres casos del mismo oficio desde ángulos distintos: el asistente de este
             portfolio responde sobre contenido propio y publicado; el de reingeniería
-            reconstruye un producto legacy sin documentación, verificado byte a byte.
-            Dos pestañas, mismo toggle RRHH / técnico.
+            reconstruye un producto legacy sin documentación, verificado byte a byte;
+            y el harness recorta lo que se le paga al modelo. Tres pestañas, mismo
+            toggle RRHH / técnico.
           </p>
         </div>
 
@@ -103,6 +104,28 @@ export default function IASolutions() {
 
           {activeTab === 'merlin' ? (
             <>
+              <div className="views-label">El resultado, de un vistazo</div>
+              <div
+                className="match-bars"
+                role="img"
+                aria-label={`Matching decompilation: 5 funciones al 100 por ciento, despachador al ${project.results[1].pct} por ciento, test SAT al ${project.results[2].pct} por ciento`}
+              >
+                {project.results.map((r) => (
+                  <div className="match-bar-row" key={r.label}>
+                    <div className="match-bar-head">
+                      <span className="match-bar-label">{r.label}</span>
+                      <span className="match-bar-detail">{r.detail}</span>
+                      <span className="match-bar-value">{String(r.pct).replace('.', ',')} %</span>
+                    </div>
+                    <div className="match-bar-track">
+                      <div
+                        className={`match-bar-fill${r.pct === 100 ? ' is-full' : ''}`}
+                        style={{ width: `${r.pct}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
               <div className="tag-row">
                 {project.tech.map((item) => (
                   <span className="tag" key={item}>
@@ -148,6 +171,35 @@ export default function IASolutions() {
             </>
           ) : (
             <>
+              <div className="views-label">{project.compareTable.caption}</div>
+              <div className="harness-table-wrap">
+                <table className="harness-table">
+                  <thead>
+                    <tr>
+                      {project.compareTable.head.map((col) => (
+                        <th key={col || 'row-head'} scope="col">
+                          {col}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {project.compareTable.rows.map((row) => (
+                      <tr key={row[0]}>
+                        {row.map((cell, i) => (
+                          i === 0 ? (
+                            <th key={`${row[0]}-${i}`} scope="row">
+                              {cell}
+                            </th>
+                          ) : (
+                            <td key={`${row[0]}-${i}`}>{cell}</td>
+                          )
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
               <div className="views-label">Tres casos para explorarlo</div>
               <div className="apps-grid">
                 {project.apps.map((app) => (

@@ -176,6 +176,17 @@ export const featuredAgent = {
     },
   ],
   backendRepo: 'https://github.com/darwinrocha85/spacecraftSystem-frontend',
+  compareTable: {
+    caption: 'Tres casos, un mismo motor',
+    head: ['', 'Admin', 'Taller', 'Portfolio'],
+    rows: [
+      ['Alcance', 'Dueño de la flota', 'Staff del hangar', 'Visitante del portfolio'],
+      ['Datos', 'En vivo: flota y ventas', 'En vivo: ciclo de reparación', 'Estáticos: lo publicado'],
+      ['Tools', '28 (lectura + escritura)', '15 (sin destructivas)', 'Ninguna'],
+      ['Confirmación', 'Previa a impacto real', 'Solo borrador de presupuesto', 'No aplica'],
+      ['Modelo', 'Groq qwen3.8-27b · fallback Gemini', 'Groq qwen3.8-27b · fallback Gemini', 'Gemini o Claude, solo texto'],
+    ],
+  },
   hrDescription: [
     'No son un chat de demo: son tres asistentes trabajando sobre casos reales, cada uno con su nivel de permiso. El del panel consulta y opera la flota en vivo, el del taller lleva el día a día del hangar, y el de este portfolio responde solo con lo que está publicado acá.',
     'La regla es la misma en los tres: no inventar. Los dos primeros leen el dato real antes de responder y piden confirmación antes de cualquier acción con impacto —crear una nave, enviarla a reparar—; el tercero prefiere decir que no lo tiene y llevarte a la sección correcta.',
@@ -251,6 +262,11 @@ export const merlinCase = {
     'Mi loop: elegir candidata por barrido (tamaño, sin llamadas a imports crudos ni helpers con hash irreproducible), escribir C, compilar con ninja, medir, alinear diffs y repetir —con 22 scripts propios para ranking, visores de diff y aplicación de cambios—. Todo verificado localmente, con evidencia JSON por función.',
   ],
   tech: ['C', 'MSVC', 'ninja', 'objdiff-cli', 'Python', 'IA aplicada'],
+  results: [
+    { label: '5 funciones al 100 %', detail: '24–441 B · byte a byte', pct: 100 },
+    { label: 'Despachador battle-chatter', detail: '6100 B · switch de 43 eventos', pct: 81.28 },
+    { label: 'Test SAT de 15 ejes', detail: '2718 B · colisiones OBB', pct: 66.75 },
+  ],
 }
 
 export const relatedProject = {

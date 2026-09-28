@@ -732,6 +732,68 @@ button {
   white-space: nowrap;
 }
 
+.harness-table tbody th[scope='row'] {
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--tag-bg);
+  vertical-align: top;
+}
+
+/* Match bars (Merlin: % byte-identico por pieza) */
+.match-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 4px 0 20px;
+}
+
+.match-bar-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.match-bar-label {
+  font-weight: 700;
+  color: var(--text);
+  font-size: 14.5px;
+}
+
+.match-bar-detail {
+  color: var(--text-faint);
+  font-size: 13px;
+  flex-grow: 1;
+}
+
+.match-bar-value {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.match-bar-track {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--tag-bg);
+  overflow: hidden;
+}
+
+.match-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.match-bar-fill.is-full {
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+}
+
 /* Diagram blocks (preformatted figures) */
 .diagram-block {
   font-family: var(--mono);
