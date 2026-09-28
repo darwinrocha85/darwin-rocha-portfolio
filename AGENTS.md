@@ -7,8 +7,12 @@
 - `npm.cmd install` + `npm.cmd run dev` → `:5179` (puerto propio con `strictPort`, sin colisiones),
   proxy `/api` → `http://localhost:5002`, emuladores functions :5002 / hosting :5000
 - Sin backend externo: la API propia es `/api/ask` (prod) o emulador (dev). Sin `.env`.
-- Contenido: `src/data/content.js` (`featuredProject` naveSpace + sección BankIn).
-  Esa es la única fuente — no duplicar contenido en otros archivos.
+- Contenido: `src/data/content.js` es la única fuente — no duplicar contenido en otros archivos.
+  Estructura actual: Hero → Experiencia → Ecosistema (5 tabs: Admin/Taller/BankIn/Asistentes/Harness)
+  → IA Solutions (solo Merlin, lugar para 2 casos más) → Otros → Contacto.
+  Los visuales (barras, tablas, pasos) salen de datos estructurados en content.js
+  (`results`, `compareTable`, `benchBars`, `flowSteps`…) y `scripts/generate-agent-context.mjs`
+  los serializa al contexto del widget — si agregás un campo visual, agregalo al script.
 
 ## Deploy
 - Proyecto propio `darwin-rocha-portfolio`: `npm.cmd run build` (corre `generate:agent-context`)
@@ -18,4 +22,4 @@
 ## No hacer
 - No romper el rewrite `/api/ask` → Function `ask` en `firebase.json`.
 - No commitear `node_modules/`, `dist/`, `.firebase/` (ver `.gitignore`).
-- No agregar BankIn como proyecto destacado separado: es parte de la historia de naveSpace.
+- BankIn y Taller son tabs del ecosistema, no secciones propias; Merlin vive solo en IA Solutions.
