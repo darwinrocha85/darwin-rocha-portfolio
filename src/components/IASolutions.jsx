@@ -87,7 +87,7 @@ export default function IASolutions() {
             </div>
           </div>
 
-          {activeTab === 'harness' && (
+          {activeTab === 'harness' && audience === 'hr' && (
             <>
               <div className="bench-hero">
                 <span className="bench-hero-value">{project.benchHero.value}</span>
@@ -124,39 +124,9 @@ export default function IASolutions() {
                   </div>
                 ))}
               </div>
-              <div className="views-label">Cómo funciona</div>
-              <ol className="flow-steps">
-                {project.flowSteps.map((s, i) => (
-                  <li key={s.title}>
-                    <span className="flow-step-n" aria-hidden="true">
-                      {i + 1}
-                    </span>
-                    <div>
-                      <strong>{s.title}</strong>
-                      <p>{s.desc}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
             </>
           )}
-
-          <div className="audience-copy">
-            {copy.map((block, i) =>
-              typeof block === 'string' ? (
-                <p key={block}>{block}</p>
-              ) : (
-                <div key={block.title || `block-${i}`}>
-                  {block.title && <div className="views-label">{block.title}</div>}
-                  <pre className="diagram-block">
-                    <code>{block.pre}</code>
-                  </pre>
-                </div>
-              )
-            )}
-          </div>
-
-          {activeTab === 'merlin' ? (
+          {activeTab === 'merlin' && audience === 'hr' && (
             <>
               <div className="views-label">El resultado, de un vistazo</div>
               <div
@@ -180,62 +150,118 @@ export default function IASolutions() {
                   </div>
                 ))}
               </div>
-              <div className="tag-row">
-                {project.tech.map((item) => (
-                  <span className="tag" key={item}>
-                    {item}
-                  </span>
-                ))}
-              </div>
-              <div className="relevant-connection">
-                <span className="connection-chip">Evidencias objdiff</span>
-                <span className="connection-arrow">verificadas contra JSONs crudos →</span>
-                <span className="connection-chip accent">detalle en entrevista</span>
-              </div>
             </>
+          )}
+
+          <div className="audience-copy">
+            {copy.map((block, i) =>
+              typeof block === 'string' ? (
+                <p key={block}>{block}</p>
+              ) : (
+                <div key={block.title || `block-${i}`}>
+                  {block.title && <div className="views-label">{block.title}</div>}
+                  <pre className="diagram-block">
+                    <code>{block.pre}</code>
+                  </pre>
+                </div>
+              )
+            )}
+          </div>
+
+          {activeTab === 'merlin' ? (
+            audience === 'hr' ? null : (
+              <>
+                <div className="views-label">Cómo se logró, paso a paso</div>
+                <ol className="flow-steps flow-steps-five">
+                  {project.loopSteps.map((s, i) => (
+                    <li key={s.title}>
+                      <span className="flow-step-n" aria-hidden="true">
+                        {i + 1}
+                      </span>
+                      <div>
+                        <strong>{s.title}</strong>
+                        <p>{s.desc}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+                <div className="tag-row">
+                  {project.tech.map((item) => (
+                    <span className="tag" key={item}>
+                      {item}
+                    </span>
+                  ))}
+                </div>
+                <div className="relevant-connection">
+                  <span className="connection-chip">Evidencias objdiff</span>
+                  <span className="connection-arrow">verificadas contra JSONs crudos →</span>
+                  <span className="connection-chip accent">detalle en entrevista</span>
+                </div>
+              </>
+            )
           ) : activeTab === 'harness' ? (
-            <>
-              <div className="views-label">{project.stackTable.caption}</div>
-              <dl className="stack-grid">
-                {project.stackTable.rows.map((row) => (
-                  <div className="stack-cell" key={row[0]}>
-                    <dt>{row[0]}</dt>
-                    <dd>{row[1]}</dd>
-                  </div>
-                ))}
-              </dl>
-            </>
+            audience === 'hr' ? null : (
+              <>
+                <div className="views-label">Cómo funciona</div>
+                <ol className="flow-steps">
+                  {project.flowSteps.map((s, i) => (
+                    <li key={s.title}>
+                      <span className="flow-step-n" aria-hidden="true">
+                        {i + 1}
+                      </span>
+                      <div>
+                        <strong>{s.title}</strong>
+                        <p>{s.desc}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+                <div className="views-label">{project.stackTable.caption}</div>
+                <dl className="stack-grid">
+                  {project.stackTable.rows.map((row) => (
+                    <div className="stack-cell" key={row[0]}>
+                      <dt>{row[0]}</dt>
+                      <dd>{row[1]}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </>
+            )
           ) : (
             <>
-              <div className="views-label">{project.compareTable.caption}</div>
-              <div className="harness-table-wrap">
-                <table className="harness-table">
-                  <thead>
-                    <tr>
-                      {project.compareTable.head.map((col) => (
-                        <th key={col || 'row-head'} scope="col">
-                          {col}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {project.compareTable.rows.map((row) => (
-                      <tr key={row[0]}>
-                        {row.map((cell, i) => (
-                          i === 0 ? (
-                            <th key={`${row[0]}-${i}`} scope="row">
-                              {cell}
+              {audience === 'hr' && (
+                <>
+                  <div className="views-label">{project.compareTable.caption}</div>
+                  <div className="harness-table-wrap">
+                    <table className="harness-table">
+                      <thead>
+                        <tr>
+                          {project.compareTable.head.map((col) => (
+                            <th key={col || 'row-head'} scope="col">
+                              {col}
                             </th>
-                          ) : (
-                            <td key={`${row[0]}-${i}`}>{cell}</td>
-                          )
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {project.compareTable.rows.map((row) => (
+                          <tr key={row[0]}>
+                            {row.map((cell, i) => (
+                              i === 0 ? (
+                                <th key={`${row[0]}-${i}`} scope="row">
+                                  {cell}
+                                </th>
+                              ) : (
+                                <td key={`${row[0]}-${i}`}>{cell}</td>
+                              )
+                            ))}
+                          </tr>
                         ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              )}
               <div className="views-label">Tres casos para explorarlo</div>
               <div className="apps-grid">
                 {project.apps.map((app) => (

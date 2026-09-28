@@ -273,6 +273,13 @@ export const merlinCase = {
     { label: 'Despachador battle-chatter', detail: '6100 B · switch de 43 eventos', pct: 81.28 },
     { label: 'Test SAT de 15 ejes', detail: '2718 B · colisiones OBB', pct: 66.75 },
   ],
+  loopSteps: [
+    { title: 'Barrido', desc: 'Elegir candidata por tamaño y forma: sin calls a imports crudos ni helpers con hash irreproducible.' },
+    { title: 'Escritura', desc: 'C que compile a bytes idénticos: mismas instrucciones, registros y orden.' },
+    { title: 'Compilación', desc: 'ninja con el compilador original (MSVC) sobre el proyecto tal cual.' },
+    { title: 'Medición', desc: 'objdiff-cli: match_percent por función; aligndiff para ver fila por fila.' },
+    { title: 'Iteración', desc: 'Ajustar y repetir con 22 scripts propios; gateway GPT solo donde hizo falta.' },
+  ],
 }
 
 export const relatedProject = {

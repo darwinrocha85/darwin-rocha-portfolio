@@ -93,6 +93,12 @@ function renderProjectBody(project, { includeApps = false, includeDemo = false }
         project.flowSteps.map((s, i) => `  ${i + 1}. ${s.title} — ${s.desc}`).join('\n')
     )
   }
+  if (Array.isArray(project.loopSteps) && project.loopSteps.length) {
+    lines.push(
+      'El loop:\n' +
+        project.loopSteps.map((s, i) => `  ${i + 1}. ${s.title} — ${s.desc}`).join('\n')
+    )
+  }
 
   if (Array.isArray(project.hrDescription) && project.hrDescription.length) {
     lines.push('Para RRHH / negocio:')

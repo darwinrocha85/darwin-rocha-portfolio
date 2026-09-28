@@ -902,6 +902,10 @@ button {
   margin: 0;
 }
 
+.flow-steps-five {
+  grid-template-columns: repeat(5, 1fr);
+}
+
 /* Stack grid (Harness: piezas sin tabla) */
 .stack-grid {
   display: grid;
@@ -932,6 +936,7 @@ button {
 @media (max-width: 860px) {
   .stat-chips,
   .flow-steps,
+  .flow-steps-five,
   .stack-grid {
     grid-template-columns: 1fr;
   }
