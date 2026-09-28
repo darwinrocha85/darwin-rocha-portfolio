@@ -1,64 +1,25 @@
 import { useState } from 'react'
-import { featuredAgent, harnessCase, merlinCase } from '../data/content'
+import { merlinCase } from '../data/content'
 import { useReveal } from '../hooks/useReveal'
 
 export default function IASolutions() {
-  const [activeTab, setActiveTab] = useState('merlin')
   const [audience, setAudience] = useState('hr')
   const { ref, revealed } = useReveal()
-
-  const project = activeTab === 'merlin' ? merlinCase : activeTab === 'harness' ? harnessCase : featuredAgent
-  const copy = audience === 'hr' ? project.hrDescription : project.techDescription
+  const isHr = audience === 'hr'
+  const project = merlinCase
+  const copy = isHr ? project.hrDescription : project.techDescription
 
   return (
     <section ref={ref} className={`section reveal${revealed ? ' is-visible' : ''}`} id="ia-solutions">
       <div className="container">
         <div className="section-head">
           <span className="eyebrow">IA Solutions</span>
-          <h2>IA aplicada donde hay —y donde no hay— documentación</h2>
+          <h2>Casos fuera del ecosistema</h2>
           <p>
-            Tres casos del mismo oficio desde ángulos distintos: el asistente de este
-            portafolio responde sobre contenido propio y publicado; el de reingeniería
-            reconstruye un producto legacy sin documentación, verificado byte a byte;
-            y el harness recorta lo que se le paga al modelo. Tres pestañas, mismo
-            toggle RRHH / técnico.
+            Lo mismo que en el ecosistema pero sin conocer el dominio —
+            empezando por un videojuego clásico reconstruido byte a byte
+            con IA como copiloto.
           </p>
-        </div>
-
-        <div className="project-tabs" role="tablist" aria-label="Elegir caso de IA">
-          <button
-            role="tab"
-            aria-selected={activeTab === 'merlin'}
-            className={activeTab === 'merlin' ? 'active' : ''}
-            onClick={() => {
-              setActiveTab('merlin')
-              setAudience('hr')
-            }}
-          >
-            IA - Reingenieria
-          </button>
-          <button
-            role="tab"
-            aria-selected={activeTab === 'agent'}
-            className={activeTab === 'agent' ? 'active' : ''}
-            onClick={() => {
-              setActiveTab('agent')
-              setAudience('hr')
-            }}
-          >
-            Asistente IA
-          </button>
-          <button
-            role="tab"
-            aria-selected={activeTab === 'harness'}
-            className={activeTab === 'harness' ? 'active' : ''}
-            onClick={() => {
-              setActiveTab('harness')
-              setAudience('hr')
-            }}
-          >
-            Harness
-          </button>
         </div>
 
         <div className="secondary-project-card">
@@ -70,16 +31,16 @@ export default function IASolutions() {
             <div className="audience-toggle" role="tablist" aria-label="Elegir tipo de descripción">
               <button
                 role="tab"
-                aria-selected={audience === 'hr'}
-                className={audience === 'hr' ? 'active' : ''}
+                aria-selected={isHr}
+                className={isHr ? 'active' : ''}
                 onClick={() => setAudience('hr')}
               >
                 Para RRHH / PM
               </button>
               <button
                 role="tab"
-                aria-selected={audience === 'tech'}
-                className={audience === 'tech' ? 'active' : ''}
+                aria-selected={!isHr}
+                className={!isHr ? 'active' : ''}
                 onClick={() => setAudience('tech')}
               >
                 Para perfiles técnicos
@@ -87,46 +48,7 @@ export default function IASolutions() {
             </div>
           </div>
 
-          {activeTab === 'harness' && audience === 'hr' && (
-            <>
-              <div className="bench-hero">
-                <span className="bench-hero-value">{project.benchHero.value}</span>
-                <span className="bench-hero-label">{project.benchHero.label}</span>
-              </div>
-              <div className="views-label">{project.benchCaption}</div>
-              <div className="match-bars" role="img" aria-label="Tokens pre-harness 56.934 contra post-harness 16.344, un 71,3 por ciento menos">
-                {project.benchBars.map((b) => (
-                  <div className="match-bar-row" key={b.label}>
-                    <div className="match-bar-head">
-                      <span className="match-bar-label">{b.label}</span>
-                      <span className="match-bar-detail">
-                        {b.pre} → {b.post}
-                      </span>
-                      <span className="match-bar-value">{b.save}</span>
-                    </div>
-                    <div className="match-bar-track bench-track">
-                      <div className="match-bar-fill bench-pre" style={{ width: '100%' }} />
-                    </div>
-                    <div className="match-bar-track">
-                      <div
-                        className="match-bar-fill is-full"
-                        style={{ width: `${((b.postN / b.preN) * 100).toFixed(1)}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="stat-chips">
-                {project.benchChips.map((c) => (
-                  <div className="stat-chip" key={c.label}>
-                    <span className="stat-chip-label">{c.label}</span>
-                    <span className="stat-chip-value">{c.value}</span>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-          {activeTab === 'merlin' && audience === 'hr' && (
+          {isHr ? (
             <>
               <div className="views-label">El resultado, de un vistazo</div>
               <div
@@ -151,169 +73,42 @@ export default function IASolutions() {
                 ))}
               </div>
             </>
-          )}
-
-          <div className="audience-copy">
-            {copy.map((block, i) =>
-              typeof block === 'string' ? (
-                <p key={block}>{block}</p>
-              ) : (
-                <div key={block.title || `block-${i}`}>
-                  {block.title && <div className="views-label">{block.title}</div>}
-                  <pre className="diagram-block">
-                    <code>{block.pre}</code>
-                  </pre>
-                </div>
-              )
-            )}
-          </div>
-
-          {activeTab === 'merlin' ? (
-            audience === 'hr' ? null : (
-              <>
-                <div className="views-label">Cómo se logró, paso a paso</div>
-                <ol className="flow-steps flow-steps-five">
-                  {project.loopSteps.map((s, i) => (
-                    <li key={s.title}>
-                      <span className="flow-step-n" aria-hidden="true">
-                        {i + 1}
-                      </span>
-                      <div>
-                        <strong>{s.title}</strong>
-                        <p>{s.desc}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-                <div className="tag-row">
-                  {project.tech.map((item) => (
-                    <span className="tag" key={item}>
-                      {item}
-                    </span>
-                  ))}
-                </div>
-                <div className="relevant-connection">
-                  <span className="connection-chip">Evidencias objdiff</span>
-                  <span className="connection-arrow">verificadas contra JSONs crudos →</span>
-                  <span className="connection-chip accent">detalle en entrevista</span>
-                </div>
-              </>
-            )
-          ) : activeTab === 'harness' ? (
-            audience === 'hr' ? null : (
-              <>
-                <div className="views-label">Cómo funciona</div>
-                <ol className="flow-steps">
-                  {project.flowSteps.map((s, i) => (
-                    <li key={s.title}>
-                      <span className="flow-step-n" aria-hidden="true">
-                        {i + 1}
-                      </span>
-                      <div>
-                        <strong>{s.title}</strong>
-                        <p>{s.desc}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-                <div className="views-label">{project.stackTable.caption}</div>
-                <dl className="stack-grid">
-                  {project.stackTable.rows.map((row) => (
-                    <div className="stack-cell" key={row[0]}>
-                      <dt>{row[0]}</dt>
-                      <dd>{row[1]}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </>
-            )
           ) : (
             <>
-              {audience === 'hr' && (
-                <>
-                  <div className="views-label">{project.compareTable.caption}</div>
-                  <div className="harness-table-wrap">
-                    <table className="harness-table">
-                      <thead>
-                        <tr>
-                          {project.compareTable.head.map((col) => (
-                            <th key={col || 'row-head'} scope="col">
-                              {col}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {project.compareTable.rows.map((row) => (
-                          <tr key={row[0]}>
-                            {row.map((cell, i) => (
-                              i === 0 ? (
-                                <th key={`${row[0]}-${i}`} scope="row">
-                                  {cell}
-                                </th>
-                              ) : (
-                                <td key={`${row[0]}-${i}`}>{cell}</td>
-                              )
-                            ))}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </>
-              )}
-              {audience !== 'hr' && (
-                <>
-                  <div className="views-label">Modelos y estructura, de un vistazo</div>
-                  <ol className="flow-steps">
-                    {project.archSteps.map((s, i) => (
-                      <li key={s.title}>
-                        <span className="flow-step-n" aria-hidden="true">
-                          {i + 1}
-                        </span>
-                        <div>
-                          <strong>{s.title}</strong>
-                          <p>{s.desc}</p>
-                        </div>
-                      </li>
-                    ))}
-                  </ol>
-                </>
-              )}
-              <div className="views-label">Tres casos para explorarlo</div>
-              <div className="apps-grid">
-                {project.apps.map((app) => (
-                  <div className="app-card" key={app.label}>
-                    <div className="label">{app.label}</div>
-                    <p>{app.description}</p>
-                    <div className="links">
-                      <a
-                        className="link-pill primary"
-                        href={app.url}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Ver demo ↗
-                      </a>
-                      <a className="link-pill" href={app.repo} target="_blank" rel="noreferrer">
-                        Código
-                      </a>
+              <div className="views-label">Cómo se logró, paso a paso</div>
+              <ol className="flow-steps flow-steps-five">
+                {project.loopSteps.map((s, i) => (
+                  <li key={s.title}>
+                    <span className="flow-step-n" aria-hidden="true">
+                      {i + 1}
+                    </span>
+                    <div>
+                      <strong>{s.title}</strong>
+                      <p>{s.desc}</p>
                     </div>
-                  </div>
+                  </li>
+                ))}
+              </ol>
+              <div className="tag-row">
+                {project.tech.map((item) => (
+                  <span className="tag" key={item}>
+                    {item}
+                  </span>
                 ))}
               </div>
-              <div className="agent-invite">
-                <p>¿Querés probar el tercer caso ya? Abajo a la derecha está el chat real de este portafolio — preguntale lo que quieras.</p>
-                <button
-                  type="button"
-                  className="link-pill primary"
-                  onClick={() => window.dispatchEvent(new CustomEvent('open-portfolio-agent'))}
-                >
-                  Abrir el chat ↗
-                </button>
+              <div className="relevant-connection">
+                <span className="connection-chip">Evidencias objdiff</span>
+                <span className="connection-arrow">verificadas contra JSONs crudos →</span>
+                <span className="connection-chip accent">detalle en entrevista</span>
               </div>
             </>
           )}
+
+          <div className="audience-copy">
+            {copy.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
         </div>
       </div>
     </section>

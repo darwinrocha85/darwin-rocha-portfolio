@@ -742,6 +742,41 @@ button {
   vertical-align: top;
 }
 
+/* Eco visual: caja clara inset dentro de la tarjeta oscura del ecosistema */
+.eco-visual {
+  background: var(--surface);
+  color: var(--text);
+  border-radius: var(--radius-md);
+  padding: 28px;
+  margin-top: 28px;
+}
+
+.eco-visual .views-label.eco-label {
+  margin-top: 24px;
+  color: var(--text-faint);
+}
+
+.eco-visual .views-label.eco-label:first-child {
+  margin-top: 0;
+}
+
+.eco-note {
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.eco-visual .secondary-project-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.eco-tabs {
+  flex-wrap: wrap;
+}
+
 /* Match bars (Merlin: % byte-identico por pieza) */
 .match-bars {
   display: flex;

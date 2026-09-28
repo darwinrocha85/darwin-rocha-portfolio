@@ -176,6 +176,18 @@ export const featuredAgent = {
     },
   ],
   backendRepo: 'https://github.com/darwinrocha85/spacecraftSystem-frontend',
+  portfolioLine: 'El tercer caso vive en este portafolio: el widget de abajo a la derecha responde solo con lo publicado — probalo sin moverte de acá.',
+  ecoCompareTable: {
+    caption: 'Admin y Taller, lado a lado',
+    head: ['', 'Admin', 'Taller'],
+    rows: [
+      ['Alcance', 'Dueño de la flota', 'Staff del hangar'],
+      ['Datos', 'En vivo: flota y ventas', 'En vivo: ciclo de reparación'],
+      ['Tools', '28 (lectura + escritura)', '15 (sin destructivas)'],
+      ['Confirmación', 'Previa a impacto real', 'Solo borrador de presupuesto'],
+      ['Modelo', 'Groq qwen3.8-27b · fallback Gemini', 'Groq qwen3.8-27b · fallback Gemini'],
+    ],
+  },
   compareTable: {
     caption: 'Tres casos, un mismo motor',
     head: ['', 'Admin', 'Taller', 'Portafolio'],
