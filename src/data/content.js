@@ -7,9 +7,9 @@ export const profile = {
   linkedin: 'https://linkedin.com/in/darwinrocha',
   cvUrl: '/cv/Darwin_Rocha_CV.pdf',
   summary:
-    'Backend con Python y Java desde hace más de 10 años: APIs, microservicios y datos en producción. Trabajo a diario con IA (Claude, OpenCode) para analizar código y entregar más rápido.',
+    'Ingeniero en Computación con más de 10 años de experiencia en desarrollo backend con Python y Java: APIs REST, microservicios y sistemas de base de datos para plataformas en producción. En los últimos años integré herramientas de IA (Claude, OpenCode) directamente en mi flujo de trabajo para acelerar el análisis de código y reducir tiempos de entrega.',
   aiNote:
-    'Abajo hay un ejemplo directo: yo defino arquitectura y reglas con el cliente, y construyo, verifico y despliego cada fase con un agente de IA.',
+    'El proyecto destacado de abajo es un ejemplo directo de ese proceso: yo defino la arquitectura y las reglas de negocio con el cliente, y colaboro con un agente de IA para construir, verificar y desplegar cada fase — el mismo flujo que uso hoy en mi trabajo diario.',
 }
 
 export const highlights = [
@@ -27,9 +27,9 @@ export const experience = [
     period: '2026',
     tech: ['Java', 'Spring Boot', 'JSP', 'MySQL', 'Jenkins', 'AWS', 'IA (Claude, OpenCode)'],
     bullets: [
-      'Producto Java en microservicios: refactors y funcionalidades nuevas.',
-      'Plataforma JSP en paralelo, sin cortar la operación.',
-      'IA en el flujo diario para analizar código y responder más rápido.',
+      'Desarrollo y mantenimiento del producto en Java, refactorizando código existente y agregando funcionalidades a distintos microservicios.',
+      'Mantenimiento de la plataforma en JSP en paralelo a los nuevos microservicios, asegurando continuidad operativa del sistema.',
+      'Integración de herramientas de IA en el flujo de trabajo para acelerar el análisis de código y optimizar tiempos de respuesta en desarrollo.',
     ],
   },
   {
@@ -39,9 +39,9 @@ export const experience = [
     period: '2024 — 2025',
     tech: ['Python', 'PyTorch', 'NumPy', 'scikit-learn', 'OpenCV', 'Pandas', 'Matplotlib'],
     bullets: [
-      'ML multimodal (audio, video, texto): clasificación y reconocimiento de emociones con modelos simples e interpretables.',
-      'Pipelines completos: preproceso, entrenamiento, validación cruzada y métricas (F1, matrices de confusión).',
-      'Datasets grandes: limpieza, alineación de modalidades y scripts reproducibles.',
+      'Modelos de aprendizaje automático para clasificación y análisis multimodal (audio, video, texto), con arquitecturas de fusión de características para reconocimiento de emociones enfocadas en simplicidad e interpretabilidad.',
+      'Pipelines completos de IA — preprocesamiento, extracción de características, entrenamiento, validación cruzada y métricas (F1-score, matrices de confusión) — experimentando con activación adaptativa y normalización para estabilidad numérica en modelos ligeros.',
+      'Gestión de datasets a gran escala (limpieza, alineación de modalidades, scripts reproducibles) y documentación técnica siguiendo estándares de investigación reproducible.',
     ],
   },
   {
@@ -51,8 +51,8 @@ export const experience = [
     period: '2025',
     tech: ['Java', 'MySQL', 'SQL Server', 'RabbitMQ', 'SOAP/REST', 'JUnit', 'Mockito', 'SonarQube'],
     bullets: [
-      'Tests unitarios e integrados (JUnit, Mockito, Spring Test) contra servicios externos.',
-      'Backend SOAP/REST entre módulos internos y externos.',
+      'Pruebas unitarias e integradas con JUnit, Mockito y Spring Test, reduciendo errores en integración con servicios externos.',
+      'Funcionalidades backend para servicios SOAP/REST, ampliando la interacción entre módulos internos y externos.',
     ],
   },
   {
@@ -62,9 +62,9 @@ export const experience = [
     period: '2021 — 2024',
     tech: ['Python', 'Kotlin', 'Flask', 'EmberJS', 'PostgreSQL', 'Docker', 'Kubernetes', 'AWS'],
     bullets: [
-      'ERP/CRM: trabajos, incidencias y garantías.',
-      'Apps Android para mecánicos y administradores.',
-      'Python + EmberJS de baja latencia.',
+      'Funcionalidades críticas para un ERP/CRM de gestión de trabajos, incidencias y garantías, mejorando la eficiencia operativa.',
+      'Apps Android para mecánicos y administradores de talleres, optimizando el registro de tareas y datos operativos.',
+      'Arquitecturas de baja latencia en Python y EmberJS para mejorar tiempos de respuesta y escalabilidad.',
     ],
   },
   {
@@ -74,9 +74,9 @@ export const experience = [
     period: '2019 — 2021',
     tech: ['Java EE', 'PrimeFaces', 'JSF', 'JPA', 'Oracle 12c', 'WebLogic'],
     bullets: [
-      'Agendamiento de técnicos: asignación y seguimiento.',
-      'REST de inventarios entre áreas comerciales y técnicas.',
-      'Ventas unificadas con microservicios.',
+      'Módulo de agendamiento de técnicos, optimizando asignación y seguimiento de visitas.',
+      'APIs RESTful para inventarios y materiales, integrando áreas comerciales y técnicas.',
+      'Unificación de operaciones comerciales en un flujo de ventas mediante microservicios.',
     ],
   },
   {
@@ -86,8 +86,9 @@ export const experience = [
     period: '2018',
     tech: ['Gestión de proyectos', 'Infraestructura IT'],
     bullets: [
-      'Proyectos e infraestructura IT: políticas, redes y equipos.',
-      'Soporte a usuarios y áreas operativas.',
+      'Gestión de proyectos tecnológicos, definiendo políticas de uso y mantenimiento de infraestructura.',
+      'Coordinación de instalación de redes, equipos y sistemas críticos.',
+      'Soporte técnico a usuarios y áreas operativas de la organización.',
     ],
   },
   {
@@ -97,8 +98,9 @@ export const experience = [
     period: '2016 — 2017',
     tech: ['PHP', 'Laravel', 'Java', 'Spring Boot', 'Angular', 'MySQL'],
     bullets: [
-      'Módulos web con Laravel/PHP según requerimientos.',
-      'Componentes Spring Boot y distribución a clientes corporativos.',
+      'Análisis de requerimientos de negocio e implementación de módulos web con Laravel/PHP.',
+      'Desarrollo de componentes en Spring Boot para extender funcionalidades internas.',
+      'Soluciones para la administración y distribución del producto entre clientes corporativos.',
     ],
   },
 ]
@@ -136,15 +138,17 @@ export const featuredProject = {
   ],
   backendRepo: 'https://github.com/darwinrocha85/spacecraftSystem',
   hrDescription: [
-    'Empezó como un MVP para dar de alta naves y hoy es un sistema completo: venta de entradas con cobro real, taller aparte con presupuestos y panel con métricas. Todo desplegado y usable.',
-    'Cada parte tiene su rol: la landing muestra qué hay para visitar, la tienda resuelve la compra, el panel gestiona la flota y el taller lleva el trabajo diario.',
-    'Así trabajo un producto: reglas claras con el usuario, responsabilidades separadas y cada entrega verificada. El panel y el taller tienen su asistente con IA (detalle en IA Solutions).',
+    'Empezó como un MVP para dar de alta naves y fue creciendo por partes hasta un sistema completo: venta de entradas con cobro real, un taller aparte que lleva presupuestos y aprobaciones, y un panel con métricas del negocio. Todo desplegado y usable hoy.',
+    'Cada parte tiene su rol: la landing muestra qué hay para visitar, la tienda resuelve la compra, el panel de administración gestiona la flota sin tocar lo que está en reparación, y la app de taller lleva el trabajo diario y el historial de cada visita.',
+    'Refleja cómo trabajo un producto: acordar reglas claras con el usuario, separar responsabilidades donde hace falta y verificar cada entrega antes de darla por lista.',
+    'El panel de administración y el taller tienen, cada uno, su propio asistente de chat con IA: no da respuestas genéricas, lee los datos reales y hasta actúa (crear una nave, armar un horario, enviar a reparar) — siempre pidiendo confirmación antes de algo con impacto real.',
   ],
   techDescription: [
-    'Backend en Java 17 + Spring Boot (Maven), sin DTOs, con Lombok; SQLite en archivo y seeder idempotente.',
-    '3 frontends en React + Vite: landing de lo reservable con deep-link a la tienda, tienda que resuelve la compra y panel admin con dashboard de solo lectura (ingresos, ocupación, flota, top naves).',
-    'Cobro real vía BankIn —nada se guarda hasta el 201— con email de compra y cancelación; el taller expone presupuestos con histórico visible.',
-    'Taller extraído a Python 3.14 + FastAPI (SQLAlchemy 2.0) con su propia app de hangar. Los asistentes con IA viven en la sección IA Solutions.',
+    'Backend en Java 17 + Spring Boot (Maven), sin capa DTO, con Lombok y `@ElementCollection` para asientos de teatro; ahora con SQLite en archivo y seeder idempotente para que el estado no se pierda al reiniciar.',
+    '3 frontends en React + Vite sobre ese backend: landing que agrega lo reservable (museos y funciones con fecha) con deep-link a la tienda, tienda que resuelve la compra, y panel admin con dashboard de solo lectura (ingresos, ocupación del día, estado de flota, top naves) sin tocar esquema. Tabla sin scroll horizontal y columna Estado en lugar de Taller.',
+    'Cobro real vía BankIn desde el backend — nada se guarda hasta que BankIn confirma con 201 y cancelar intenta revertir el cobro — con email de compra y cancelación. El taller expone presupuestos con histórico: lo enviado y, si hubo rechazo, lo anterior queda visible.',
+    'Taller extraído a servicio propio en Python 3.14 + FastAPI con SQLAlchemy 2.0 y SQLite en archivo, con su propia app en React + Vite de estilo sobrio de hangar. El panel admin solo envía a taller y ve estado/historial; el flujo fino (recibir, avanzar, presupuesto) vive en la app de taller.',
+    'El panel admin corre su propio motor de function-calling (lectura y escritura sobre la flota) sobre Groq (`qwen/qwen3.8-27b`, gratis sin tarjeta) con Gemini como fallback ante 429, según la variable `AI_PROVIDER` — un solo JSON Schema por tool sirve para los tres proveedores, y catálogo + prompts en inglés (las respuestas siguen en español) para gastar menos tokens. Ese mismo catálogo se expone además por un servidor MCP aparte (protocolo `@modelcontextprotocol/sdk`, sin pasar por el SDK de ningún modelo) para que cualquier cliente MCP externo, no solo el widget de chat, pueda consultarlo y operarlo. El taller comparte proyecto y deploy (`spacecraft-mcp`) con el panel admin, pero con catálogo y SYSTEM_PROMPT propios: sus 6 tools de lectura se reusan por referencia desde el catálogo admin —misma definición, cero duplicación— y el flujo fino (recibir, avanzar, presupuesto) vive en sus 9 tools propias.',
   ],
 }
 
@@ -184,12 +188,14 @@ export const featuredAgent = {
     ],
   },
   hrDescription: [
-    'Tres asistentes reales, cada uno con su permiso: el panel opera la flota en vivo, el taller lleva el hangar y este portafolio responde solo con lo publicado.',
-    'La regla en los tres: no inventar. Los dos primeros leen el dato real y confirman antes de actuar; el tercero deriva a la sección. Todo uso queda registrado.',
+    'No son un chat de demo: son tres asistentes trabajando sobre casos reales, cada uno con su nivel de permiso. El del panel consulta y opera la flota en vivo, el del taller lleva el día a día del hangar, y el de este portafolio responde solo con lo que está publicado acá.',
+    'La regla es la misma en los tres: no inventar. Los dos primeros leen el dato real antes de responder y piden confirmación antes de cualquier acción con impacto —crear una nave, enviarla a reparar—; el tercero prefiere decir que no lo tiene y llevarte a la sección correcta.',
+    'Todo queda registrado —modelo, tokens y latencia de cada uso—. Y cada asistente ve solo su alcance: el taller no toca cobros y aprobar un presupuesto solo se hace desde el panel, nunca desde un chat.',
   ],
   techDescription: [
-    'Function-calling propio en Cloud Functions 2.ª gen: Groq `qwen/qwen3.8-27b` (fallback Gemini ante 429, Claude soportado) según `AI_PROVIDER`; un JSON Schema por tool para los tres proveedores.',
-    'Catálogo único (28 admin + 15 taller, 6 de lectura reusadas), MCP público de 20 solo lectura y `draft_budget_from_damage_description` en el taller; topes por pregunta (500 caracteres, 3 rondas, 6 turnos). Aprobar presupuestos no existe en ningún catálogo. El portafolio: contexto estático desde `content.js`, temperature 0.55 y mock sin API key.',
+    'Motor de function-calling propio en Cloud Functions for Firebase 2.ª gen (Node 20, ESM): corre sobre Groq —`qwen/qwen3.8-27b` en producción, pisado por `GROQ_MODEL` porque el catálogo rota— con Gemini (`gemini-3.8-flash`) como fallback ante 429 y Claude (`claude-haiku-4-5`) soportado, todo según `AI_PROVIDER`. Un solo JSON Schema por tool sirve a los tres proveedores; a Groq se le pega por fetch directo a su endpoint OpenAI-compatible, sin SDK nuevo.',
+    'Catálogo único en inglés (las respuestas siguen en español): 28 tools del admin y 15 del taller, con las 6 de lectura reusadas por referencia —misma definición, cero duplicación—. El MCP público expone 20 de solo lectura (denylist de 17 de escritura) por StreamableHTTP stateless (`@modelcontextprotocol/sdk` 1.30); `askAdmin` y `askTaller` consumen las tools en el mismo proceso, sin doble hop HTTP. Cada pregunta va acotada: 500 caracteres, 3 rondas de tools, 6 turnos de historial.',
+    'El taller suma `draft_budget_from_damage_description` (matching exacto y fuzzy contra catálogo de daños y stock; lo ambiguo queda al criterio del modelo con confirmación previa a crear) y la confirmación previa a destructivas vive en el `SYSTEM_PROMPT` del admin. Aprobar presupuestos —cobra tarjeta real vía BankIn— no existe en ningún catálogo. El caso del portafolio no toca datos vivos: contexto estático generado desde `content.js` en cada build, temperature 0.55 y mock si falta la API key.',
   ],
 }
 
@@ -274,13 +280,13 @@ export const relatedProject = {
   name: 'BankIn — sistema de pago del ecosistema',
   tagline: 'No es una demo suelta. BankIn es el sistema de pago del ecosistema.',
   hrDescription: [
-    'Cada compra en naveSpace pasa por aquí: cobra, guarda y deja auditar. También cobra el taller.',
-    'Panel de gerente con cada movimiento y su origen, sin pasos manuales.',
-    'Hoy conecta naveSpace; más apps usan la misma API sin cambios.',
+    'Cada compra de entradas en naveSpace pasa por aquí: recibe los datos, hace el cobro y lo guarda para que se pueda auditar después. Los pagos al taller tambien usan esta apps.',
+    'Tiene un panel de gerente donde se ve cada movimiento con su nota de origen, sin pasos manuales entre una app y otra.',
+    'Hoy ya conecta naveSpace. Más adelante se podra conectar a otras apps con la misma API y sin cambios en BankIn.',
   ],
   techDescription: [
-    'FastAPI hexagonal (antes Java/Spring): SQLite en archivo con SQLAlchemy 2.0 y Pydantic.',
-    'Expone `POST /transactions/purchase`: tarjeta, monto y `note` de origen, con API key.',
+    'Backend en Python 3.14 con FastAPI y arquitectura hexagonal. Viene de una versión anterior en Java/Spring Boot y ahora persiste en SQLite en archivo con SQLAlchemy 2.0 y validación con Pydantic.',
+    'Expone `POST /transactions/purchase` para apps externas: recibe tarjeta, monto y un campo `note` con el origen, protegido con API key por variable de entorno.',
     'naveSpace lo llama al confirmar una compra; el panel de gerente muestra el cargo con su nota para saber qué app y qué compra generó cada movimiento.',
   ],
   connectedTo: 'naveSpace',
