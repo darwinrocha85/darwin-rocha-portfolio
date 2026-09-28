@@ -193,9 +193,15 @@ export const featuredAgent = {
     'Todo queda registrado —modelo, tokens y latencia de cada uso—. Y cada asistente ve solo su alcance: el taller no toca cobros y aprobar un presupuesto solo se hace desde el panel, nunca desde un chat.',
   ],
   techDescription: [
-    'Motor de function-calling propio en Cloud Functions for Firebase 2.ª gen (Node 20, ESM): corre sobre Groq —`qwen/qwen3.8-27b` en producción, pisado por `GROQ_MODEL` porque el catálogo rota— con Gemini (`gemini-3.8-flash`) como fallback ante 429 y Claude (`claude-haiku-4-5`) soportado, todo según `AI_PROVIDER`. Un solo JSON Schema por tool sirve a los tres proveedores; a Groq se le pega por fetch directo a su endpoint OpenAI-compatible, sin SDK nuevo.',
-    'Catálogo único en inglés (las respuestas siguen en español): 28 tools del admin y 15 del taller, con las 6 de lectura reusadas por referencia —misma definición, cero duplicación—. El MCP público expone 20 de solo lectura (denylist de 17 de escritura) por StreamableHTTP stateless (`@modelcontextprotocol/sdk` 1.30); `askAdmin` y `askTaller` consumen las tools en el mismo proceso, sin doble hop HTTP. Cada pregunta va acotada: 500 caracteres, 3 rondas de tools, 6 turnos de historial.',
-    'El taller suma `draft_budget_from_damage_description` (matching exacto y fuzzy contra catálogo de daños y stock; lo ambiguo queda al criterio del modelo con confirmación previa a crear) y la confirmación previa a destructivas vive en el `SYSTEM_PROMPT` del admin. Aprobar presupuestos —cobra tarjeta real vía BankIn— no existe en ningún catálogo. El caso del portafolio no toca datos vivos: contexto estático generado desde `content.js` en cada build, temperature 0.55 y mock si falta la API key.',
+    'Un motor de function-calling (Cloud Functions 2.ª gen) que habla con Groq, Gemini o Claude según `AI_PROVIDER`: un solo JSON Schema por tool sirve a los tres. En prod corre Groq con fallback a Gemini ante 429.',
+    'Catálogo único: 28 tools del admin + 15 del taller (6 de lectura reusadas). El MCP público expone 20 de lectura; la escritura solo existe en los chats, con confirmación. Topes por pregunta: 500 caracteres, 3 rondas, 6 turnos.',
+    'El taller suma borrador de presupuesto desde texto libre; aprobar presupuestos no existe en ningún catálogo. Este portafolio no toca datos vivos: contexto estático desde `content.js`, temperature 0.55 y mock sin API key.',
+  ],
+  archSteps: [
+    { title: 'Modelos', desc: 'Groq qwen3.8-27b en prod · Gemini de fallback · Claude soportado.' },
+    { title: 'Motor', desc: 'Function-calling propio; un JSON Schema por tool para los tres.' },
+    { title: 'Catálogo', desc: '28 admin + 15 taller; 6 de lectura reusadas por referencia.' },
+    { title: 'Salidas', desc: 'MCP con 20 de lectura · chats con escritura y confirmación.' },
   ],
 }
 

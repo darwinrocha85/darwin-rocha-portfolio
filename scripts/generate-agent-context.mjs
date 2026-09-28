@@ -93,6 +93,12 @@ function renderProjectBody(project, { includeApps = false, includeDemo = false }
         project.flowSteps.map((s, i) => `  ${i + 1}. ${s.title} — ${s.desc}`).join('\n')
     )
   }
+  if (Array.isArray(project.archSteps) && project.archSteps.length) {
+    lines.push(
+      'Arquitectura:\n' +
+        project.archSteps.map((s, i) => `  ${i + 1}. ${s.title} — ${s.desc}`).join('\n')
+    )
+  }
   if (Array.isArray(project.loopSteps) && project.loopSteps.length) {
     lines.push(
       'El loop:\n' +

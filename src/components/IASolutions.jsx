@@ -262,6 +262,24 @@ export default function IASolutions() {
                   </div>
                 </>
               )}
+              {audience !== 'hr' && (
+                <>
+                  <div className="views-label">Modelos y estructura, de un vistazo</div>
+                  <ol className="flow-steps">
+                    {project.archSteps.map((s, i) => (
+                      <li key={s.title}>
+                        <span className="flow-step-n" aria-hidden="true">
+                          {i + 1}
+                        </span>
+                        <div>
+                          <strong>{s.title}</strong>
+                          <p>{s.desc}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                </>
+              )}
               <div className="views-label">Tres casos para explorarlo</div>
               <div className="apps-grid">
                 {project.apps.map((app) => (
