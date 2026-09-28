@@ -18,7 +18,7 @@ export default function IASolutions() {
           <h2>IA aplicada donde hay —y donde no hay— documentación</h2>
           <p>
             Tres casos del mismo oficio desde ángulos distintos: el asistente de este
-            portfolio responde sobre contenido propio y publicado; el de reingeniería
+            portafolio responde sobre contenido propio y publicado; el de reingeniería
             reconstruye un producto legacy sin documentación, verificado byte a byte;
             y el harness recorta lo que se le paga al modelo. Tres pestañas, mismo
             toggle RRHH / técnico.
@@ -285,7 +285,7 @@ export default function IASolutions() {
                 ))}
               </div>
               <div className="agent-invite">
-                <p>¿Querés probar el tercer caso ya? Abajo a la derecha está el chat real de este portfolio — preguntale lo que quieras.</p>
+                <p>¿Querés probar el tercer caso ya? Abajo a la derecha está el chat real de este portafolio — preguntale lo que quieras.</p>
                 <button
                   type="button"
                   className="link-pill primary"

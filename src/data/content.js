@@ -154,7 +154,7 @@ export const featuredProject = {
 
 export const featuredAgent = {
   name: 'Asistentes IA — tres casos, un mismo oficio',
-  tagline: 'Tres asistentes con el mismo motor y distinto alcance: el admin opera la flota en vivo, el del taller lleva el ciclo de reparación, y el de este portfolio responde solo con lo publicado.',
+  tagline: 'Tres asistentes con el mismo motor y distinto alcance: el admin opera la flota en vivo, el del taller lleva el ciclo de reparación, y el de este portafolio responde solo con lo publicado.',
   apps: [
     {
       label: 'Caso 1 — Admin',
@@ -169,8 +169,8 @@ export const featuredAgent = {
       repo: 'https://github.com/darwinrocha85/spacecraft-taller-frontend',
     },
     {
-      label: 'Caso 3 — Portfolio (este widget)',
-      description: 'Burbuja abajo a la derecha con historial corto y sugerencias. Sin datos en vivo: si no está en el portfolio, dice que no lo tiene y deriva a la sección.',
+      label: 'Caso 3 — Portafolio (este widget)',
+      description: 'Burbuja abajo a la derecha con historial corto y sugerencias. Sin datos en vivo: si no está en el portafolio, dice que no lo tiene y deriva a la sección.',
       url: '/#contact',
       repo: 'https://github.com/darwinrocha85/darwin-rocha-portfolio',
     },
@@ -178,9 +178,9 @@ export const featuredAgent = {
   backendRepo: 'https://github.com/darwinrocha85/spacecraftSystem-frontend',
   compareTable: {
     caption: 'Tres casos, un mismo motor',
-    head: ['', 'Admin', 'Taller', 'Portfolio'],
+    head: ['', 'Admin', 'Taller', 'Portafolio'],
     rows: [
-      ['Alcance', 'Dueño de la flota', 'Staff del hangar', 'Visitante del portfolio'],
+      ['Alcance', 'Dueño de la flota', 'Staff del hangar', 'Visitante del portafolio'],
       ['Datos', 'En vivo: flota y ventas', 'En vivo: ciclo de reparación', 'Estáticos: lo publicado'],
       ['Tools', '28 (lectura + escritura)', '15 (sin destructivas)', 'Ninguna'],
       ['Confirmación', 'Previa a impacto real', 'Solo borrador de presupuesto', 'No aplica'],
@@ -188,14 +188,14 @@ export const featuredAgent = {
     ],
   },
   hrDescription: [
-    'No son un chat de demo: son tres asistentes trabajando sobre casos reales, cada uno con su nivel de permiso. El del panel consulta y opera la flota en vivo, el del taller lleva el día a día del hangar, y el de este portfolio responde solo con lo que está publicado acá.',
+    'No son un chat de demo: son tres asistentes trabajando sobre casos reales, cada uno con su nivel de permiso. El del panel consulta y opera la flota en vivo, el del taller lleva el día a día del hangar, y el de este portafolio responde solo con lo que está publicado acá.',
     'La regla es la misma en los tres: no inventar. Los dos primeros leen el dato real antes de responder y piden confirmación antes de cualquier acción con impacto —crear una nave, enviarla a reparar—; el tercero prefiere decir que no lo tiene y llevarte a la sección correcta.',
     'Todo queda registrado —modelo, tokens y latencia de cada uso—. Y cada asistente ve solo su alcance: el taller no toca cobros y aprobar un presupuesto solo se hace desde el panel, nunca desde un chat.',
   ],
   techDescription: [
     'Motor de function-calling propio en Cloud Functions for Firebase 2.ª gen (Node 20, ESM): corre sobre Groq —`qwen/qwen3.8-27b` en producción, pisado por `GROQ_MODEL` porque el catálogo rota— con Gemini (`gemini-3.8-flash`) como fallback ante 429 y Claude (`claude-haiku-4-5`) soportado, todo según `AI_PROVIDER`. Un solo JSON Schema por tool sirve a los tres proveedores; a Groq se le pega por fetch directo a su endpoint OpenAI-compatible, sin SDK nuevo.',
     'Catálogo único en inglés (las respuestas siguen en español): 28 tools del admin y 15 del taller, con las 6 de lectura reusadas por referencia —misma definición, cero duplicación—. El MCP público expone 20 de solo lectura (denylist de 17 de escritura) por StreamableHTTP stateless (`@modelcontextprotocol/sdk` 1.30); `askAdmin` y `askTaller` consumen las tools en el mismo proceso, sin doble hop HTTP. Cada pregunta va acotada: 500 caracteres, 3 rondas de tools, 6 turnos de historial.',
-    'El taller suma `draft_budget_from_damage_description` (matching exacto y fuzzy contra catálogo de daños y stock; lo ambiguo queda al criterio del modelo con confirmación previa a crear) y la confirmación previa a destructivas vive en el `SYSTEM_PROMPT` del admin. Aprobar presupuestos —cobra tarjeta real vía BankIn— no existe en ningún catálogo. El caso del portfolio no toca datos vivos: contexto estático generado desde `content.js` en cada build, temperature 0.55 y mock si falta la API key.',
+    'El taller suma `draft_budget_from_damage_description` (matching exacto y fuzzy contra catálogo de daños y stock; lo ambiguo queda al criterio del modelo con confirmación previa a crear) y la confirmación previa a destructivas vive en el `SYSTEM_PROMPT` del admin. Aprobar presupuestos —cobra tarjeta real vía BankIn— no existe en ningún catálogo. El caso del portafolio no toca datos vivos: contexto estático generado desde `content.js` en cada build, temperature 0.55 y mock si falta la API key.',
   ],
 }
 
@@ -207,16 +207,11 @@ export const harnessCase = {
     'El problema: cada pregunta al chat mandaba al modelo todo —el prompt completo más las 28 herramientas del admin (o 15 del taller)— en cada vuelta de la conversación. Eso son ~5000 tokens por pregunta. Groq gratis te da 7000 por minuto: con 2 preguntas seguidas te corta (error 429). El harness es un peaje antes del modelo que recorta lo que se le manda.',
     'La idea en una frase: antes de llamar al modelo (caro), resolvemos por reglas baratas todo lo que no necesita inteligencia: qué herramientas mostrarle y si la pregunta ya se respondió antes.',
     'El router adivina la intención sin IA: lee la pregunta con reglas simples —keywords en español, sin acentos—. Si preguntás "cuánto recaudamos hoy", detecta familia dashboard y al modelo le muestra solo 4 herramientas en vez de 28. Si no entiende la pregunta, le muestra todo como antes: nunca rompe nada, a lo sumo no ahorra esa vez.',
-    'El caché L1 hace que las repetidas no paguen: preguntas como "dame las naves" o "stock" se responden siempre igual, así que la primera vez se guarda el mapeo de pregunta a herramienta y la próxima se ejecuta directo sin llamar al modelo: 0 tokens. No se guarda la respuesta vieja —el dato se vuelve a pedir fresco cada vez—; lo que se evita es pagarle al modelo por algo trivial.',
+    'El caché L1 hace que las repetidas no paguen: preguntas como "dame las naves" o "stock" se responden siempre igual, así que la primera vez se guarda el mapeo de pregunta a herramienta y la próxima se ejecuta directo sin llamar al modelo: 0 tokens. No se guarda la respuesta vieja —el dato se vuelve a pedir actualizado cada vez—; lo que se evita es pagarle al modelo por algo trivial.',
   ],
   techDescription: [
-    {
-      title: 'Dónde vive',
-      pre: 'pregunta → [L1: ¿ya la vi?] → sí → ejecuta herramienta, listo (0 tokens)\n            ↓ no\n         [router: ¿qué familia es?] → modelo ve solo 4-12 herramientas\n              ↓ responde\n         [¿usó una sola herramienta de lectura? → aprender para la próxima]',
-    },
-    'Todo esto corre antes del modelo, así que funciona igual con Groq, Gemini o Claude. Y con HARNESS_PHASE=pre-harness se desactiva por completo (así medimos el antes/después).',
-    'Local vs producción: el código es el mismo, cambia dónde anota lo aprendido. En local (emulador), archivo SQLite vía node:sqlite —built-in de Node, sin dependencias nativas— que se borra; en producción (Firebase), colección ai_cache en Firestore que persiste y comparte lo aprendido entre instancias. En local sirve para medir sin ruido; en producción ahorra cuota real todos los días. Modelos y runtime: Groq qwen/qwen3.8-27b con fallback a Gemini gemini-3.8-flash, Cloud Functions 2.ª gen Node 20.',
-    'Cómo sabemos que funciona: cada respuesta trae la factura —qué familia detectó, cuántas herramientas vio el modelo (ej. 4 de 28), si fue hit de caché y cuántos tokens se evitaron— y queda registrada en ai_usage. De ahí salió la tabla de abajo: 56.934 a 16.344 tokens, 71,3 % menos, con las mismas 14 preguntas.',
+    'El router adivina la intención sin IA: lee la pregunta con reglas simples —keywords en español, sin acentos—. Si preguntás "cuánto recaudamos hoy", detecta familia dashboard y al modelo le muestra solo 4 herramientas en vez de 28. Si no entiende la pregunta, le muestra todo como antes: nunca rompe nada, a lo sumo no ahorra esa vez.',
+    'El caché L1 hace que las repetidas no paguen: preguntas como "dame las naves" o "stock" se responden siempre igual, así que la primera vez se guarda el mapeo de pregunta a herramienta y la próxima se ejecuta directo sin llamar al modelo: 0 tokens. No se guarda la respuesta vieja —el dato se vuelve a pedir actualizado cada vez—; lo que se evita es pagarle al modelo por algo trivial.',
   ],
   stackTable: {
     caption: 'Con qué está construido',
@@ -246,7 +241,7 @@ export const harnessCase = {
     { label: 'Preguntas OK', value: '14/14' },
   ],
   flowSteps: [
-    { title: 'L1: ¿ya la vi?', desc: 'Pregunta repetida → ejecuta directo, 0 tokens. El dato se pide fresco; lo que se ahorra es el modelo.' },
+    { title: 'L1: ¿ya la vi?', desc: 'Pregunta repetida → ejecuta directo, 0 tokens. El dato se pide actualizado; lo que se ahorra es el modelo.' },
     { title: 'Router: ¿qué familia es?', desc: 'Reglas en español sin IA → el modelo ve 4–12 tools en vez de 28. Si no entiende, ve todo: nunca rompe.' },
     { title: 'Modelo responde', desc: 'Con catálogo chico: menos tokens, misma respuesta. Groq con fallback a Gemini ante 429.' },
     { title: 'Aprende', desc: 'Si usó una sola tool de lectura, guarda el mapeo para la próxima. Se desactiva con pre-harness.' },
@@ -370,7 +365,7 @@ export const otherProjects = [
     name: 'Sonora Labs',
     kind: 'Landing de conversión — productora premium',
     description:
-      'Productora urbana en Gran Vía (Madrid): trap, reggaeton, drill y afro con enfoque "sonido de label". Comparativa antes/después, portfolio de streams y planes tipo Starter/Pro/Label.',
+      'Productora urbana en Gran Vía (Madrid): trap, reggaeton, drill y afro con enfoque "sonido de label". Comparativa antes/después, portafolio de streams y planes tipo Starter/Pro/Label.',
     url: 'https://roybert33-cmd.github.io/Sonora-labs/',
     accent: '#B9F227',
     bg: '#0D0D10',

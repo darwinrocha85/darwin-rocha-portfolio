@@ -26,7 +26,7 @@ export default function AgentWidget() {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      text: 'Hola — soy el asistente del portfolio de Darwin. Puedo responder sobre estudios, experiencia y demos. Si no está en el portfolio te diré dónde mirar.',
+      text: 'Hola — soy el asistente del portafolio de Darwin. Puedo responder sobre estudios, experiencia y demos. Si no está en el portafolio te diré dónde mirar.',
     },
   ])
   const listRef = useRef(null)
@@ -81,7 +81,7 @@ export default function AgentWidget() {
       <button
         className={`agent-bubble ${open ? 'open' : ''}`}
         onClick={() => setOpen((v) => !v)}
-        aria-label={open ? 'Cerrar asistente' : 'Abrir asistente del portfolio'}
+        aria-label={open ? 'Cerrar asistente' : 'Abrir asistente del portafolio'}
       >
         {open ? (
           '×'
@@ -101,9 +101,9 @@ export default function AgentWidget() {
       </button>
 
       {open && (
-        <div className="agent-panel" role="dialog" aria-label="Asistente del portfolio">
+        <div className="agent-panel" role="dialog" aria-label="Asistente del portafolio">
           <div className="agent-header">
-            <strong>Pregunta a mi portfolio</strong>
+            <strong>Pregunta a mi portafolio</strong>
             <button className="agent-close" onClick={() => setOpen(false)} aria-label="Cerrar">
               ×
             </button>
@@ -139,7 +139,7 @@ export default function AgentWidget() {
               Enviar
             </button>
           </div>
-          <p className="agent-hint">Solo responde con lo que hay en el portfolio. Si no está, te deriva a la sección.</p>
+          <p className="agent-hint">Solo responde con lo que hay en el portafolio. Si no está, te deriva a la sección.</p>
         </div>
       )}
     </>
