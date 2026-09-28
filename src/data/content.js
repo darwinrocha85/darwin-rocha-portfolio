@@ -232,19 +232,25 @@ export const harnessCase = {
       ['Medición', 'bench.mjs + colección ai_usage'],
     ],
   },
-  benchTable: {
-    caption: 'Bench en producción · 14 preguntas fijas en orden · Groq · 2026-09-27',
-    head: ['Métrica', 'Pre-harness', 'Post-harness'],
-    rows: [
-      ['Tokens totales', '56.934', '16.344 (−71,3 %)'],
-      ['Admin (7 preguntas)', '35.002', '10.706 (−69,4 %)'],
-      ['Taller (7 preguntas)', '21.932', '5.638 (−74,3 %)'],
-      ['Hit-rate caché L1', '—', '0,43'],
-      ['Latencia p50 admin', '1310 ms', '1136 ms'],
-      ['Latencia p50 taller', '1010 ms', '1031 ms'],
-      ['Preguntas OK', '14/14', '14/14'],
-    ],
-  },
+  benchCaption: 'Bench en producción · 14 preguntas fijas en orden · Groq · 2026-09-27',
+  benchHero: { value: '−71,3 %', label: 'menos tokens por las mismas 14 preguntas' },
+  benchBars: [
+    { label: 'Tokens totales', pre: '56.934', post: '16.344', preN: 56934, postN: 16344, save: '−71,3 %' },
+    { label: 'Admin · 7 preguntas', pre: '35.002', post: '10.706', preN: 35002, postN: 10706, save: '−69,4 %' },
+    { label: 'Taller · 7 preguntas', pre: '21.932', post: '5.638', preN: 21932, postN: 5638, save: '−74,3 %' },
+  ],
+  benchChips: [
+    { label: 'Hit-rate caché L1', value: '0,43' },
+    { label: 'Latencia p50 admin', value: '1310 → 1136 ms' },
+    { label: 'Latencia p50 taller', value: '1010 → 1031 ms' },
+    { label: 'Preguntas OK', value: '14/14' },
+  ],
+  flowSteps: [
+    { title: 'L1: ¿ya la vi?', desc: 'Pregunta repetida → ejecuta directo, 0 tokens. El dato se pide fresco; lo que se ahorra es el modelo.' },
+    { title: 'Router: ¿qué familia es?', desc: 'Reglas en español sin IA → el modelo ve 4–12 tools en vez de 28. Si no entiende, ve todo: nunca rompe.' },
+    { title: 'Modelo responde', desc: 'Con catálogo chico: menos tokens, misma respuesta. Groq con fallback a Gemini ante 429.' },
+    { title: 'Aprende', desc: 'Si usó una sola tool de lectura, guarda el mapeo para la próxima. Se desactiva con pre-harness.' },
+  ],
 }
 
 export const merlinCase = {

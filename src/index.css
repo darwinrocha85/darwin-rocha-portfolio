@@ -794,6 +794,149 @@ button {
   background: linear-gradient(90deg, var(--accent), var(--accent-strong));
 }
 
+/* Bench hero (Harness: ahorro de un vistazo) */
+.bench-hero {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 4px 0 4px;
+}
+
+.bench-hero-value {
+  font-size: clamp(44px, 6vw, 64px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--accent-strong);
+  line-height: 1;
+}
+
+.bench-hero-label {
+  color: var(--text-muted);
+  font-size: 15px;
+  max-width: 280px;
+}
+
+/* Bench pre/post: barra fantasma (antes) + barra real (ahora) */
+.bench-track {
+  margin-bottom: 5px;
+}
+
+.match-bar-fill.bench-pre {
+  background: var(--text-faint);
+  opacity: 0.45;
+}
+
+/* Stat chips (Harness: hit-rate, latencias, OK) */
+.stat-chips {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 4px 0 20px;
+}
+
+.stat-chip {
+  background: var(--tag-bg);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-chip-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.stat-chip-value {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text);
+}
+
+/* Flow steps (Harness: L1 → router → modelo → aprende) */
+.flow-steps {
+  list-style: none;
+  margin: 4px 0 20px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.flow-steps li {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  gap: 10px;
+}
+
+.flow-step-n {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flow-steps li strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.flow-steps li p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Stack grid (Harness: piezas sin tabla) */
+.stack-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 4px 0 0;
+}
+
+.stack-cell {
+  background: var(--tag-bg);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.stack-cell dt {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.stack-cell dd {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 13.5px;
+  color: var(--text);
+}
+
+@media (max-width: 860px) {
+  .stat-chips,
+  .flow-steps,
+  .stack-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Diagram blocks (preformatted figures) */
 .diagram-block {
   font-family: var(--mono);

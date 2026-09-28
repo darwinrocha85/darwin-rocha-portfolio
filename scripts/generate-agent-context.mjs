@@ -74,6 +74,25 @@ function renderProjectBody(project, { includeApps = false, includeDemo = false }
         project.results.map((r) => `  - ${r.label} (${r.detail}): ${r.pct} %`).join('\n')
     )
   }
+  if (project.benchHero) lines.push(`Bench: ${project.benchHero.value} ${project.benchHero.label}`)
+  if (Array.isArray(project.benchBars) && project.benchBars.length) {
+    lines.push(
+      'Bench por grupo (pre → post):\n' +
+        project.benchBars.map((b) => `  - ${b.label}: ${b.pre} → ${b.post} (${b.save})`).join('\n')
+    )
+  }
+  if (Array.isArray(project.benchChips) && project.benchChips.length) {
+    lines.push(
+      'Bench detalle:\n' +
+        project.benchChips.map((c) => `  - ${c.label}: ${c.value}`).join('\n')
+    )
+  }
+  if (Array.isArray(project.flowSteps) && project.flowSteps.length) {
+    lines.push(
+      'Cómo funciona:\n' +
+        project.flowSteps.map((s, i) => `  ${i + 1}. ${s.title} — ${s.desc}`).join('\n')
+    )
+  }
 
   if (Array.isArray(project.hrDescription) && project.hrDescription.length) {
     lines.push('Para RRHH / negocio:')
@@ -105,6 +124,7 @@ async function main() {
     featuredProject,
     featuredAgent,
     merlinCase,
+    harnessCase,
     relatedProject,
     secondaryProjects,
     otherProjects,
@@ -143,6 +163,9 @@ ${renderProjectBody(featuredAgent, { includeApps: true })}`)
   sections.push(`IA SOLUTIONS — caso dominio desconocido (decompilación)
 ${renderProjectBody(merlinCase, { includeDemo: false })}`)
 
+  sections.push(`IA SOLUTIONS — harness de ahorro de tokens
+${renderProjectBody(harnessCase, { includeDemo: false })}`)
+
   sections.push(`PROYECTO RELACIONADO — BankIn
 ${renderProjectBody(relatedProject, { includeDemo: true })}`)
 
@@ -160,12 +183,12 @@ ${otherProjects.map((p) => `- ${p.name} (${p.kind}): ${p.description} — ${p.ur
 
   const output = sections.join('\n\n')
 
-  // Claves estables por sección, en el MISMO orden en que se pusieron arriba (11 secciones).
+  // Claves estables por sección, en el MISMO orden en que se pusieron arriba (12 secciones).
   // functions/index.js manda solo las relevantes por pregunta (pickContext) en vez del texto
   // entero — si algún día cambia la cantidad de secciones, esto falla en build a propósito.
   const SECTION_KEYS = [
     'PERFIL', 'DESTACADOS', 'EXPERIENCIA', 'EDUCACION',
-    'NAVESPACE', 'ASISTENTE', 'MERLIN', 'BANKIN', 'SECUNDARIOS', 'OTROS', 'SECCIONES',
+    'NAVESPACE', 'ASISTENTE', 'MERLIN', 'HARNESS', 'BANKIN', 'SECUNDARIOS', 'OTROS', 'SECCIONES',
   ]
   if (SECTION_KEYS.length !== sections.length) {
     throw new Error(

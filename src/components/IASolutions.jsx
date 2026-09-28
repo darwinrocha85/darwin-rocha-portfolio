@@ -87,6 +87,60 @@ export default function IASolutions() {
             </div>
           </div>
 
+          {activeTab === 'harness' && (
+            <>
+              <div className="bench-hero">
+                <span className="bench-hero-value">{project.benchHero.value}</span>
+                <span className="bench-hero-label">{project.benchHero.label}</span>
+              </div>
+              <div className="views-label">{project.benchCaption}</div>
+              <div className="match-bars" role="img" aria-label="Tokens pre-harness 56.934 contra post-harness 16.344, un 71,3 por ciento menos">
+                {project.benchBars.map((b) => (
+                  <div className="match-bar-row" key={b.label}>
+                    <div className="match-bar-head">
+                      <span className="match-bar-label">{b.label}</span>
+                      <span className="match-bar-detail">
+                        {b.pre} → {b.post}
+                      </span>
+                      <span className="match-bar-value">{b.save}</span>
+                    </div>
+                    <div className="match-bar-track bench-track">
+                      <div className="match-bar-fill bench-pre" style={{ width: '100%' }} />
+                    </div>
+                    <div className="match-bar-track">
+                      <div
+                        className="match-bar-fill is-full"
+                        style={{ width: `${((b.postN / b.preN) * 100).toFixed(1)}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="stat-chips">
+                {project.benchChips.map((c) => (
+                  <div className="stat-chip" key={c.label}>
+                    <span className="stat-chip-label">{c.label}</span>
+                    <span className="stat-chip-value">{c.value}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="views-label">Cómo funciona</div>
+              <ol className="flow-steps">
+                {project.flowSteps.map((s, i) => (
+                  <li key={s.title}>
+                    <span className="flow-step-n" aria-hidden="true">
+                      {i + 1}
+                    </span>
+                    <div>
+                      <strong>{s.title}</strong>
+                      <p>{s.desc}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </>
+          )}
+
           <div className="audience-copy">
             {copy.map((block, i) =>
               typeof block === 'string' ? (
@@ -141,33 +195,15 @@ export default function IASolutions() {
             </>
           ) : activeTab === 'harness' ? (
             <>
-              {[project.stackTable, project.benchTable].map((table) => (
-                <div key={table.caption}>
-                  <div className="views-label">{table.caption}</div>
-                  <div className="harness-table-wrap">
-                    <table className="harness-table">
-                      <thead>
-                        <tr>
-                          {table.head.map((col) => (
-                            <th key={col} scope="col">
-                              {col}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {table.rows.map((row) => (
-                          <tr key={row[0]}>
-                            {row.map((cell, i) => (
-                              <td key={`${row[0]}-${i}`}>{cell}</td>
-                            ))}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+              <div className="views-label">{project.stackTable.caption}</div>
+              <dl className="stack-grid">
+                {project.stackTable.rows.map((row) => (
+                  <div className="stack-cell" key={row[0]}>
+                    <dt>{row[0]}</dt>
+                    <dd>{row[1]}</dd>
                   </div>
-                </div>
-              ))}
+                ))}
+              </dl>
             </>
           ) : (
             <>
