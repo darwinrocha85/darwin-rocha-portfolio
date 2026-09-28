@@ -2,6 +2,42 @@ import { useState } from 'react'
 import { merlinCase } from '../data/content'
 import { useReveal } from '../hooks/useReveal'
 
+function CaseTable({ table }) {
+  return (
+    <>
+      <div className="views-label eco-label">{table.caption}</div>
+      <div className="harness-table-wrap">
+        <table className="harness-table">
+          <thead>
+            <tr>
+              {table.head.map((col) => (
+                <th key={col || 'row-head'} scope="col">
+                  {col}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {table.rows.map((row) => (
+              <tr key={row[0]}>
+                {row.map((cell, i) =>
+                  i === 0 ? (
+                    <th key={`${row[0]}-${i}`} scope="row">
+                      {cell}
+                    </th>
+                  ) : (
+                    <td key={`${row[0]}-${i}`}>{cell}</td>
+                  )
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  )
+}
+
 export default function IASolutions() {
   const [audience, setAudience] = useState('hr')
   const { ref, revealed } = useReveal()
@@ -16,9 +52,9 @@ export default function IASolutions() {
           <span className="eyebrow">IA Solutions</span>
           <h2>Casos fuera del ecosistema</h2>
           <p>
-            Lo mismo que en el ecosistema pero sin conocer el dominio —
-            empezando por un videojuego clásico reconstruido byte a byte
-            con IA como copiloto.
+            El mismo flujo con IA pero sin conocer el dominio —
+            empezando por una prueba técnica de decompilación,
+            con alcance y verificación explícitos.
           </p>
         </div>
 
@@ -54,7 +90,7 @@ export default function IASolutions() {
               <div
                 className="match-bars"
                 role="img"
-                aria-label={`Matching decompilation: 5 funciones al 100 por ciento, despachador al ${project.results[1].pct} por ciento, test SAT al ${project.results[2].pct} por ciento`}
+                aria-label={`Matching decompilation: 5 funciones al 100 por ciento (4 mas 1 helper), despachador al ${project.results[1].pct} por ciento, test SAT al ${project.results[2].pct} por ciento`}
               >
                 {project.results.map((r) => (
                   <div className="match-bar-row" key={r.label}>
@@ -97,9 +133,13 @@ export default function IASolutions() {
                 ))}
               </div>
               <div className="relevant-connection">
-                <span className="connection-chip">Evidencias objdiff</span>
-                <span className="connection-arrow">verificadas contra JSONs crudos →</span>
-                <span className="connection-chip accent">detalle en entrevista</span>
+                <a className="connection-chip" href={project.prUrl} target="_blank" rel="noreferrer">
+                  PR #4 (pendiente de merge)
+                </a>
+                <span className="connection-arrow">base {project.baseCommit} · verificado con objdiff-cli →</span>
+                <a className="connection-chip accent" href={project.repoUrl} target="_blank" rel="noreferrer">
+                  repo Homeworld2Classic
+                </a>
               </div>
             </>
           )}
@@ -109,6 +149,9 @@ export default function IASolutions() {
               <p key={paragraph}>{paragraph}</p>
             ))}
           </div>
+
+          {project.decisions && <CaseTable table={project.decisions} />}
+          {project.ownership && <CaseTable table={project.ownership} />}
         </div>
       </div>
     </section>

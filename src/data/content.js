@@ -9,7 +9,7 @@ export const profile = {
   summary:
     'Ingeniero en Computación con más de 10 años de experiencia en desarrollo backend con Python y Java: APIs REST, microservicios y sistemas de base de datos para plataformas en producción. En los últimos años integré herramientas de IA (Claude, OpenCode) directamente en mi flujo de trabajo para acelerar el análisis de código y reducir tiempos de entrega.',
   aiNote:
-    'El proyecto destacado de abajo es un ejemplo directo de ese proceso: yo defino la arquitectura y las reglas de negocio con el cliente, y colaboro con un agente de IA para construir, verificar y desplegar cada fase — el mismo flujo que uso hoy en mi trabajo diario.',
+    'Cómo trabajo con IA: yo defino la arquitectura y las reglas con el cliente, la IA propone, y nada entra sin que yo lo revise — build, tests/diffs y deploy verificados por mí en cada fase. El caso de abajo lo muestra fuera de mi dominio.',
 }
 
 export const highlights = [
@@ -150,6 +150,24 @@ export const featuredProject = {
     'Taller extraído a servicio propio en Python 3.14 + FastAPI con SQLAlchemy 2.0 y SQLite en archivo, con su propia app en React + Vite de estilo sobrio de hangar. El panel admin solo envía a taller y ve estado/historial; el flujo fino (recibir, avanzar, presupuesto) vive en la app de taller.',
     'El panel admin corre su propio motor de function-calling (lectura y escritura sobre la flota) sobre Groq (`qwen/qwen3.8-27b`, gratis sin tarjeta) con Gemini como fallback ante 429, según la variable `AI_PROVIDER` — un solo JSON Schema por tool sirve para los tres proveedores, y catálogo + prompts en inglés (las respuestas siguen en español) para gastar menos tokens. Ese mismo catálogo se expone además por un servidor MCP aparte (protocolo `@modelcontextprotocol/sdk`, sin pasar por el SDK de ningún modelo) para que cualquier cliente MCP externo, no solo el widget de chat, pueda consultarlo y operarlo. El taller comparte proyecto y deploy (`spacecraft-mcp`) con el panel admin, pero con catálogo y SYSTEM_PROMPT propios: sus 6 tools de lectura se reusan por referencia desde el catálogo admin —misma definición, cero duplicación— y el flujo fino (recibir, avanzar, presupuesto) vive en sus 9 tools propias.',
   ],
+  decisions: {
+    caption: 'Decisiones de negocio (por qué está así)',
+    head: ['Decisión', 'Por qué'],
+    rows: [
+      ['Taller separado del panel', 'Si una nave está en reparación, nadie la vende ni la edita por error'],
+      ['Nada se guarda sin cobro confirmado', 'BankIn confirma primero (201); si se cancela, se intenta devolver el dinero'],
+      ['El panel mira, no toca el taller', 'Cada app hace su trabajo; menos mezclas, menos errores'],
+    ],
+  },
+  ownership: {
+    caption: 'Quién hizo qué',
+    head: ['', 'Yo', 'La IA', 'Cómo lo comprobé'],
+    rows: [
+      ['Reglas del negocio', 'Acordadas con el cliente y codificadas', '—', 'Compras y cancelaciones probadas de punta a punta'],
+      ['Código', 'Arquitectura y deploys', 'Propuso y completó funciones', 'Reviso todo antes de subirlo'],
+      ['Asistentes', 'Permisos y confirmaciones', 'Redactan y ejecutan', 'Nada con impacto sin tu OK; todo registrado'],
+    ],
+  },
 }
 
 export const featuredAgent = {
@@ -197,6 +215,15 @@ export const featuredAgent = {
       ['Tools', '28 (lectura + escritura)', '15 (sin destructivas)', 'Ninguna'],
       ['Confirmación', 'Previa a impacto real', 'Solo borrador de presupuesto', 'No aplica'],
       ['Modelo', 'Groq qwen3.8-27b · fallback Gemini', 'Groq qwen3.8-27b · fallback Gemini', 'Gemini o Claude, solo texto'],
+    ],
+  },
+  ownership: {
+    caption: 'Quién decide y quién ejecuta',
+    head: ['', 'Yo', 'La IA'],
+    rows: [
+      ['Permisos', 'Defino qué puede tocar cada uno', '—'],
+      ['Respuestas', '—', 'Redacta con datos reales, no inventa'],
+      ['Acciones con impacto', 'Solo con tu OK previo', 'Ejecuta si confirmas'],
     ],
   },
   hrDescription: [
@@ -267,31 +294,52 @@ export const harnessCase = {
 
 export const merlinCase = {
   id: 'merlin-decomp',
-  name: 'Reconversión — legacy desconocido con IA',
-  tagline: 'Un videojuego clásico (Homeworld 2) como banco de pruebas: reconstruir su C para que compile a bytes idénticos al original, sin conocer el dominio y con IA como copiloto.',
+  name: 'Decompilation Challenge — Homeworld 2 (matching)',
+  tagline: 'Reto técnico personal de 48 h: escribir el C que, compilado con el compilador original (MSVC), produzca los mismos bytes que el binario de 2003. Dejo el alcance real y cómo lo verifiqué.',
+  repoUrl: 'https://github.com/HaydnTrigg/Homeworld2Classic',
+  prUrl: 'https://github.com/HaydnTrigg/Homeworld2Classic/pull/4',
+  baseCommit: '9b3fed4',
   hrDescription: [
-    'Quise probarme fuera de mi dominio: elegí un producto legacy real y abierto —el videojuego Homeworld 2— donde no conocía ni el código ni las reglas del negocio, y me puse a reconstruirlo con IA como copiloto.',
-    'El resultado se mide solo: 5 funciones de lógica real reconstruidas al 100 % byte a byte —el compilador original produce exactamente los mismos bytes—, más 2 piezas grandes llevadas al 66–81 % con su límite técnico explicado.',
-    'Lo que me llevo y ofrezco: entrar rápido en código ajeno sin documentación, distinguir qué es reproducible de qué tiene techo, y dejar tooling propio para que el siguiente avance más rápido.',
+    'Fue un reto técnico personal con límite de 48 horas sobre un proyecto abierto que yo no conocía (el juego Homeworld 2): reconstruir funciones en C sin documentación, con IA como apoyo y todo verificado en local.',
+    'Alcance real: 4 funciones de lógica del juego + 1 ayudante pequeño, las 5 al 100 % byte a byte según la herramienta del proyecto (objdiff-cli), más 2 piezas grandes documentadas como parciales (66–81 %) con su techo técnico explicado. La entrega está en el PR, abierto y pendiente de revisión.',
+    'Lo que sí acredita de mi criterio: elegir candidatas sin techo estructural, revertir arreglos que empeoraban el resultado y descartar una función por irreproducible — todo decidido y comprobado por mí, no aceptado de la IA.',
   ],
   techDescription: [
-    'Matching decompilation sobre Homeworld2Classic (MSVC): el C que escribo debe compilar a bytes idénticos al original —mismas instrucciones, registros y orden—. Medido con objdiff-cli: una función pequeña al 100 % (24 B), 4 de lógica real al 100 % (comparador de sonido de 441 B, contenedor de efectos, punto de envolvente y tabla de excepciones Windows de 387 B) y 2 piezas grandes al 66.75 % (test SAT de 15 ejes, 2718 B) y 81.28 % (despachador de 43 eventos, 6100 B).',
-    'El aprendizaje duro: corregir una sola declaración guiándome por el diff exacto empeoró 66.75 % → 61.19 % —el compilador reprograma registros y scheduling de forma global—. Igual que un intento previo (60 % → 22 %). Esas piezas son difíciles de verdad, no solo largas: no convergen con arreglos locales.',
-    'Mi loop: elegir candidata por barrido (tamaño, sin llamadas a imports crudos ni helpers con hash irreproducible), escribir C, compilar con ninja, medir, alinear diffs y repetir —con 22 scripts propios para ranking, visores de diff y aplicación de cambios—. Todo verificado localmente, con evidencia JSON por función.',
+    'Matching decompilation sobre Homeworld2Classic (MSVC 2003 vía toolchain del proyecto): mi C debe compilar a los mismos bytes — instrucciones, registros y orden—. Se verifica con `ninja <obj unidad>` + `objdiff-cli diff -p . -u <unidad> <símbolo>` → `match_percent`. Base `9b3fed4`; entrega en PR #4 (5 commits, pendiente de merge, sin validación independiente).',
+    'Al 100 %: comparador de sonido `SoundParams::operator==` (441 B), contenedor de efectos (290 B), punto de envolvente (104 B) y tabla de excepciones Windows `GetExceptionDescription` (387 B), más helper `stringLengthReverse` (24 B). Parciales honestos: test SAT de 15 ejes `Collision::Intersect` (2718 B, 66.75 %) y despachador de 43 eventos `getChatterEvent` (6100 B, 81.28 %).',
+    'Mi revisión, no la de la IA: un fix guiado por el diff exacto empeoró 66.75 % → 61.19 % (MSVC reprograma registros en cascada) y lo revertí; igual un intento previo (60 % → 22 %). Descarté `FindIntersection` por techo estructural (hash de helper anónimo irreproducible). Un hallazgo de registros aportado por IA (`esi=B, edi=A`) lo verifiqué a mano antes de aplicarlo. Evidencia por función en JSONs crudos de objdiff-cli.',
   ],
-  tech: ['C', 'MSVC', 'ninja', 'objdiff-cli', 'Python', 'IA aplicada'],
+  tech: ['C', 'MSVC', 'ninja', 'objdiff-cli', 'Python', 'IA supervisada'],
   results: [
-    { label: '5 funciones al 100 %', detail: '24–441 B · byte a byte', pct: 100 },
-    { label: 'Despachador battle-chatter', detail: '6100 B · switch de 43 eventos', pct: 81.28 },
-    { label: 'Test SAT de 15 ejes', detail: '2718 B · colisiones OBB', pct: 66.75 },
+    { label: '5 funciones al 100 % (4 + 1 helper)', detail: '24–441 B · objdiff-cli', pct: 100 },
+    { label: 'Despachador battle-chatter (parcial)', detail: '6100 B · switch de 43 eventos', pct: 81.28 },
+    { label: 'Test SAT de 15 ejes (parcial)', detail: '2718 B · colisiones OBB', pct: 66.75 },
   ],
   loopSteps: [
-    { title: 'Barrido', desc: 'Elegir candidata por tamaño y forma: sin calls a imports crudos ni helpers con hash irreproducible.' },
-    { title: 'Escritura', desc: 'C que compile a bytes idénticos: mismas instrucciones, registros y orden.' },
-    { title: 'Compilación', desc: 'ninja con el compilador original (MSVC) sobre el proyecto tal cual.' },
-    { title: 'Medición', desc: 'objdiff-cli: match_percent por función; aligndiff para ver fila por fila.' },
-    { title: 'Iteración', desc: 'Ajustar y repetir con 22 scripts propios; gateway GPT solo donde hizo falta.' },
+    { title: 'Barrido', desc: 'Elegir candidata sin techo estructural: sin calls a imports crudos ni helpers con hash irreproducible.' },
+    { title: 'Escritura', desc: 'Propongo el C (mío o de la IA) y decido qué entra.' },
+    { title: 'Compilación', desc: 'ninja con el compilador original sobre el proyecto tal cual.' },
+    { title: 'Medición', desc: 'objdiff-cli match_percent por función; diff fila a fila.' },
+    { title: 'Revisión', desc: 'Si un arreglo local empeora el global, lo revierto y lo documento. Sin merge, no hay 100 % que valga.' },
   ],
+  decisions: {
+    caption: 'Mis decisiones (antes de soltar a la IA)',
+    head: ['Decisión', 'Por qué'],
+    rows: [
+      ['Elegir piezas sin techo', 'Si el original no se puede reproducir, la descarto antes de gastar tiempo'],
+      ['Revertir lo que empeora', 'Un arreglo "correcto" bajó de 67 % a 61 %: lo quité'],
+      ['Verificar a mano', 'Un dato que aportó la IA lo comprobé yo antes de usarlo'],
+    ],
+  },
+  ownership: {
+    caption: 'Quién hizo qué',
+    head: ['', 'Yo', 'La IA'],
+    rows: [
+      ['Elegir y revisar', 'Yo decido qué entra', '—'],
+      ['Proponer código', 'Yo también escribo', 'La IA también propone'],
+      ['Verificar', 'Yo compilo y comparo', '—'],
+    ],
+  },
 }
 
 export const relatedProject = {

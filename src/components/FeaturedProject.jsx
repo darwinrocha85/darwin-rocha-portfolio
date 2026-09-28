@@ -180,6 +180,8 @@ export default function FeaturedProject() {
                     {project.backendRepo.replace('https://github.com/', '')}
                   </a>
                 </div>
+                {project.decisions && <EcoTable table={project.decisions} />}
+                {project.ownership && <EcoTable table={project.ownership} />}
               </>
             )}
 
@@ -218,8 +220,7 @@ export default function FeaturedProject() {
                     <Steps steps={project.archSteps} />
                   </>
                 )}
-                <div className="views-label eco-label">Probalos en vivo</div>
-                <div className="secondary-project-actions">
+                <div className="views-label eco-label">Probalos en vivo</div>                <div className="secondary-project-actions">
                   <a className="btn btn-primary btn-sm" href="https://spacecraft-system.web.app" target="_blank" rel="noreferrer">
                     Demo admin ↗
                   </a>
@@ -235,6 +236,7 @@ export default function FeaturedProject() {
                   </button>
                 </div>
                 <p className="eco-note">{project.portfolioLine}</p>
+                {project.ownership && <EcoTable table={project.ownership} />}
               </div>
             )}
 

@@ -1300,6 +1300,7 @@ button {
   background: var(--tag-bg);
   color: var(--text);
   border: 1px solid var(--border-strong);
+  text-decoration: none;
 }
 
 .connection-chip.accent {

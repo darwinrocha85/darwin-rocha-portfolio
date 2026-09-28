@@ -62,7 +62,7 @@ function renderProjectBody(project, { includeApps = false, includeDemo = false }
   if (includeDemo && project.demoUrl) lines.push(`Demo: ${project.demoUrl}`)
   if (project.connectedTo) lines.push(`Conectado a: ${project.connectedTo}`)
   if (Array.isArray(project.tech)) lines.push(`Stack: ${project.tech.join(', ')}`)
-  for (const key of ['compareTable', 'stackTable', 'benchTable']) {
+  for (const key of ['compareTable', 'ecoCompareTable', 'stackTable', 'benchTable', 'decisions', 'ownership']) {
     if (project[key]) {
       const rendered = renderTable(project[key])
       if (rendered) lines.push(rendered)
@@ -120,6 +120,8 @@ function renderProjectBody(project, { includeApps = false, includeDemo = false }
   }
 
   const repoLines = []
+  if (project.repoUrl) repoLines.push(`repo: ${project.repoUrl}`)
+  if (project.prUrl) repoLines.push(`PR: ${project.prUrl}${project.baseCommit ? ` (base ${project.baseCommit})` : ''}`)
   if (project.backendRepo) repoLines.push(`backend: ${project.backendRepo}`)
   if (project.frontendRepo) repoLines.push(`frontend: ${project.frontendRepo}`)
   if (repoLines.length) lines.push(`Repos — ${repoLines.join(' · ')}`)
