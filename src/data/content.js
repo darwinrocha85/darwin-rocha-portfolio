@@ -206,11 +206,11 @@ export const harnessCase = {
   hrDescription: [
     'El problema: cada pregunta al chat mandaba al modelo todo —el prompt completo más las 28 herramientas del admin (o 15 del taller)— en cada vuelta de la conversación. Eso son ~5000 tokens por pregunta. Groq gratis te da 7000 por minuto: con 2 preguntas seguidas te corta (error 429). El harness es un peaje antes del modelo que recorta lo que se le manda.',
     'La idea en una frase: antes de llamar al modelo (caro), resolvemos por reglas baratas todo lo que no necesita inteligencia: qué herramientas mostrarle y si la pregunta ya se respondió antes.',
-    'El router adivina la intención sin IA: lee la pregunta con reglas simples —keywords en español, sin acentos—. Si preguntás "cuánto recaudamos hoy", detecta familia dashboard y al modelo le muestra solo 4 herramientas en vez de 28. Si no entiende la pregunta, le muestra todo como antes: nunca rompe nada, a lo sumo no ahorra esa vez.',
-    'El caché L1 hace que las repetidas no paguen: preguntas como "dame las naves" o "stock" se responden siempre igual, así que la primera vez se guarda el mapeo de pregunta a herramienta y la próxima se ejecuta directo sin llamar al modelo: 0 tokens. No se guarda la respuesta vieja —el dato se vuelve a pedir actualizado cada vez—; lo que se evita es pagarle al modelo por algo trivial.',
-  ],
-  techDescription: [
     'Router y caché L1 antes del modelo: keywords en español sin acentos detectan la familia ("cuánto recaudamos hoy" → dashboard, 4 herramientas en vez de 28; si no entiende, muestra todo y no rompe) y las repetidas ("dame las naves", "stock") ejecutan directo sin llamar al modelo: 0 tokens. No almacenamos datos —cada respuesta se pide actualizada—; lo que se evita es pagarle al modelo por algo trivial.',
+    ],
+  techDescription: [
+    'El router aprende la intención sin IA: lee la pregunta con reglas simples —keywords en español, sin acentos—. Si preguntás "cuánto recaudamos hoy", detecta familia dashboard y al modelo le muestra solo 4 herramientas en vez de 28. Si no entiende la pregunta, le muestra todo como antes: nunca rompe nada, a lo sumo no ahorra esa vez.',
+    'El caché L1 hace que las repetidas no paguen: preguntas como "dame las naves" o "stock" se responden siempre igual, así que la primera vez se guarda el mapeo de pregunta a herramienta y la próxima se ejecuta directo sin llamar al modelo: 0 tokens. No almacenamos datos —cada respuesta se pide actualizada—; lo que se evita es pagarle al modelo por algo trivial.',
   ],
   stackTable: {
     caption: 'Con qué está construido',
