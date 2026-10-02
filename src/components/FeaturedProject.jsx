@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { featuredProject, featuredAgent, harnessCase, relatedProject, secondaryProjects } from '../data/content'
 import { useReveal } from '../hooks/useReveal'
 
@@ -66,11 +66,51 @@ function Steps({ steps }) {
   )
 }
 
+const TAB_IDS = ['navespace', 'taller', 'bankin', 'asistentes', 'harness']
+
+// Lee `?tab=<id>` (sobrevive al redirect de LinkedIn, que a veces pela el
+// hash) o `#proyecto-destacado-<tab>` para abrir la sección con su pestaña.
+function tabFromHash() {
+  if (typeof window === 'undefined') return null
+  const q = new URLSearchParams(window.location.search || '').get('tab')
+  if (q && TAB_IDS.includes(q) && q !== 'navespace') return q
+  const m = (window.location.hash || '').match(/^#proyecto-destacado(?:-([a-z]+))?$/)
+  return m && m[1] && TAB_IDS.includes(m[1]) ? m[1] : null
+}
+
+function hashForTab(tab) {
+  return tab === 'navespace' ? '#proyecto-destacado' : `#proyecto-destacado-${tab}`
+}
+
 export default function FeaturedProject() {
-  const [activeProject, setActiveProject] = useState('navespace')
+  const [activeProject, setActiveProject] = useState(() => tabFromHash() || 'navespace')
   const [audience, setAudience] = useState('hr')
   const { ref, revealed } = useReveal()
   const isHr = audience === 'hr'
+
+  // Si se llega con hash de pestaña (o cambia luego), activar ese tab y bajar a la sección.
+  useEffect(() => {
+    const applyHash = (scroll) => {
+      const tab = tabFromHash()
+      if (tab) {
+        setActiveProject(tab)
+        setAudience('hr')
+        if (scroll) document.getElementById('proyecto-destacado')?.scrollIntoView()
+      }
+    }
+    applyHash(true)
+    const onHashChange = () => applyHash(false)
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
+
+  const selectTab = (id) => {
+    setActiveProject(id)
+    setAudience('hr')
+    if (typeof window !== 'undefined') {
+      window.history.replaceState(null, '', hashForTab(id))
+    }
+  }
 
   const project =
     activeProject === 'taller'
@@ -107,8 +147,7 @@ export default function FeaturedProject() {
                   aria-selected={activeProject === tab.id}
                   className={activeProject === tab.id ? 'active' : ''}
                   onClick={() => {
-                    setActiveProject(tab.id)
-                    setAudience('hr')
+                    selectTab(tab.id)
                   }}
                 >
                   {tab.label}

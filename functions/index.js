@@ -19,7 +19,7 @@ const portfolioFull = generated && generated.ALL ? generated.ALL : generated;
 // loop de tool-calling de esos dos: este asistente responde solo con lo que ya está escrito
 // en el portafolio, nunca datos operativos en vivo — alcance confirmado con el usuario, ver
 // claude/fase4-estado.md.
-const SYSTEM_HEAD = `Eres el asistente del portafolio de Darwin Rocha. Respondes SOLO sobre lo que hay en PORTFOLIO_CONTEXT: su perfil, experiencia (cada experiencia lista su stack), educación, y los proyectos mostrados en este portafolio (naveSpace, este mismo asistente IA, el caso de decompilación con IA, el harness de ahorro de tokens, BankIn, Taller de Reparación, ContentHub, y las landings de Sonora).
+const SYSTEM_HEAD = `Eres el asistente del portafolio de Darwin Rocha. Respondes SOLO sobre lo que hay en PORTFOLIO_CONTEXT: su perfil, experiencia (cada experiencia lista su stack), educación, y los proyectos mostrados en este portafolio (naveSpace, este mismo asistente IA, el laboratorio personal de marcha FreeMotionsLabs, el caso de decompilación con IA, el harness de ahorro de tokens, BankIn, Taller de Reparación, ContentHub, y las landings de Sonora).
 
 Si preguntan algo que no está en PORTFOLIO_CONTEXT (salario, disponibilidad, datos personales no listados, o cualquier tema sin relación con este portafolio — cultura general, matemáticas, noticias, o cualquier otro tema), no respondas ese tema. Responde exactamente: "No tengo esa información en el portafolio. Para más detalle mira la sección [elige la más relacionada: #experiencia, #proyecto-destacado, #ia-solutions, #otros-proyectos, #contacto]".
 
@@ -42,13 +42,14 @@ const SECTION_RULES = [
   { key: "NAVESPACE", words: ["navespace", "nave", "museo", "teatro", "entrada", "flota", "ticket"] },
   { key: "ASISTENTE", words: ["asistente", "agente", "inteligencia", "chat", "widget", "modelo", "agent"] },
   { key: "MERLIN", words: ["merlin", "decompil", "decomp", "homeworld", "matching", "byte", "dominio desconocido", "legacy", "revers"] },
+  { key: "FREEMOTION", words: ["freemotion", "c3d", "marcha", "gait", "mocap", "captura de movimiento", "three.js", "visor 3d", "laboratorio", "biomec"] },
   { key: "HARNESS", words: ["harness", "token", "caché", "cache", "router", "bench", "groq", "ahorro", "pre-harness", "post-harness"] },
   { key: "BANKIN", words: ["bankin", "banco", "pago", "tarjeta", "cobro"] },
   { key: "SECUNDARIOS", words: ["taller", "reparaci", "contenthub", "contenido", "marketplace", "presupuesto"] },
   { key: "OTROS", words: ["landing", "freelance", "sonora", "otros proyectos", "other project"] },
 ];
 
-const PROJECT_SECTIONS = ["NAVESPACE", "ASISTENTE", "MERLIN", "HARNESS", "BANKIN", "SECUNDARIOS"];
+const PROJECT_SECTIONS = ["NAVESPACE", "ASISTENTE", "MERLIN", "FREEMOTION", "HARNESS", "BANKIN", "SECUNDARIOS"];
 
 function pickContext(question) {
   if (!portfolioSections) return portfolioFull;

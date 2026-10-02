@@ -138,6 +138,7 @@ async function main() {
     featuredProject,
     featuredAgent,
     merlinCase,
+    freemotionCase,
     harnessCase,
     relatedProject,
     secondaryProjects,
@@ -160,7 +161,7 @@ ${highlights.map((h) => `${h.value} ${h.label}`).join(' · ')}`)
 ${experience
     .map(
       (job) => `- ${job.company} — ${job.role} — ${job.place} — ${job.period}
-  Stack: ${job.tech.join(', ')}
+  Stack: ${job.tech.join(', ')}${job.link ? `\n  App: ${job.link}` : ''}
 ${bulletList(job.bullets)}`
     )
     .join('\n')}`)
@@ -176,6 +177,9 @@ ${renderProjectBody(featuredAgent, { includeApps: true })}`)
 
   sections.push(`IA SOLUTIONS — caso dominio desconocido (decompilación)
 ${renderProjectBody(merlinCase, { includeDemo: false })}`)
+
+  sections.push(`RESEARCH — laboratorio personal de marcha (freemotions-labs, visor C3D en el navegador)
+${renderProjectBody(freemotionCase, { includeDemo: true })}`)
 
   sections.push(`IA SOLUTIONS — harness de ahorro de tokens
 ${renderProjectBody(harnessCase, { includeDemo: false })}`)
@@ -197,12 +201,12 @@ ${otherProjects.map((p) => `- ${p.name} (${p.kind}): ${p.description} — ${p.ur
 
   const output = sections.join('\n\n')
 
-  // Claves estables por sección, en el MISMO orden en que se pusieron arriba (12 secciones).
+  // Claves estables por sección, en el MISMO orden en que se pusieron arriba (13 secciones).
   // functions/index.js manda solo las relevantes por pregunta (pickContext) en vez del texto
   // entero — si algún día cambia la cantidad de secciones, esto falla en build a propósito.
   const SECTION_KEYS = [
     'PERFIL', 'DESTACADOS', 'EXPERIENCIA', 'EDUCACION',
-    'NAVESPACE', 'ASISTENTE', 'MERLIN', 'HARNESS', 'BANKIN', 'SECUNDARIOS', 'OTROS', 'SECCIONES',
+    'NAVESPACE', 'ASISTENTE', 'MERLIN', 'FREEMOTION', 'HARNESS', 'BANKIN', 'SECUNDARIOS', 'OTROS', 'SECCIONES',
   ]
   if (SECTION_KEYS.length !== sections.length) {
     throw new Error(

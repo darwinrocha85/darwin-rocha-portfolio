@@ -5,3 +5,7 @@ dist-ssr
 .env
 .firebase
 npm-debug.log*
+# CV fuente en Word: no se versiona (solo el PDF publicado en public/cv)
+public/cv/*.docx
+# Historial LinkedIn: local y personal, no se commitea
+docs/linkedin-posts.md

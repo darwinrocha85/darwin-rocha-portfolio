@@ -5,7 +5,7 @@ import { useTheme } from '../hooks/useTheme'
 const NAV_ITEMS = [
   { href: '#experiencia', label: 'Experiencia' },
   { href: '#proyecto-destacado', label: 'Ecosistema' },
-  { href: '#ia-solutions', label: 'IA Solutions' },
+  { href: '#ia-solutions', label: 'Research & IA Solutions' },
   { href: '#otros-proyectos', label: 'Otros' },
   { href: '#contacto', label: 'Contacto' },
 ]

@@ -21,6 +21,11 @@ export default function Experience() {
                   {job.role} · <span className="timeline-company">{job.company}</span>
                 </div>
                 <div className="timeline-place">{job.place}</div>
+                {job.link && (
+                  <a className="link-pill" href={job.link} target="_blank" rel="noreferrer">
+                    Ver app ↗
+                  </a>
+                )}
                 <ul className="timeline-bullets">
                   {job.bullets.map((b) => (
                     <li key={b}>{b}</li>

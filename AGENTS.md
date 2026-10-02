@@ -23,3 +23,10 @@
 - No romper el rewrite `/api/ask` → Function `ask` en `firebase.json`.
 - No commitear `node_modules/`, `dist/`, `.firebase/` (ver `.gitignore`).
 - BankIn y Taller son tabs del ecosistema, no secciones propias; Merlin vive solo en IA Solutions.
+
+## LinkedIn (regla de publicación)
+- Cada cambio que sume valor visible (nuevo tab, tabla, métrica, deep-link, caso) deja además un **post corto listo para pegar** (no se publica solo: el dueño lo pega en su cuenta).
+- Si detectás una nueva funcionalidad o un nuevo proyecto/caso, agregá su post al historial local `docs/linkedin-posts.md` (archivo ignorado por git, no commitear) con estado `- [ ] Borrador`; al avisar que se publicó, marcar `- [x] Publicado (fecha)`.
+- Formato: resultado primero en 1 línea (`71% menos…`), link profundo `https://darwin-rocha-portfolio.web.app/?tab=<id>#proyecto-destacado` (el `?tab=` sobrevive al redirect de LinkedIn; ids: `taller`, `bankin`, `asistentes`, `harness`; Admin es la URL base), pregunta final que invite comentarios, 3–5 hashtags.
+- Tono RRHH (dinero/negocio, sin jerga), números solo si están en `content.js` (nada inventado), español por defecto.
+- Deep-links: `FeaturedProject.jsx` lee `?tab=` y `#proyecto-destacado-<tab>` y activa la pestaña; al cambiar de tab se actualiza la URL con `replaceState`.

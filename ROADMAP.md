@@ -8,4 +8,6 @@
 - [x] IA Solutions visual + ecosistema 5 tabs (2026-09-28): Asistentes y Harness absorbidos al ecosistema (Admin/Taller/BankIn/Asistentes/Harness); IA Solutions solo Merlin con lugar para 2 casos más; barras/tablas/pasos desde datos estructurados; sección HARNESS cableada al widget; narrativa por audiencia (números PM / cómo técnico)
 - [x] spacecraft-mcp (2026-09-26/28, repo aparte): MCP stateless solo-lectura (20 tools, denylist 17 writes) + askAdmin/askTaller + ai_usage en Firestore; widgets por URL directa; modelo prod gemini-3.8-flash (3.6 sin cupo, 2.5 retirado)
 - [ ] 2 casos más en IA Solutions (lugar reservado en código)
+- [x] Link demo freemotionsLabs (2026-10-02): demo publicada en `https://freemotionslabs.web.app/`, enlazada en la ficha de IA Solutions con botones demo/código + contexto del asistente
+- [x] Link AppSeguimientoVisitas (2026-10-01, local): `https://app-seguimiento-visitas.vercel.app/ingresar` en experiencia del portfolio + CV Word/PDF
 - [ ] Pendiente que pidas: no empezar nada sin issue explícito

@@ -21,6 +21,21 @@ export const highlights = [
 
 export const experience = [
   {
+    company: 'Organización sin ánimo de lucro (pro bono)',
+    role: 'Desarrollador Full Stack — Voluntariado',
+    place: 'Barcelona, España',
+    period: '2026',
+    link: 'https://app-seguimiento-visitas.vercel.app/ingresar',
+    tech: ['Next.js', 'TypeScript', 'Prisma', 'SQLite', 'PWA', 'WhatsApp'],
+    bullets: [
+      'Diseñé y desarrollé un sistema de seguimiento de contactos nuevos con roles jerárquicos (dirección, responsables de zona, responsables de grupo).',
+      'Creé una app móvil para voluntarios: asignación de contactos, registro de llamadas y visitas.',
+      'Automaticé mensajes por WhatsApp para seguimiento y feedback.',
+      'Panel de estadísticas: visitas, contactos atendidos, pendientes y rechazos.',
+      'Puesta en producción y taller de formación a los usuarios.',
+    ],
+  },
+  {
     company: 'Clorian Ticketing',
     role: 'Java Backend',
     place: 'Barcelona, España',
@@ -338,6 +353,55 @@ export const merlinCase = {
       ['Elegir y revisar', 'Yo decido qué entra', '—'],
       ['Proponer código', 'Yo también escribo', 'La IA también propone'],
       ['Verificar', 'Yo compilo y comparo', '—'],
+    ],
+  },
+}
+
+export const freemotionCase = {
+  id: 'freemotions-labs',
+  name: 'freemotionsLabs — visor C3D en el navegador',
+  tagline: 'Proyecto personal: un visor de captura de movimiento (C3D) que corre 100 % en el navegador. No es un producto a la venta —es la prueba de que puedo llevar a la IA más allá de un CRUD/CRM: formato binario de los 80, tres arquitecturas de procesador y archivos de 100 MB que abren en menos de medio segundo.',
+  demoUrl: 'https://freemotionslabs.web.app/',
+  repoUrl: 'https://github.com/darwinrocha85/freemotionsLabs',
+  hrDescription: [
+    'La idea en una frase: cualquiera que reciba un archivo de captura de movimiento (.c3d) puede verlo en 3D sin instalar nada y sin subirlo a ningún servidor — el archivo nunca sale de su equipo.',
+    'No lo vendo como producto: el mercado de biomecánica es cerrado y no es mi objetivo. Lo que demuestra es método: elegí un problema que no es un CRUD, definí qué significa "está bien" antes de programar, dirigí a la IA en cada paso y comprobé todo con datos reales.',
+    'Estado honesto: demo publicada con galería de 4 ejemplos CMU con atribución. Probado en Chromium con 20 archivos de muestra; falta probar en Firefox, Safari y Edge, y los datos analógicos (plataformas de fuerza) aún no se muestran.',
+  ],
+  techDescription: [
+    'Stack: JavaScript + Vite 5 + Three.js, sin backend. Parser C3D puro (`src/c3d/parser.js`, sin DOM, testeable en Node): Intel, DEC —incluidos decimales VAX de cabecera y parámetros— y SGI/MIPS; datos enteros y decimales; nº de fotogramas por parámetro (más de 65.535); tolera grupos ANALOG/FORCE_PLATFORM ausentes; separa puntos calculados de marcadores reales.',
+    'Lectura bajo demanda: al abrir solo se leen cabecera y parámetros y cada fotograma se decodifica al mostrarse (`getFrame(i, out)`); large01 (102 MB, 73.285 fotogramas) y large02 (112 MB, 72.610) abren en menos de 0,5 s y permiten saltar a mitad de archivo, sin Web Worker.',
+    'Verificación sin librería de referencia (decisión propia): `npm run inspect` sobre 20 muestras de c3d.org — 20/20 abren sin fallos inesperados; coherencia interna por rigidez de segmentos (p. ej. LPSI–RPSI varía 0,08 % en muestras largas: si el lector leyera mal, ese número se dispararía); casos malos (aleatorio, texto, truncado, solo analógicos) con mensaje claro y sin colgarse; revisión visual (marchas, salto, tenis de mesa, danza).',
+  ],
+  tech: ['JavaScript', 'Vite', 'Three.js', 'C3D', 'IA supervisada'],
+  results: [
+    { label: '20/20 muestras abren', detail: 'inspect sin fallos inesperados', pct: 100 },
+    { label: 'Archivos 100 MB+ en <0,5 s', detail: '102 y 112 MB · 70k+ fotogramas', pct: 100 },
+    { label: 'Rigidez LPSI–RPSI', detail: 'varía 0,08 % en muestras largas', pct: 99.9 },
+  ],
+  loopSteps: [
+    { title: 'Definir "bien"', desc: 'Antes de pedir código: qué archivo debe abrir y qué medida debe cumplirse (distancia rígida estable).' },
+    { title: 'La IA propone', desc: 'Lector, visor 3D, scripts de comprobación y docs — cada cambio pasa por mí.' },
+    { title: 'Comprobar con datos', desc: 'Ni el formato de memoria ni la IA se dan por buenos: 20 muestras reales + casos malos.' },
+    { title: 'Revertir y anotar', desc: 'Si un arreglo empeora o un dato del readme contradice al archivo, se corrige y se documenta.' },
+    { title: 'Pensar en quien lo ve', desc: 'Galería de ejemplos con vídeo: quien no sabe qué es un C3D lo entiende en segundos.' },
+  ],
+  decisions: {
+    caption: 'Mis decisiones (antes de soltar a la IA)',
+    head: ['Decisión', 'Por qué'],
+    rows: [
+      ['Un producto usable, no la tesis', 'La tesis de 2013 es el origen; el código se reescribe desde cero y se juzga por lo que hace'],
+      ['Todo en el navegador, sin servidor', 'Privacidad (nada sale del equipo) y coste cero'],
+      ['Sin comparar con otras librerías', 'El objetivo es ver el movimiento: coherencia interna + revisión visual'],
+    ],
+  },
+  ownership: {
+    caption: 'Quién hizo qué',
+    head: ['', 'Yo', 'La IA'],
+    rows: [
+      ['Definir y revisar', 'Yo decido qué entra y qué es "correcto"', '—'],
+      ['Proponer código', 'Yo también escribo', 'La IA también propone'],
+      ['Verificar', 'Yo compruebo con muestras reales', '—'],
     ],
   },
 }
