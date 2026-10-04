@@ -9,7 +9,7 @@ export const profile = {
   summary:
     'Ingeniero en Computación con más de 10 años de experiencia en desarrollo backend con Python y Java: APIs REST, microservicios y sistemas de base de datos para plataformas en producción. En los últimos años integré herramientas de IA (Claude, OpenCode) directamente en mi flujo de trabajo para acelerar el análisis de código y reducir tiempos de entrega.',
   aiNote:
-    'Cómo trabajo con IA: yo defino la arquitectura y las reglas con el cliente, la IA propone, y nada entra sin que yo lo revise — build, tests/diffs y deploy verificados por mí en cada fase. El caso de abajo lo muestra fuera de mi dominio.',
+    'Cómo trabajo con IA: yo defino la arquitectura y las reglas con el cliente, la IA propone, y nada entra sin que yo lo revise — build, tests/diffs y deploy verificados por mí en cada fase.',
 }
 
 export const highlights = [
@@ -140,7 +140,8 @@ export const featuredProject = {
     },
     {
       label: 'Tienda de Entradas',
-      description: 'App pública de compra de entradas para naves-museo y naves-teatro, con cobro real vía BankIn.',
+      description:
+        'App pública de compra de entradas para naves-museo y naves-teatro, con cobro real vía BankIn. Se puede pagar en partes y en varias monedas (la entrada se confirma al cubrir el total), y al cancelar se devuelve todo lo cobrado.',
       url: 'https://spacecraft-tickets.web.app',
       repo: 'https://github.com/darwinrocha85/spacecraft-tickets-frontend',
     },
@@ -161,7 +162,7 @@ export const featuredProject = {
   techDescription: [
     'Backend en Java 17 + Spring Boot (Maven), sin capa DTO, con Lombok y `@ElementCollection` para asientos de teatro; ahora con SQLite en archivo y seeder idempotente para que el estado no se pierda al reiniciar.',
     '3 frontends en React + Vite sobre ese backend: landing que agrega lo reservable (museos y funciones con fecha) con deep-link a la tienda, tienda que resuelve la compra, y panel admin con dashboard de solo lectura (ingresos, ocupación del día, estado de flota, top naves) sin tocar esquema. Tabla sin scroll horizontal y columna Estado en lugar de Taller.',
-    'Cobro real vía BankIn desde el backend — nada se guarda hasta que BankIn confirma con 201 y cancelar intenta revertir el cobro — con email de compra y cancelación. El taller expone presupuestos con histórico: lo enviado y, si hubo rechazo, lo anterior queda visible.',
+    'Cobro real vía BankIn desde el backend — nada se guarda hasta que BankIn confirma con 201: la entrada se puede pagar en varios tramos y monedas hasta cubrir el total, y al cancelar se revierten todos los tramos cobrados — con email de compra y cancelación. El taller expone presupuestos con histórico: lo enviado y, si hubo rechazo, lo anterior queda visible.',
     'Taller extraído a servicio propio en Python 3.14 + FastAPI con SQLAlchemy 2.0 y SQLite en archivo, con su propia app en React + Vite de estilo sobrio de hangar. El panel admin solo envía a taller y ve estado/historial; el flujo fino (recibir, avanzar, presupuesto) vive en la app de taller.',
     'El panel admin corre su propio motor de function-calling (lectura y escritura sobre la flota) sobre Groq (`qwen/qwen3.8-27b`, gratis sin tarjeta) con Gemini como fallback ante 429, según la variable `AI_PROVIDER` — un solo JSON Schema por tool sirve para los tres proveedores, y catálogo + prompts en inglés (las respuestas siguen en español) para gastar menos tokens. Ese mismo catálogo se expone además por un servidor MCP aparte (protocolo `@modelcontextprotocol/sdk`, sin pasar por el SDK de ningún modelo) para que cualquier cliente MCP externo, no solo el widget de chat, pueda consultarlo y operarlo. El taller comparte proyecto y deploy (`spacecraft-mcp`) con el panel admin, pero con catálogo y SYSTEM_PROMPT propios: sus 6 tools de lectura se reusan por referencia desde el catálogo admin —misma definición, cero duplicación— y el flujo fino (recibir, avanzar, presupuesto) vive en sus 9 tools propias.',
   ],

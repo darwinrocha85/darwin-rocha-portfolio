@@ -9,3 +9,5 @@ npm-debug.log*
 public/cv/*.docx
 # Historial LinkedIn: local y personal, no se commitea
 docs/linkedin-posts.md
+
+.engram/
