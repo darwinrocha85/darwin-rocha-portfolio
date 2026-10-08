@@ -40,7 +40,7 @@ export const experience = [
     role: 'Java Backend',
     place: 'Barcelona, España',
     period: '2026',
-    tech: ['Java', 'Spring Boot', 'JSP', 'MySQL', 'Jenkins', 'AWS', 'IA (Claude, OpenCode)'],
+    tech: ['Java', 'Spring Boot', 'JSP', 'MyBatis', 'MySQL', 'Jenkins', 'AWS', 'IA (Claude, OpenCode)'],
     bullets: [
       'Desarrollo y mantenimiento del producto en Java, refactorizando código existente y agregando funcionalidades a distintos microservicios.',
       'Mantenimiento de la plataforma en JSP en paralelo a los nuevos microservicios, asegurando continuidad operativa del sistema.',
