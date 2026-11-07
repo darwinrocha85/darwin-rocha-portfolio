@@ -21,6 +21,20 @@ export const highlights = [
 
 export const experience = [
   {
+    company: 'Decowood',
+    role: 'Tech Lead — Business Operations Software',
+    place: 'Cataluña, España · Presencial',
+    period: 'Oct 2026 — Actualidad',
+    tech: ['Laravel', 'Odoo'],
+    bullets: [
+      'Parte del equipo técnico, con responsabilidad sobre el backend de un ERP propio en Laravel, dentro de la migración a Odoo que acompaña la transformación de la empresa de modelo fabril a distribución.',
+      'Desarrollo y evolución del backend del ERP: logística, almacén y procesos operativos.',
+      'Migración de Laravel a Odoo, alineando los procesos de negocio con el nuevo sistema.',
+      'Ownership del pedido a la entrega.',
+      'Trabajo directo con operaciones para convertir procesos de negocio en flujos del sistema.',
+    ],
+  },
+  {
     company: 'Organización sin ánimo de lucro (pro bono)',
     role: 'Desarrollador Full Stack — Voluntariado',
     place: 'Barcelona, España',
