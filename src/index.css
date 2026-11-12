@@ -777,7 +777,7 @@ button {
   flex-wrap: wrap;
 }
 
-/* Match bars (Merlin: % byte-identico por pieza) */
+/* Result bars (IA Solutions: resultado por pieza) */
 .match-bars {
   display: flex;
   flex-direction: column;
@@ -1531,35 +1531,6 @@ button {
   color: var(--text-muted);
   font-size: 14px;
   flex-grow: 1;
-}
-
-/* Other works — compact list (ContentHub + landings) */
-.other-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.other-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 14px 18px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  transition: border-color 0.2s ease, transform 0.2s ease;
-}
-
-.other-row:hover {
-  border-color: var(--border-strong);
-  transform: translateY(-2px);
-}
-
-.other-row-desc {
-  color: var(--text-muted);
-  font-size: 14px;
 }
 
 /* Contact */

@@ -322,56 +322,6 @@ export const harnessCase = {
   ],
 }
 
-export const merlinCase = {
-  id: 'merlin-decomp',
-  name: 'Decompilation Challenge — Homeworld 2 (matching)',
-  tagline: 'Reto técnico personal de 48 h: escribir el C que, compilado con el compilador original (MSVC), produzca los mismos bytes que el binario de 2003. Dejo el alcance real y cómo lo verifiqué.',
-  repoUrl: 'https://github.com/HaydnTrigg/Homeworld2Classic',
-  prUrl: 'https://github.com/HaydnTrigg/Homeworld2Classic/pull/4',
-  baseCommit: '9b3fed4',
-  hrDescription: [
-    'Fue un reto técnico personal con límite de 48 horas sobre un proyecto abierto que yo no conocía (el juego Homeworld 2): reconstruir funciones en C sin documentación, con IA como apoyo y todo verificado en local.',
-    'Alcance real: 4 funciones de lógica del juego + 1 ayudante pequeño, las 5 al 100 % byte a byte según la herramienta del proyecto (objdiff-cli), más 2 piezas grandes documentadas como parciales (66–81 %) con su techo técnico explicado. La entrega está en el PR, abierto y pendiente de revisión.',
-    'Lo que sí acredita de mi criterio: elegir candidatas sin techo estructural, revertir arreglos que empeoraban el resultado y descartar una función por irreproducible — todo decidido y comprobado por mí, no aceptado de la IA.',
-  ],
-  techDescription: [
-    'Matching decompilation sobre Homeworld2Classic (MSVC 2003 vía toolchain del proyecto): mi C debe compilar a los mismos bytes — instrucciones, registros y orden—. Se verifica con `ninja <obj unidad>` + `objdiff-cli diff -p . -u <unidad> <símbolo>` → `match_percent`. Base `9b3fed4`; entrega en PR #4 (5 commits, pendiente de merge, sin validación independiente).',
-    'Al 100 %: comparador de sonido `SoundParams::operator==` (441 B), contenedor de efectos (290 B), punto de envolvente (104 B) y tabla de excepciones Windows `GetExceptionDescription` (387 B), más helper `stringLengthReverse` (24 B). Parciales honestos: test SAT de 15 ejes `Collision::Intersect` (2718 B, 66.75 %) y despachador de 43 eventos `getChatterEvent` (6100 B, 81.28 %).',
-    'Mi revisión, no la de la IA: un fix guiado por el diff exacto empeoró 66.75 % → 61.19 % (MSVC reprograma registros en cascada) y lo revertí; igual un intento previo (60 % → 22 %). Descarté `FindIntersection` por techo estructural (hash de helper anónimo irreproducible). Un hallazgo de registros aportado por IA (`esi=B, edi=A`) lo verifiqué a mano antes de aplicarlo. Evidencia por función en JSONs crudos de objdiff-cli.',
-  ],
-  tech: ['C', 'MSVC', 'ninja', 'objdiff-cli', 'Python', 'IA supervisada'],
-  results: [
-    { label: '5 funciones al 100 % (4 + 1 helper)', detail: '24–441 B · objdiff-cli', pct: 100 },
-    { label: 'Despachador battle-chatter (parcial)', detail: '6100 B · switch de 43 eventos', pct: 81.28 },
-    { label: 'Test SAT de 15 ejes (parcial)', detail: '2718 B · colisiones OBB', pct: 66.75 },
-  ],
-  loopSteps: [
-    { title: 'Barrido', desc: 'Elegir candidata sin techo estructural: sin calls a imports crudos ni helpers con hash irreproducible.' },
-    { title: 'Escritura', desc: 'Propongo el C (mío o de la IA) y decido qué entra.' },
-    { title: 'Compilación', desc: 'ninja con el compilador original sobre el proyecto tal cual.' },
-    { title: 'Medición', desc: 'objdiff-cli match_percent por función; diff fila a fila.' },
-    { title: 'Revisión', desc: 'Si un arreglo local empeora el global, lo revierto y lo documento. Sin merge, no hay 100 % que valga.' },
-  ],
-  decisions: {
-    caption: 'Mis decisiones (antes de soltar a la IA)',
-    head: ['Decisión', 'Por qué'],
-    rows: [
-      ['Elegir piezas sin techo', 'Si el original no se puede reproducir, la descarto antes de gastar tiempo'],
-      ['Revertir lo que empeora', 'Un arreglo "correcto" bajó de 67 % a 61 %: lo quité'],
-      ['Verificar a mano', 'Un dato que aportó la IA lo comprobé yo antes de usarlo'],
-    ],
-  },
-  ownership: {
-    caption: 'Quién hizo qué',
-    head: ['', 'Yo', 'La IA'],
-    rows: [
-      ['Elegir y revisar', 'Yo decido qué entra', '—'],
-      ['Proponer código', 'Yo también escribo', 'La IA también propone'],
-      ['Verificar', 'Yo compilo y comparo', '—'],
-    ],
-  },
-}
-
 export const freemotionCase = {
   id: 'freemotions-labs',
   name: 'freemotionsLabs — visor C3D en el navegador',
@@ -462,57 +412,5 @@ export const secondaryProjects = [
     demoUrl: 'https://spacecraft-taller-frontend.web.app',
     frontendRepo: 'https://github.com/darwinrocha85/spacecraft-taller-frontend',
     backendRepo: 'https://github.com/darwinrocha85/spacecraft-taller-backend',
-  },
-  {
-    id: 'contenthub',
-    name: 'ContentHub',
-    tagline: 'Marketplace pequeño donde cada compra es única y queda trazada.',
-    hrDescription: [
-      'Cualquiera puede publicar una foto, vídeo o pista con precio y ponerla a la venta en un feed.',
-      'También se puede pedir lo que falta y otros usuarios responden ofreciendo piezas propias. En cuanto alguien paga, esa pieza deja de estar disponible para el resto.',
-      'Sirve como ejemplo de flujo de compra con moderación y sin depender de lo que diga el navegador.',
-    ],
-    techDescription: [
-      'Backend en Python con FastAPI y arquitectura hexagonal: dominio y casos de uso sin ataduras a framework, así cambiar SQLite por Postgres o el gateway de pago es solo un adaptador nuevo.',
-      'Cada pieza se modera al publicarse con reglas o IA de OpenAI. El checkout usa Stripe en modo test con confirmación en servidor; nunca se confía en que el navegador diga “ya pagué”.',
-      'Frontend en React + Vite con feed, detalle y flujo de solicitud/oferta. Operación única: una venta cierra la disponibilidad para los demás.',
-    ],
-    tech: ['Python', 'FastAPI', 'SQLite', 'Stripe', 'React', 'Vite'],
-    demoUrl: 'https://contenthub-frontend.web.app',
-    frontendRepo: 'https://github.com/darwinrocha85/ContentHub-frontend',
-    backendRepo: 'https://github.com/darwinrocha85/ContentHub',
-  },
-]
-
-export const otherProjects = [
-  {
-    name: 'Barrio Sonora',
-    kind: 'Landing de conversión — productora urbana',
-    description:
-      'Productora musical en Villaverde (Madrid) enfocada en drill, reggaeton y trap: beatmaking, mezcla/máster, grabación, distribución y videoclip teaser. Copy directo de calle, planes de precio con urgencia y testimonios.',
-    url: 'https://roybert33-cmd.github.io/Barrio-sonora-/',
-    accent: '#E8541F',
-    bg: '#231411',
-    style: 'Calle / neón cálido',
-  },
-  {
-    name: 'Casa Sonora',
-    kind: 'Landing de conversión — atelier boutique',
-    description:
-      'Atelier de songwriting y producción para voces femeninas pop en Malasaña (Madrid): co-writing, producción boutique y camps privados para sellos. Tono editorial, tipografía serif, precios por encargo firmado.',
-    url: 'https://roybert33-cmd.github.io/Casa-sonora-/',
-    accent: '#C23B4E',
-    bg: '#F6F3EE',
-    style: 'Editorial / elegante',
-  },
-  {
-    name: 'Sonora Labs',
-    kind: 'Landing de conversión — productora premium',
-    description:
-      'Productora urbana en Gran Vía (Madrid): trap, reggaeton, drill y afro con enfoque "sonido de label". Comparativa antes/después, portafolio de streams y planes tipo Starter/Pro/Label.',
-    url: 'https://roybert33-cmd.github.io/Sonora-labs/',
-    accent: '#B9F227',
-    bg: '#0D0D10',
-    style: 'Dark / neón lima',
   },
 ]

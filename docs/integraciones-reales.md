@@ -9,7 +9,6 @@
 | # | Pieza | Producto real | Estado | Qué demuestra | Coste |
 |---|-------|---------------|--------|---------------|-------|
 | 1 | Pagos naveSpace | Adyen (cuenta test) | Pendiente | Webhooks firmados HMAC, 3DS2/SCA, reembolsos, estados asíncronos. 2º adaptador junto a BankIn, mismo puerto hexagonal | 0€ |
-| 2 | Pagos ContentHub | Stripe (test, ya integrado) | Hecho (test) | Checkout + confirmación en servidor | 0€ |
 | 3 | Email compra/cancelación | Brevo (API HTTP, 300/día) | Pendiente | Entrega real, reintentos, bounces. Sin SMTP (puerto bloqueado en demo) | 0€ |
 | 4 | Taller: "tu nave está lista" | Brevo o WhatsApp sandbox | Pendiente | Notificación transaccional real al cliente | 0€ |
 | 5 | Taller: turnos del hangar | Google Calendar API | Pendiente | Reservar slots reales del taller | 0€ |

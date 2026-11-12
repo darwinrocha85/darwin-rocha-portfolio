@@ -1,7 +1,7 @@
 {
   "name": "functions",
   "description": "Portfolio agent - ask Darwin - Gemini o Claude segun AI_PROVIDER",
-  "engines": { "node": "20" },
+  "engines": { "node": "22" },
   "main": "index.js",
   "scripts": {
     "generate:agent-context": "node ../scripts/generate-agent-context.mjs",

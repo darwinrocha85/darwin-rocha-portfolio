@@ -42,7 +42,7 @@ function renderTable(table) {
   return lines.join('\n')
 }
 
-// Arma el cuerpo de texto de un proyecto (BankIn, Taller, ContentHub, naveSpace, el propio
+// Arma el cuerpo de texto de un proyecto (BankIn, Taller, naveSpace, el propio
 // asistente) a partir de la misma forma de objeto que ya usa content.js para renderizar la
 // UI (tagline, hrDescription, techDescription, apps, demoUrl, repos, etc.) — sin inventar
 // campos nuevos, solo reordenando lo que ya existe en texto plano para el modelo.
@@ -137,12 +137,10 @@ async function main() {
     education,
     featuredProject,
     featuredAgent,
-    merlinCase,
     freemotionCase,
     harnessCase,
     relatedProject,
     secondaryProjects,
-    otherProjects,
   } = await import(pathToFileURL(CONTENT_PATH).href)
 
   const sections = []
@@ -175,9 +173,6 @@ ${renderProjectBody(featuredProject, { includeApps: true })}`)
   sections.push(`PROYECTO DESTACADO 2 — el propio asistente IA (este mismo widget)
 ${renderProjectBody(featuredAgent, { includeApps: true })}`)
 
-  sections.push(`IA SOLUTIONS — caso dominio desconocido (decompilación)
-${renderProjectBody(merlinCase, { includeDemo: false })}`)
-
   sections.push(`RESEARCH — laboratorio personal de marcha (freemotions-labs, visor C3D en el navegador)
 ${renderProjectBody(freemotionCase, { includeDemo: true })}`)
 
@@ -193,20 +188,17 @@ ${renderProjectBody(relatedProject, { includeDemo: true })}`)
       .join('\n\n')}`
   )
 
-  sections.push(`OTROS PROYECTOS (landings freelance de conversión, no negocios propios del usuario)
-${otherProjects.map((p) => `- ${p.name} (${p.kind}): ${p.description} — ${p.url}`).join('\n')}`)
-
   sections.push(`SECCIONES DEL SITIO (para derivar cuando la respuesta no está en este contexto)
-#experiencia, #proyecto-destacado, #ia-solutions, #otros-proyectos, #contacto`)
+#experiencia, #proyecto-destacado, #ia-solutions, #contacto`)
 
   const output = sections.join('\n\n')
 
-  // Claves estables por sección, en el MISMO orden en que se pusieron arriba (13 secciones).
+  // Claves estables por sección, en el MISMO orden en que se pusieron arriba (11 secciones).
   // functions/index.js manda solo las relevantes por pregunta (pickContext) en vez del texto
   // entero — si algún día cambia la cantidad de secciones, esto falla en build a propósito.
   const SECTION_KEYS = [
     'PERFIL', 'DESTACADOS', 'EXPERIENCIA', 'EDUCACION',
-    'NAVESPACE', 'ASISTENTE', 'MERLIN', 'FREEMOTION', 'HARNESS', 'BANKIN', 'SECUNDARIOS', 'OTROS', 'SECCIONES',
+    'NAVESPACE', 'ASISTENTE', 'FREEMOTION', 'HARNESS', 'BANKIN', 'SECUNDARIOS', 'SECCIONES',
   ]
   if (SECTION_KEYS.length !== sections.length) {
     throw new Error(
