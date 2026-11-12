@@ -32,7 +32,7 @@ descargable está en `public/cv/`.
 
 ## Proyectos que muestra
 Hero → Experiencia → Ecosistema (5 tabs: Admin/Taller/BankIn/Asistentes/Harness) →
-IA Solutions (solo Merlin, lugar para 2 casos más) → Otros → Contacto.
+IA Solutions (solo Merlin, lugar para 2 casos más) → Contacto.
 
 ## Deploy
 ```powershell
