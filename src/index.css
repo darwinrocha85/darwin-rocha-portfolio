@@ -777,7 +777,7 @@ button {
   flex-wrap: wrap;
 }
 
-/* Match bars (Merlin: % byte-identico por pieza) */
+/* Result bars (IA Solutions: resultado por pieza) */
 .match-bars {
   display: flex;
   flex-direction: column;

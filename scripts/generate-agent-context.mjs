@@ -137,7 +137,6 @@ async function main() {
     education,
     featuredProject,
     featuredAgent,
-    merlinCase,
     freemotionCase,
     harnessCase,
     relatedProject,
@@ -174,9 +173,6 @@ ${renderProjectBody(featuredProject, { includeApps: true })}`)
   sections.push(`PROYECTO DESTACADO 2 — el propio asistente IA (este mismo widget)
 ${renderProjectBody(featuredAgent, { includeApps: true })}`)
 
-  sections.push(`IA SOLUTIONS — caso dominio desconocido (decompilación)
-${renderProjectBody(merlinCase, { includeDemo: false })}`)
-
   sections.push(`RESEARCH — laboratorio personal de marcha (freemotions-labs, visor C3D en el navegador)
 ${renderProjectBody(freemotionCase, { includeDemo: true })}`)
 
@@ -197,12 +193,12 @@ ${renderProjectBody(relatedProject, { includeDemo: true })}`)
 
   const output = sections.join('\n\n')
 
-  // Claves estables por sección, en el MISMO orden en que se pusieron arriba (12 secciones).
+  // Claves estables por sección, en el MISMO orden en que se pusieron arriba (11 secciones).
   // functions/index.js manda solo las relevantes por pregunta (pickContext) en vez del texto
   // entero — si algún día cambia la cantidad de secciones, esto falla en build a propósito.
   const SECTION_KEYS = [
     'PERFIL', 'DESTACADOS', 'EXPERIENCIA', 'EDUCACION',
-    'NAVESPACE', 'ASISTENTE', 'MERLIN', 'FREEMOTION', 'HARNESS', 'BANKIN', 'SECUNDARIOS', 'SECCIONES',
+    'NAVESPACE', 'ASISTENTE', 'FREEMOTION', 'HARNESS', 'BANKIN', 'SECUNDARIOS', 'SECCIONES',
   ]
   if (SECTION_KEYS.length !== sections.length) {
     throw new Error(

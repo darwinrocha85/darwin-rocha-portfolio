@@ -9,7 +9,7 @@
 - Sin backend externo: la API propia es `/api/ask` (prod) o emulador (dev). Sin `.env`.
 - Contenido: `src/data/content.js` es la única fuente — no duplicar contenido en otros archivos.
   Estructura actual: Hero → Experiencia → Ecosistema (5 tabs: Admin/Taller/BankIn/Asistentes/Harness)
-  → IA Solutions (solo Merlin, lugar para 2 casos más) → Contacto.
+  → IA Solutions (freemotionsLabs, lugar para más casos) → Contacto.
   Los visuales (barras, tablas, pasos) salen de datos estructurados en content.js
   (`results`, `compareTable`, `benchBars`, `flowSteps`…) y `scripts/generate-agent-context.mjs`
   los serializa al contexto del widget — si agregás un campo visual, agregalo al script.
@@ -22,7 +22,7 @@
 ## No hacer
 - No romper el rewrite `/api/ask` → Function `ask` en `firebase.json`.
 - No commitear `node_modules/`, `dist/`, `.firebase/` (ver `.gitignore`).
-- BankIn y Taller son tabs del ecosistema, no secciones propias; Merlin vive solo en IA Solutions.
+- BankIn y Taller son tabs del ecosistema, no secciones propias.
 
 ## LinkedIn (regla de publicación)
 - Cada cambio que sume valor visible (nuevo tab, tabla, métrica, deep-link, caso) deja además un **post corto listo para pegar** (no se publica solo: el dueño lo pega en su cuenta).

@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react'
-import { merlinCase, freemotionCase } from '../data/content'
+import { freemotionCase } from '../data/content'
 import { useReveal } from '../hooks/useReveal'
 
-const CASES = [freemotionCase, merlinCase]
+const CASES = [freemotionCase]
 
-const TABS = [
-  { id: 'freemotions-labs', label: 'freemotionsLabs (visor C3D)' },
-  { id: 'merlin-decomp', label: 'Homeworld 2 (Decompilation)' },
-]
+// Con un solo caso no hay nada que elegir: la barra de pestañas se oculta (ver render).
+// Para sumar otro caso: agregarlo a CASES y a TABS.
+const TABS = [{ id: 'freemotions-labs', label: 'freemotionsLabs (visor C3D)' }]
 
 const TAB_IDS = TABS.map((t) => t.id)
 
@@ -96,28 +95,29 @@ export default function IASolutions() {
       <div className="container">
         <div className="section-head">
           <span className="eyebrow">Research & IA Solutions</span>
-          <h2>Más que un CRUD: dos pruebas</h2>
+          <h2>Más que un CRUD: una prueba</h2>
           <p>
-            El mismo flujo con IA sobre problemas que no son un CRM —
-            un laboratorio personal de marcha y una prueba técnica de decompilación,
-            con alcance y verificación explícitos.
+            El mismo flujo con IA sobre un problema que no es un CRM —
+            un laboratorio personal de marcha, con alcance y verificación explícitos.
           </p>
         </div>
 
         <div className="secondary-project-card">
-          <div className="project-tabs eco-tabs" role="tablist" aria-label="Elegir caso">
-            {TABS.map((tab) => (
-              <button
-                key={tab.id}
-                role="tab"
-                aria-selected={activeTab === tab.id}
-                className={activeTab === tab.id ? 'active' : ''}
-                onClick={() => selectTab(tab.id)}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+          {TABS.length > 1 && (
+            <div className="project-tabs eco-tabs" role="tablist" aria-label="Elegir caso">
+              {TABS.map((tab) => (
+                <button
+                  key={tab.id}
+                  role="tab"
+                  aria-selected={activeTab === tab.id}
+                  className={activeTab === tab.id ? 'active' : ''}
+                  onClick={() => selectTab(tab.id)}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="secondary-top">
             <div>
@@ -192,17 +192,6 @@ export default function IASolutions() {
                   </span>
                 ))}
               </div>
-              {project.prUrl && (
-                <div className="relevant-connection">
-                  <a className="connection-chip" href={project.prUrl} target="_blank" rel="noreferrer">
-                    PR #4 (pendiente de merge)
-                  </a>
-                  <span className="connection-arrow">base {project.baseCommit} · verificado con objdiff-cli →</span>
-                  <a className="connection-chip accent" href={project.repoUrl} target="_blank" rel="noreferrer">
-                    repo Homeworld2Classic
-                  </a>
-                </div>
-              )}
             </>
           )}
 

@@ -322,56 +322,6 @@ export const harnessCase = {
   ],
 }
 
-export const merlinCase = {
-  id: 'merlin-decomp',
-  name: 'Decompilation Challenge — Homeworld 2 (matching)',
-  tagline: 'Reto técnico personal de 48 h: escribir el C que, compilado con el compilador original (MSVC), produzca los mismos bytes que el binario de 2003. Dejo el alcance real y cómo lo verifiqué.',
-  repoUrl: 'https://github.com/HaydnTrigg/Homeworld2Classic',
-  prUrl: 'https://github.com/HaydnTrigg/Homeworld2Classic/pull/4',
-  baseCommit: '9b3fed4',
-  hrDescription: [
-    'Fue un reto técnico personal con límite de 48 horas sobre un proyecto abierto que yo no conocía (el juego Homeworld 2): reconstruir funciones en C sin documentación, con IA como apoyo y todo verificado en local.',
-    'Alcance real: 4 funciones de lógica del juego + 1 ayudante pequeño, las 5 al 100 % byte a byte según la herramienta del proyecto (objdiff-cli), más 2 piezas grandes documentadas como parciales (66–81 %) con su techo técnico explicado. La entrega está en el PR, abierto y pendiente de revisión.',
-    'Lo que sí acredita de mi criterio: elegir candidatas sin techo estructural, revertir arreglos que empeoraban el resultado y descartar una función por irreproducible — todo decidido y comprobado por mí, no aceptado de la IA.',
-  ],
-  techDescription: [
-    'Matching decompilation sobre Homeworld2Classic (MSVC 2003 vía toolchain del proyecto): mi C debe compilar a los mismos bytes — instrucciones, registros y orden—. Se verifica con `ninja <obj unidad>` + `objdiff-cli diff -p . -u <unidad> <símbolo>` → `match_percent`. Base `9b3fed4`; entrega en PR #4 (5 commits, pendiente de merge, sin validación independiente).',
-    'Al 100 %: comparador de sonido `SoundParams::operator==` (441 B), contenedor de efectos (290 B), punto de envolvente (104 B) y tabla de excepciones Windows `GetExceptionDescription` (387 B), más helper `stringLengthReverse` (24 B). Parciales honestos: test SAT de 15 ejes `Collision::Intersect` (2718 B, 66.75 %) y despachador de 43 eventos `getChatterEvent` (6100 B, 81.28 %).',
-    'Mi revisión, no la de la IA: un fix guiado por el diff exacto empeoró 66.75 % → 61.19 % (MSVC reprograma registros en cascada) y lo revertí; igual un intento previo (60 % → 22 %). Descarté `FindIntersection` por techo estructural (hash de helper anónimo irreproducible). Un hallazgo de registros aportado por IA (`esi=B, edi=A`) lo verifiqué a mano antes de aplicarlo. Evidencia por función en JSONs crudos de objdiff-cli.',
-  ],
-  tech: ['C', 'MSVC', 'ninja', 'objdiff-cli', 'Python', 'IA supervisada'],
-  results: [
-    { label: '5 funciones al 100 % (4 + 1 helper)', detail: '24–441 B · objdiff-cli', pct: 100 },
-    { label: 'Despachador battle-chatter (parcial)', detail: '6100 B · switch de 43 eventos', pct: 81.28 },
-    { label: 'Test SAT de 15 ejes (parcial)', detail: '2718 B · colisiones OBB', pct: 66.75 },
-  ],
-  loopSteps: [
-    { title: 'Barrido', desc: 'Elegir candidata sin techo estructural: sin calls a imports crudos ni helpers con hash irreproducible.' },
-    { title: 'Escritura', desc: 'Propongo el C (mío o de la IA) y decido qué entra.' },
-    { title: 'Compilación', desc: 'ninja con el compilador original sobre el proyecto tal cual.' },
-    { title: 'Medición', desc: 'objdiff-cli match_percent por función; diff fila a fila.' },
-    { title: 'Revisión', desc: 'Si un arreglo local empeora el global, lo revierto y lo documento. Sin merge, no hay 100 % que valga.' },
-  ],
-  decisions: {
-    caption: 'Mis decisiones (antes de soltar a la IA)',
-    head: ['Decisión', 'Por qué'],
-    rows: [
-      ['Elegir piezas sin techo', 'Si el original no se puede reproducir, la descarto antes de gastar tiempo'],
-      ['Revertir lo que empeora', 'Un arreglo "correcto" bajó de 67 % a 61 %: lo quité'],
-      ['Verificar a mano', 'Un dato que aportó la IA lo comprobé yo antes de usarlo'],
-    ],
-  },
-  ownership: {
-    caption: 'Quién hizo qué',
-    head: ['', 'Yo', 'La IA'],
-    rows: [
-      ['Elegir y revisar', 'Yo decido qué entra', '—'],
-      ['Proponer código', 'Yo también escribo', 'La IA también propone'],
-      ['Verificar', 'Yo compilo y comparo', '—'],
-    ],
-  },
-}
-
 export const freemotionCase = {
   id: 'freemotions-labs',
   name: 'freemotionsLabs — visor C3D en el navegador',
